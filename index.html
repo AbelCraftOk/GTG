@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2d3e50">
+    <link rel="icon" type="image/png" href="./logo.png">
+    <title>Sistema de Planilleo - GTG</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f7fa;
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 50%;
+            left: 0;
+            width: 30vw;
+            height: 60vh;
+            background: url('./fondo.png') left center/contain no-repeat;
+            opacity: 1;
+            z-index: 0;
+            pointer-events: none;
+            transform: translateY(-50%) rotate(-90deg);
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            top: 50%;
+            right: 0;
+            width: 30vw;
+            height: 60vh;
+            background: url('./fondo.png') right center/contain no-repeat;
+            opacity: 1;
+            z-index: 0;
+            pointer-events: none;
+            transform: translateY(-50%) rotate(90deg);
+        }
+        .contenedor {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 40px auto 24px auto;
+            background: rgba(255,255,255,0.97);
+            border-radius: 18px;
+            box-shadow: 0 6px 32px rgba(44,62,80,0.13);
+            padding: 32px 28px 24px 28px;
+        }
+        .seccion {
+            margin-bottom: 28px;
+            padding: 18px 16px 14px 16px;
+            border-radius: 12px;
+            background: #eaf1f8;
+            box-shadow: 0 1px 4px rgba(44,62,80,0.07);
+        }
+        .seccion h2 {
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 1.18rem;
+            color: #2d3e50;
+            letter-spacing: 0.5px;
+        }
+        .campo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .campo label {
+            min-width: 110px;
+            font-weight: 500;
+            color: #34495e;
+        }
+        .campo input[type="text"], .campo input[type="number"], .campo input[type="time"], .campo select {
+            flex: 1;
+            padding: 7px 10px;
+            border: 1px solid #bfc9d1;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: #fff;
+            transition: border 0.2s;
+        }
+        .campo input[type="text"]:focus, .campo input[type="number"]:focus, .campo input[type="time"]:focus, .campo select:focus {
+            border-color: #2980b9;
+            outline: none;
+        }
+        .acciones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .acciones button {
+            flex: 1 1 45%;
+            background: #2980b9;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 0;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 6px;
+            transition: background 0.2s;
+        }
+        .acciones button:hover {
+            background: #1c5d8c;
+        }
+        .acciones .discord {
+            background: #5865F2;
+        }
+        .acciones .discord:hover {
+            background: #404eed;
+        }
+        .boton-mini {
+            background: #fff;
+            border: 1px solid #bfc9d1;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            padding: 2px 8px;
+            margin-left: 6px;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s;
+        }
+        .boton-mini:hover {
+            background: #eaf1f8;
+            border-color: #2980b9;
+        }
+        .menu-flotante {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(44,62,80,0.18);
+            backdrop-filter: blur(2px);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .menu-flotante .menu-contenido {
+            background: rgba(255,255,255,0.98);
+            border-radius: 16px;
+            box-shadow: 0 6px 32px rgba(44,62,80,0.18);
+            padding: 28px 22px 18px 22px;
+            min-width: 320px;
+            max-width: 370px;
+        }
+        .menu-flotante h3 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+            color: #2d3e50;
+        }
+        .menu-flotante .campo {
+            margin-bottom: 12px;
+        }
+        .menu-flotante .acciones {
+            gap: 0;
+        }
+        .menu-flotante .acciones button {
+            margin-bottom: 0;
+        }
+        .separador {
+            border-top: 1px solid #dbe5ee;
+            margin: 10px 0;
+        }
+        .texto-rojo {
+            color: #e74c3c;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        @media (max-width: 600px) {
+            .contenedor {
+                padding: 16px 4vw 16px 4vw;
+            }
+            .menu-flotante .menu-contenido {
+                min-width: 90vw;
+                max-width: 95vw;
+            }
+        }
+        footer {
+            text-align: center;
+            color: #7b8a99;
+            font-size: 0.97rem;
+            margin-bottom: 18px;
+            margin-top: 18px;
+            z-index: 1;
+            position: relative;
+        }
+        .logo {
+            width: 150px;
+            height: auto; 
+            display: block;
+            align-items: center; 
+            text-align: center;
+            margin: 0 auto 40px auto;
+            border-radius: 25%;
+            box-shadow: 0 8px 32px rgba(44,62,80,0.15);
+            transition: transform 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="contenedor">
+        <img src="./logo.png" alt="Logo.png" class="logo">
+        <form id="planilla-form" autocomplete="off">
+            <!-- Datos del Recorrido -->
+            <div class="seccion">
+                <h2>Datos del Recorrido</h2>
+                <div class="campo">
+                    <label for="chofer">Chofer:</label>
+                    <input type="text" id="chofer" name="chofer" placeholder="@General Tomas Guido S.A.C.I.F" required>
+                </div>
+                <div class="campo">
+                    <label for="ramal">Ramal:</label>
+                    <select id="ramal" name="ramal" required>
+                        <option value="">Indique el Ramal</option>
+                        <option value="9">9</option>
+                        <option value="84">84</option>
+                        <option value="373">373</option>
+                        <option value="384">384</option>
+                        <option value="570">570</option>
+                    </select>
+                </div>
+                <div class="campo">
+                    <label for="interno">Interno:</label>
+                    <select id="interno" name="interno" required>
+                        <option value="">Indique el Interno</option>
+                        <option value="1">TodoBus Retiro [1 Guido]</option>
+                        <option value="2">TodoBus Palermo [2 Guido]</option>
+                        <option value="3">Nuovobus Citta [3 Guido]</option>
+                        <option value="4">Italbus Tropea [4 Guido]</option>
+                        <option value="5">Metalpar Iguazu 3 [5 Guido]</option>
+                        <option value="6">Italbus Bello [6 Guido]</option>
+                        <option value="7">Marcopolo Torino [7 Guido]</option>
+                    </select>
+                </div>
+            </div>
+            <!-- Vueltas -->
+            <div class="seccion">
+                <h2>Vueltas</h2>
+                <div class="acciones">
+                    <button type="button" onclick="abrirMenuCargarVuelta()">Cargar Vuelta</button>
+                    <button type="button" onclick="abrirMenuVueltasCargadas()">Ver las Vueltas Cargadas</button>
+                </div>
+                <div class="campo">
+                    <label for="planillas">Planillas realizadas:</label>
+                    <input type="number" id="planillas" name="planillas" placeholder="##" min="0" step="1" required>
+                </div>
+            </div>
+            <!-- Acciones -->
+            <div class="seccion">
+                <h2>Acciones</h2>
+                <div class="acciones">
+                    <button type="button" onclick="guardarPlanilla()">Guardar Planilla</button>
+                    <button type="button" onclick="limpiarCampos()">Limpiar Campos</button>
+                    <button type="button" onclick="copiarResultado()">Copiar Resultado</button>
+                    <button type="button" class="discord" onclick="window.open('https://discord.com/channels/1390152252110540830/1390152261673423105', '_blank')">Ingresar Planilla</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <footer>
+        © 2025 General Tomas Guido S.A.C.I.F
+    </footer>
+    <footer>
+        Servidor de Discord - VideoJuego de la plataforma Roblox
+    </footer>
+    <!-- Menu Cargar Vuelta -->
+    <div id="menu-cargar-vuelta" class="menu-flotante" style="display:none;">
+        <div class="menu-contenido">
+            <h3>Cargar Vuelta</h3>
+            <div class="campo">
+                <label for="ida-cargar">Ida:</label>
+                <input type="text" id="ida-cargar" placeholder="13:00" pattern="^([01]\d|2[0-3]):([0-5]\d)$">
+                <button type="button" class="boton-mini" onclick="horaActual('ida-cargar')">⌚</button>
+            </div>
+            <div class="campo">
+                <label for="vuelta-cargar">Vuelta:</label>
+                <input type="text" id="vuelta-cargar" placeholder="13:10" pattern="^([01]\d|2[0-3]):([0-5]\d)$">
+                <button type="button" class="boton-mini" onclick="horaActual('vuelta-cargar')">⌚</button>
+            </div>
+            <div class="acciones">
+                <button type="button" onclick="cargarVuelta()">Cargar Vuelta</button>
+                <button type="button" onclick="cerrarMenuCargarVuelta()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <!-- Menu Vueltas Cargadas -->
+    <div id="menu-vueltas-cargadas" class="menu-flotante" style="display:none;">
+        <div class="menu-contenido">
+            <h3>Vueltas Cargadas</h3>
+            <div id="vueltas-lista"></div>
+            <div class="acciones">
+                <button type="button" onclick="cerrarMenuVueltasCargadas()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Almacena vueltas cargadas
+        let vueltas = [];
+
+        function abrirMenuCargarVuelta() {
+            document.getElementById('menu-cargar-vuelta').style.display = 'flex';
+        }
+        function cerrarMenuCargarVuelta() {
+            document.getElementById('menu-cargar-vuelta').style.display = 'none';
+            document.getElementById('ida-cargar').value = '';
+            document.getElementById('vuelta-cargar').value = '';
+        }
+        function abrirMenuVueltasCargadas() {
+            document.getElementById('menu-vueltas-cargadas').style.display = 'flex';
+            mostrarVueltasCargadas();
+        }
+        function cerrarMenuVueltasCargadas() {
+            document.getElementById('menu-vueltas-cargadas').style.display = 'none';
+        }
+        function cargarVuelta() {
+            const ida = document.getElementById('ida-cargar').value.trim();
+            const vuelta = document.getElementById('vuelta-cargar').value.trim();
+            if (!/^([01]\d|2[0-3]):([0-5]\d)$/.test(ida) || !/^([01]\d|2[0-3]):([0-5]\d)$/.test(vuelta)) {
+                alert("Ingrese horarios válidos en formato HH:MM.");
+                return;
+            }
+            vueltas.push({ida, vuelta});
+            cerrarMenuCargarVuelta();
+            mostrarVueltasCargadas();
+        }
+        function mostrarVueltasCargadas() {
+            const lista = document.getElementById('vueltas-lista');
+            lista.innerHTML = '';
+            if (vueltas.length === 0) {
+                lista.innerHTML = '<div class="texto-rojo">No se han cargado vueltas...</div>';
+                return;
+            }
+            vueltas.forEach((v, i) => {
+                lista.innerHTML += `
+                    <div>
+                        <div class="campo">
+                            <label>Ida:</label>
+                            <input type="text" value="${v.ida}" readonly>
+                        </div>
+                        <div class="campo">
+                            <label>Vuelta:</label>
+                            <input type="text" value="${v.vuelta}" readonly>
+                        </div>
+                    </div>
+                    ${i < vueltas.length-1 ? '<div class="separador"></div>' : ''}
+                `;
+            });
+        }
+        function horaActual(inputId) {
+            fetch('https://timeapi.io/api/Time/current/zone?timeZone=America/Argentina/Buenos_Aires')
+                .then(r => r.json())
+                .then(data => {
+                    const hora = String(data.hour).padStart(2, '0');
+                    const minuto = String(data.minute).padStart(2, '0');
+                    document.getElementById(inputId).value = `${hora}:${minuto}`;
+                });
+        }
+        function getFormData() {
+            return {
+                chofer: document.getElementById('chofer').value.trim(),
+                ramal: document.getElementById('ramal').value,
+                interno: document.getElementById('interno').value,
+                planillas: document.getElementById('planillas').value.trim()
+            };
+        }
+        function formatearPlanilla(datos) {
+            let vueltasTxt = '';
+            if (vueltas.length === 0) {
+                vueltasTxt = 'No se han cargado vueltas.';
+            } else {
+                vueltas.forEach((v, i) => {
+                    vueltasTxt += `**Vuelta ${i+1}:**\n> Ida: ${v.ida}\n> Vuelta: ${v.vuelta}\n\n`;
+                });
+            }
+            return `**Chofer:** ${datos.chofer}
+**Ramal:** ${datos.ramal}
+**Interno:** ${datos.interno}
+
+${vueltasTxt}**Planillas Realizadas: ${datos.planillas}**
+`;
+        }
+        function guardarPlanilla() {
+            const datos = getFormData();
+            const contenido = formatearPlanilla(datos);
+            const blob = new Blob([contenido], {type: "text/plain"});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = "planilla.txt";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        function limpiarCampos() {
+            document.getElementById('planilla-form').reset();
+            vueltas = [];
+            mostrarVueltasCargadas();
+        }
+        function copiarResultado() {
+            const datos = getFormData();
+            const contenido = formatearPlanilla(datos);
+            navigator.clipboard.writeText(contenido).then(() => {
+                alert("Contenido copiado al portapapeles.");
+            });
+        }
+    </script>
+</body>
+</html>
