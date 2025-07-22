@@ -1,113 +1,9 @@
-// Declaración de variables globales
 let vueltas = [];
 let ramalSeleccionado = "";
 let internoSeleccionado = "";
-// Nueva variable global para almacenar todas las planillas
 let todasLasPlanillas = [];
-// Única URL del Webhook de Discord
-const WEBHOOK_URL = 'https://discord.com/api/webhooks/1391181498224345148/ojCF0tPvvfSv2qNTxJQwu_dm1N1Wge2bTKtd6ck73JPmBKEq_djqS04vn5U_Fke565Zn'; // ¡IMPORTANTE: Reemplaza esto con tu URL real!
+const WEBHOOK_URL = 'https://discord.com/api/webhooks/1391181498224345148/ojCF0tPvvfSv2qNTxJQwu_dm1N1Wge2bTKtd6ck73JPmBKEq_djqS04vn5U_Fke565Zn';
 
-// --- Funciones del Menú Principal (Chofer) ---
-
-// Función para abrir el menú de ramales
-function abrirMenuRamales() {
-    document.getElementById('menu-ramales').style.display = 'flex';
-}
-// Función para cerrar el menú de ramales
-function cerrarMenuRamales() {
-    document.getElementById('menu-ramales').style.display = 'none';
-}
-
-// Función para abrir el menú de internos
-function abrirMenuInternos() {
-    if (!ramalSeleccionado) {
-        alert("Seleccione un ramal primero.");
-        return;
-    }
-    document.getElementById('menu-internos').style.display = 'flex';
-}
-// Función para cerrar el menú de internos
-function cerrarMenuInternos() {
-    document.getElementById('menu-internos').style.display = 'none';
-}
-
-// Función para seleccionar un ramal
-function seleccionarRamal(ramal) {
-    ramalSeleccionado = ramal;
-    document.getElementById('boton-ramal').textContent = `Ramal: ${ramal}`;
-    cerrarMenuRamales();
-}
-
-// Función para seleccionar un interno
-function seleccionarInterno(interno) {
-    internoSeleccionado = interno;
-    document.getElementById('boton-interno').textContent = `Interno: ${interno}`;
-    cerrarMenuInternos();
-}
-
-// Función para abrir el menú de cargar vuelta
-function abrirMenuCargarVuelta() {
-    if (!ramalSeleccionado || !internoSeleccionado) {
-        alert("Seleccione ramal e interno primero.");
-        return;
-    }
-    document.getElementById('menu-cargar-vuelta').style.display = 'flex';
-}
-
-// Función para cerrar el menú de cargar vuelta
-function cerrarMenuCargarVuelta() {
-    document.getElementById('menu-cargar-vuelta').style.display = 'none';
-}
-
-// Función para cargar una vuelta
-function cargarVuelta() {
-    const ida = document.getElementById('ida-cargar').value.trim();
-    const vuelta = document.getElementById('vuelta-cargar').value.trim();
-    if (!ida || !vuelta) {
-        alert("Complete los horarios de ida y vuelta.");
-        return;
-    }
-    vueltas.push({ ida, vuelta, invalidada: false });
-    alert(`Vuelta cargada: Ida ${ida} - Vuelta ${vuelta}`);
-    document.getElementById('ida-cargar').value = "";
-    document.getElementById('vuelta-cargar').value = "";
-    cerrarMenuCargarVuelta();
-    actualizarBotonVueltas();
-}
-
-// Función para invalidar la última vuelta cargada
-function invalidarVuelta() {
-    if (vueltas.length === 0) {
-        alert("No hay vueltas para invalidar.");
-        return;
-    }
-    vueltas[vueltas.length - 1].invalidada = true;
-    alert("Última vuelta invalidada.");
-    cerrarMenuCargarVuelta();
-}
-
-// Función para abrir el menú de vueltas cargadas
-function abrirMenuVueltasCargadas() {
-    const lista = document.getElementById('vueltas-lista');
-    if (vueltas.length === 0) {
-        lista.innerHTML = "<div class='texto-rojo'>No hay vueltas cargadas.</div>";
-    } else {
-        lista.innerHTML = "";
-        vueltas.forEach((v, i) => {
-            const estadoTexto = v.invalidada ? '<em>(Invalidada)</em>' : '';
-            lista.innerHTML += `<div class="burbuja">
-                <strong>Vuelta ${i + 1}:</strong> Ida: ${v.ida} | Vuelta: ${v.vuelta} ${estadoTexto}
-            </div>`;
-        });
-    }
-    document.getElementById('menu-vueltas-cargadas').style.display = 'flex';
-}
-// Función para cerrar el menú de vueltas cargadas
-function cerrarMenuVueltasCargadas() {
-    document.getElementById('menu-vueltas-cargadas').style.display = 'none';
-}
-
-// Función para guardar la planilla
 function guardarPlanilla() {
     const chofer = document.getElementById('chofer').value.trim();
     const planillasCount = document.getElementById('planillas').value.trim();
@@ -116,8 +12,6 @@ function guardarPlanilla() {
         alert("Por favor, complete todos los datos (Chofer, Ramal, Interno, Planillas y cargue al menos una vuelta) antes de guardar.");
         return;
     }
-
-    // Crear un objeto de planilla completa
     const nuevaPlanilla = {
         id: Date.now(), // Un ID único para la planilla
         chofer: chofer,
@@ -129,11 +23,15 @@ function guardarPlanilla() {
         timestamp: new Date().toLocaleString() // Para saber cuándo se guardó
     };
 
+    
+    const codigoPlanilla = generarCodigoUnico();
+
     todasLasPlanillas.push(nuevaPlanilla);
     localStorage.setItem('todasLasPlanillas', JSON.stringify(todasLasPlanillas)); // Guarda en localStorage
-    alert("Planilla guardada exitosamente.");
+    alert("Planilla guardada exitosamente. Codigo de planilla: " + codigoPlanilla);
 
-    limpiarCampos(); // Limpia los campos después de guardar la planilla
+    limpiarCampos(); // Limpia los campos después de guardar la planilla.
+    abrirMenuCapturas(); // Le avisa al usaurio que tiene que enviar las capturas.
 }
 
 // Función para limpiar todos los campos
@@ -147,25 +45,6 @@ function limpiarCampos() {
     document.getElementById('planillas').value = "";
     actualizarBotonVueltas();
     document.getElementById('resumen-vueltas').innerHTML = ""; // Limpia el resumen del panel privado
-}
-
-// Función para copiar el resultado al portapapeles
-function copiarResultado() {
-    const chofer = document.getElementById('chofer').value.trim();
-    const planillas = document.getElementById('planillas').value.trim();
-    if (!chofer || !planillas || !ramalSeleccionado || !internoSeleccionado || vueltas.length === 0) {
-        alert("Complete todos los campos y cargue vueltas antes de copiar.");
-        return;
-    }
-    let texto = `Planilla de ${chofer}\nRamal: ${ramalSeleccionado}\nInterno: ${internoSeleccionado}\nPlanillas: ${planillas}\n\n`;
-    vueltas.forEach((v, i) => {
-        texto += `Vuelta ${i + 1}: Ida ${v.invalidada ? '(Invalidada)' : v.ida} - Vuelta ${v.invalidada ? '(Invalidada)' : v.vuelta}\n`;
-    });
-    navigator.clipboard.writeText(texto).then(() => {
-        alert("Texto copiado al portapapeles.");
-    }, () => {
-        alert("Error al copiar texto.");
-    });
 }
 
 // Función para actualizar el texto del botón del footer con la cantidad de vueltas
@@ -183,10 +62,6 @@ function horaActual(id) {
     const minutos = ahora.getMinutes().toString().padStart(2, '0');
     document.getElementById(id).value = `${horas}:${minutos}`;
 }
-
-// --- Panel Privado (Inspectores) ---
-
-// Funciones para aceptar y denegar planillas
 async function aceptarPlanilla(id) {
     const planillaIndex = todasLasPlanillas.findIndex(p => p.id === id);
     if (planillaIndex !== -1) {
