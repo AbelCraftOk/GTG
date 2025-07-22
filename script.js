@@ -176,12 +176,6 @@ ${vueltasDescription}
 
 // Función para ver el resumen de todas las planillas (con clave)
 function verResumenVueltas() {
-    const clave = prompt("Ingrese la clave para ver el menú privado:");
-    if (clave !== "InspectoresGTG") {
-        alert("Clave incorrecta.");
-        return;
-    }
-
     const contenedor = document.getElementById('resumen-vueltas');
     if (todasLasPlanillas.length === 0) {
         contenedor.innerHTML = "<div class='texto-rojo'>No hay planillas cargadas para revisar.</div>";
@@ -230,57 +224,6 @@ function verResumenVueltas() {
     });
     contenedor.innerHTML = resumenHTML;
 }
-
-// Cargar planillas desde localStorage al iniciar la aplicación
-document.addEventListener('DOMContentLoaded', () => {
-    const storedPlanillas = localStorage.getItem('todasLasPlanillas');
-    if (storedPlanillas) {
-        todasLasPlanillas = JSON.parse(storedPlanillas);
-    }
-    actualizarBotonVueltas(); // Asegura que el botón del footer muestre el estado correcto al cargar
-});
-
-// --- Lógica para el Modo Oscuro/Claro ---
-
-document.addEventListener('DOMContentLoaded', () => {
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const body = document.body;
-
-    // Función para actualizar el texto del botón según el modo actual
-    function actualizarTextoBoton() {
-        if (!body.classList.contains('light-mode')) {
-            themeToggleBtn.innerHTML = '🌙 Noche';
-        } else {
-            themeToggleBtn.innerHTML = '☀️ Día';
-        }
-    }
-
-    // Comprueba el tema guardado o la preferencia del sistema al cargar
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light-mode') {
-        body.classList.add('light-mode');
-    } else if (savedTheme === 'dark-mode') {
-        body.classList.remove('light-mode');
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        body.classList.add('light-mode');
-    } else {
-        body.classList.remove('light-mode');
-    }
-
-    actualizarTextoBoton(); // Llamada inicial para establecer el texto correcto al cargar la página
-
-    // Event listener para el botón de cambio de tema
-    themeToggleBtn.addEventListener('click', () => {
-        body.classList.toggle('light-mode');
-        actualizarTextoBoton();
-
-        if (body.classList.contains('light-mode')) {
-            localStorage.setItem('theme', 'light-mode');
-        } else {
-            localStorage.setItem('theme', 'dark-mode');
-        }
-    });
-});
 
 function abrirPanel() {
     document.getElementById('panel').style.display = 'block';
@@ -390,4 +333,22 @@ function abrirMenuVueltasCargadas() {
 // Función para cerrar el menú de vueltas cargadas
 function cerrarMenuVueltasCargadas() {
     document.getElementById('menu-vueltas-cargadas').style.display = 'none';
+}
+
+function mostrarPestania(id) {
+    const pestañas = ['login', 'inicio', 'inspectores'];
+    pestañas.forEach(pid => {
+        const el = document.getElementById(pid);
+        if (el) el.style.display = (pid === id) ? 'block' : 'none';
+    });
+}
+
+// Función para login de inspector
+function loginInspector() {
+    const clave = prompt("Ingrese la clave de acceso para inspectores:");
+    if (clave === "InspectoresGTG") {
+        mostrarPestania('inspectores');
+    } else if (clave !== null) {
+        alert("Clave incorrecta.");
+    }
 }
