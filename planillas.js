@@ -4,19 +4,8 @@ const planillas = [
     "9876543210zyxwvutsrqponmlkjihgfedcbaZYXWVUTSRQPONMLKJIHGFEDCBA",
 ]
 
-function generarCodigoUnico() {
-    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    let codigo;
-    do {
-        const longitud = Math.floor(Math.random() * 4) + 5; // 5 a 8 caracteres
-        codigo = '';
-        for (let i = 0; i < longitud; i++) {
-            codigo += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
-        }
-    } while (planillas.includes(codigo));
-    return `${codigo}`;
+function obtenerWebhookDescifrado() {
+    const enlaceCodificado = "aHR0cHM6Ly9kaXNjb3JkLmNvbS9hcGkvd2ViaG9va3MvMTIzNDU2Nzg5MDEyMzQ1Njc4OS9BQUJCQ0NDZGZoZ0hZSlpY";
+    const enlaceDecodificado = atob(enlaceCodificado);
+    return enlaceDecodificado;
 }
-
-// Ejemplo de uso:
-const codigoPlanilla = generarCodigoUnico();
-console.log(codigoPlanilla);

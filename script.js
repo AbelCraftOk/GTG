@@ -2,10 +2,10 @@ let vueltas = [];
 let ramalSeleccionado = "";
 let internoSeleccionado = "";
 let todasLasPlanillas = [];
-const WEBHOOK_URL = 'https://discord.com/api/webhooks/1391181498224345148/ojCF0tPvvfSv2qNTxJQwu_dm1N1Wge2bTKtd6ck73JPmBKEq_djqS04vn5U_Fke565Zn';
-const codigoPlanilla = generarCodigoUnico();
+const WEBHOOK_URL = obtenerWebhookDescifrado();
 
-function guardarPlanilla() {
+async function guardarPlanilla() {
+    const codigoPlanilla = generarCodigoUnico();
     const chofer = document.getElementById('chofer').value.trim();
     const planillasCount = document.getElementById('planillas').value.trim();
 
@@ -28,6 +28,39 @@ function guardarPlanilla() {
     todasLasPlanillas.push(nuevaPlanilla);
     localStorage.setItem('todasLasPlanillas', JSON.stringify(todasLasPlanillas)); // Guarda en localStorage
     alert("Planilla guardada exitosamente. Codigo de planilla: " + codigoPlanilla);
+    const vueltasDescription = nuevaPlanilla.vueltas.map((v, i) => {
+    const estadoVuelta = v.invalidada ? '(Invalidada)' : '';
+    return `**Vuelta ${i + 1}:** Ida: ${v.ida} - Vuelta: ${v.vuelta} ${estadoVuelta}`;
+}).join('\n');
+
+const embed = {
+    title: "📥 Nueva Planilla Enviada",
+    description: `
+**Chofer:** ${nuevaPlanilla.chofer}
+**Interno:** ${nuevaPlanilla.interno}
+**Línea:** ${nuevaPlanilla.ramal}
+**Cantidad de Planillas Físicas:** ${nuevaPlanilla.planillasCount}
+---
+**Vueltas Cargadas:**
+${vueltasDescription}
+`,
+    color: 3447003, // Azul
+    footer: {
+        text: `${planilla.text} | ${planilla.timestamp}`
+    }
+};
+
+try {
+    await fetch(WEBHOOK_URL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ embeds: [embed] }),
+    });
+} catch (error) {
+    console.error('Error al enviar webhook desde guardarPlanilla:', error);
+}
 
     limpiarCampos() // Limpia los campos después de guardar la planilla.
     abrirMenuCapturas(); // Le avisa al usaurio que tiene que enviar las capturas.
@@ -87,7 +120,7 @@ ${vueltasDescription}
             `, // Usamos template literals para formato multilinea
             color: 3066993, // Un color verde (decimal para #2ecc71)
             footer: {
-                text: `Codigo de Planilla: ${codigoPlanilla} | ${planilla.timestamp}`
+                text: `${planilla.text} | ${planilla.timestamp}`
             }
         };
 
@@ -144,7 +177,7 @@ ${vueltasDescription}
             `, // Usamos template literals para formato multilinea
             color: 15158332, // Un color rojo (decimal para #e74c3c)
             footer: {
-                text: `Codigo de Planilla: ${codigoPlanilla} | ${planilla.timestamp}`
+                text: `${planilla.text} | ${planilla.timestamp}`
             }
         };
 
@@ -176,6 +209,13 @@ ${vueltasDescription}
 
 // Función para ver el resumen de todas las planillas (con clave)
 function verResumenVueltas() {
+    if (!todasLasPlanillas || todasLasPlanillas.length === 0) {
+    // Intentar cargar desde localStorage si no hay nada
+    const planillasGuardadas = localStorage.getItem('todasLasPlanillas');
+    if (planillasGuardadas) {
+        todasLasPlanillas = JSON.parse(planillasGuardadas);
+    }
+}
     const contenedor = document.getElementById('resumen-vueltas');
     if (todasLasPlanillas.length === 0) {
         contenedor.innerHTML = "<div class='texto-rojo'>No hay planillas cargadas para revisar.</div>";
@@ -223,13 +263,6 @@ function verResumenVueltas() {
         `;
     });
     contenedor.innerHTML = resumenHTML;
-}
-
-function abrirPanel() {
-    document.getElementById('panel').style.display = 'block';
-}
-function cerrarPanel() {
-    document.getElementById('panel').style.display = 'none';
 }
 
 function abrirMenuCapturas() {
@@ -351,4 +384,12 @@ function loginInspector() {
     } else if (clave !== null) {
         alert("Clave incorrecta.");
     }
+}
+function generarCodigoUnico() {
+    // Crea un código aleatorio estilo GTG-2025-XY123
+    const año = new Date().getFullYear();
+    const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const parteLetra = letras[Math.floor(Math.random() * letras.length)] + letras[Math.floor(Math.random() * letras.length)];
+    const parteNum = Math.floor(100 + Math.random() * 900); // ej: 123
+    return `GTG-${año}-${parteLetra}${parteNum}`;
 }
