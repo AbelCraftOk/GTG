@@ -1,0 +1,50 @@
+Actualizar: "Sistema de Planilleo - GTG"
+====================
+Ayudame a actualizar mí proyecto con tus respuestas en modo de asistente de programación, respuestas estilo "Ask".
+====================
+Cambios aplicados para la futura versión 1.8: 
+- Agregar un Feedback con API de Webhook.
+- Agregar Botones y menús para el sistemas de Feedback.
+- Sistema de mensajería entre Inspectores y Choferes. (Spoiler: En está nueva versión, el Inspector podrá enviarle mensajes a los conductores, estos mensajes luego de 12 horas se borrarán automáticamente. Un ejemplo es: una próxima sesión o un corte de calle).
+- Agregar sistema de mensajería.
+- Agregar Botones, sistema de avisos y menús para el sistema de mensajería.
+====================
+Agregar un Feedback con API:
+Yo me encargo de crear la API a través de Discord, tu créame un menú estilo formulario, donde le pida al usuario: "ID de Discord", "Estilo de Reporte"(un select con las opciones: "seleccione su tipo de reporte", "Error", "Duda" y "Sugerencia") y un INPUT del tamaño de un "seccion" donde el usuario escribirá su mensaje. Debajo de ese INPUT estara un botón: Botón: {Texto: "Enviar Reporte" - Función: Se recolectaran esos valores y se colocaran en el siguiente formato: 
+Reporte de: [lo escrito en el primer INPUT]
+Tipo de Reporte: [lo seleccionado en el SELECT]
+Reporte: "[lo escrito en el segundo INPUT]"
+Luego de completarse este formato, el resultado se enviara a Discord con la API colocada en const "apifeedback".
+====================
+Agregar Botones y menús para sistemas de Feedback:
+Agregar un botón en la parte inferior pegado a la derecha. La particularidad de este botón junto al del menú del para ver los mensajes enviados, es que aunque se deslice para arriba o abajo, nunca desaparecera del campo de visión del usuario. La configuración del botón es: Botón: {Texto: "💬" - Función: Abrirán el menú donde está el formulario del Feedback}
+====================
+//Este sistema usara una API diferente a el de los anteriores
+Sistema de mensajería entre Inspectores y Choferes:
+- El Inspector podrá enviarle mensajes a los conductores.
+- Estos mensajes luego de 12 horas se borrarán automáticamente.
+- Para enviar el mensaje, el inspector tiene que hacer esto:
+//Deberá responder la siguiente pregunta: 
+Mensaje: [INPUT para responder]
+Luego se pasara al siguiente formato:
+
+Un inspector ah enviado un nuevo mensaje: "[lo que respondió en el INPUT]".
+Puedes verlo también en la página: [Ver mensaje](https://abelcraftok.github.io/GTG/)
+
+- Agregar Botones, sistema de avisos y menús para el sistema de mensajería:
+El botón estará junto al botón de ver las planillas, más exactamente en la pestaña que tiene el inspector. La configuración del botón es: Botón: {Texto: "Enviar Mensaje" - Función: Se abrirán el menu para enviar el mensaje.}
+====================
+Recibir los mensajes:
+El chófer tendrá junto al botón del feedback, la configuración del botón es: Botón: {Texto: "📱" - Función: Se abrira el menú que muestra (si los hay) los mensajes enviados por el inspector. Ahí el chofer puede eliminar el mensaje con un botón que estara dentro del "seccion" del mensaje, es Botón es: Botón: {Texto: "🗑" - Función: Se borrarán el mensaje donde estaba ubicado}}
+====================
+Por ultimo necesito que hagas un html que dependiendo que dispositivo sea, lo redirija a un lugar diferente: [
+    |===================|==============================================================|
+    |Dispositivo        |Redirijido a:                                                 |
+    |===================|==============================================================|
+    |Android            |(url)celular/Sistema%20de%20Planilleo%20-%20GTG%201.8.html    |
+    |Iphone (Apple)     |(url)celular/Sistema%20de%20Planilleo%20-%20GTG%201.8.html    |
+    |Windows            |(url)pc/Sistema%20de%20Planilleo%20-%20GTG%201.8.html         |
+    |MAC (Apple)        |(url)pc/Sistema%20de%20Planilleo%20-%20GTG%201.8.html         |
+    |Linux              |(url)pc/Sistema%20de%20Planilleo%20-%20GTG%201.8.html         |
+    |===================|==============================================================|
+]

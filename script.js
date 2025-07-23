@@ -3,6 +3,8 @@ let ramalSeleccionado = "";
 let internoSeleccionado = "";
 let todasLasPlanillas = [];
 const WEBHOOK_URL = enlaceCodificado();
+const apifeedback = codificadoEnlace();
+const apiMensajes = codificadoDeMensajes();
 
 async function guardarPlanilla() {
     const codigoPlanilla = generarCodigoUnico();
@@ -24,7 +26,6 @@ async function guardarPlanilla() {
         timestamp: new Date().toLocaleString(), // Para saber cuándo se guardó
         text: `Codigo de Planilla: ` + codigoPlanilla // Genera un código único para la planilla
     };
-
     todasLasPlanillas.push(nuevaPlanilla);
     localStorage.setItem('todasLasPlanillas', JSON.stringify(todasLasPlanillas)); // Guarda en localStorage
     alert("Planilla guardada exitosamente. Codigo de planilla: " + codigoPlanilla);
@@ -32,7 +33,6 @@ async function guardarPlanilla() {
     const estadoVuelta = v.invalidada ? '(Invalidada)' : '';
     return `**Vuelta ${i + 1}:** Ida: ${v.ida} - Vuelta: ${v.vuelta} ${estadoVuelta}`;
 }).join('\n');
-
 const embed = {
     title: "📥 Nueva Planilla Enviada",
     description: `
@@ -49,7 +49,6 @@ ${vueltasDescription}
         text: `${planilla.text} | ${planilla.timestamp}`
     }
 };
-
 try {
     await fetch(WEBHOOK_URL, {
         method: 'POST',
@@ -61,11 +60,9 @@ try {
 } catch (error) {
     console.error('Error al enviar webhook desde guardarPlanilla:', error);
 }
-
     limpiarCampos() // Limpia los campos después de guardar la planilla.
     abrirMenuCapturas(); // Le avisa al usaurio que tiene que enviar las capturas.
 }
-
 // Función para limpiar todos los campos
 function limpiarCampos() {
     vueltas = [];
@@ -77,7 +74,6 @@ function limpiarCampos() {
     actualizarBotonVueltas();
     document.getElementById('resumen-vueltas').innerHTML = ""; // Limpia el resumen del panel privado
 }
-
 // Función para actualizar el texto del botón del footer con la cantidad de vueltas
 function actualizarBotonVueltas() {
     const boton = document.getElementById('boton-vueltas-footer');
@@ -85,7 +81,6 @@ function actualizarBotonVueltas() {
     boton.textContent = `${vueltasValidas.length}/3`; // Considera solo vueltas válidas
     boton.disabled = vueltasValidas.length === 0;
 }
-
 // Función para establecer la hora actual en un campo de input
 function horaActual(id) {
     const ahora = new Date();
@@ -99,13 +94,11 @@ async function aceptarPlanilla(id) {
         const planilla = todasLasPlanillas[planillaIndex]; // Obtenemos el objeto planilla
         planilla.estado = 'aceptada';
         localStorage.setItem('todasLasPlanillas', JSON.stringify(todasLasPlanillas));
-
         // Construir la lista de vueltas para la descripción del embed
         const vueltasDescription = planilla.vueltas.map((v, i) => {
             const estadoVuelta = v.invalidada ? '(Invalidada)' : '';
             return `**Vuelta ${i + 1}:** Ida: ${v.ida} - Vuelta: ${v.vuelta} ${estadoVuelta}`;
         }).join('\n');
-
         // Construir el mensaje específico para "Aceptado"
         const embed = {
             title: "✅ Planilla Aceptada",
@@ -123,7 +116,6 @@ ${vueltasDescription}
                 text: `${planilla.text} | ${planilla.timestamp}`
             }
         };
-
         try {
             const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',
@@ -134,7 +126,6 @@ ${vueltasDescription}
                     embeds: [embed]
                 }),
             });
-
             if (response.ok) {
                 alert('Planilla aceptada y notificada en Discord.');
             } else {
@@ -145,24 +136,20 @@ ${vueltasDescription}
             alert('Planilla aceptada, pero no se pudo conectar con el servidor de Discord.');
             console.error('Error de red al enviar webhook de aceptado:', error);
         }
-
         verResumenVueltas();
     }
 }
-
 async function denegarPlanilla(id) {
     const planillaIndex = todasLasPlanillas.findIndex(p => p.id === id);
     if (planillaIndex !== -1) {
         const planilla = todasLasPlanillas[planillaIndex]; // Obtenemos el objeto planilla
         planilla.estado = 'denegada';
         localStorage.setItem('todasLasPlanillas', JSON.stringify(todasLasPlanillas));
-
         // Construir la lista de vueltas para la descripción del embed
         const vueltasDescription = planilla.vueltas.map((v, i) => {
             const estadoVuelta = v.invalidada ? '(Invalidada)' : '';
             return `**Vuelta ${i + 1}:** Ida: ${v.ida} - Vuelta: ${v.vuelta} ${estadoVuelta}`;
         }).join('\n');
-
         // Construir el mensaje específico para "Denegado"
         const embed = {
             title: "❌ Planilla Denegada",
@@ -180,7 +167,6 @@ ${vueltasDescription}
                 text: `${planilla.text} | ${planilla.timestamp}`
             }
         };
-
         try {
             const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',
@@ -202,11 +188,9 @@ ${vueltasDescription}
             alert('Planilla denegada, pero no se pudo conectar con el servidor de Discord.');
             console.error('Error de red al enviar webhook de denegado:', error);
         }
-
         verResumenVueltas();
     }
 }
-
 // Función para ver el resumen de todas las planillas (con clave)
 function verResumenVueltas() {
     if (!todasLasPlanillas || todasLasPlanillas.length === 0) {
@@ -221,18 +205,15 @@ function verResumenVueltas() {
         contenedor.innerHTML = "<div class='texto-rojo'>No hay planillas cargadas para revisar.</div>";
         return;
     }
-
     let resumenHTML = "";
     todasLasPlanillas.forEach(p => {
         let vueltasHTML = p.vueltas.map((v, i) => {
             const estadoVuelta = v.invalidada ? '<em>(Invalidada)</em>' : '';
             return `Vuelta ${i + 1}: Ida ${v.ida} - Vuelta: ${v.vuelta} ${estadoVuelta}`;
         }).join('<br>');
-
         let estadoClase = '';
         let estadoTexto = '';
         let botonesAccion = '';
-
         if (p.estado === 'aceptada') {
             estadoClase = 'burbuja-aceptada'; // Nueva clase para estilos de aceptada
             estadoTexto = '<strong style="color: #2ecc71;">ESTADO: ACEPTADA ✅</strong>';
@@ -247,7 +228,6 @@ function verResumenVueltas() {
                 <button class="denegado" onclick="denegarPlanilla(${p.id})">❌ Denegar</button>
             `;
         }
-
         resumenHTML += `
             <div class="burbuja ${estadoClase}">
                 <strong>Chofer:</strong> ${p.chofer}<br>
@@ -264,21 +244,18 @@ function verResumenVueltas() {
     });
     contenedor.innerHTML = resumenHTML;
 }
-
 function abrirMenuCapturas() {
     document.getElementById('menu-capturas').style.display = 'flex';
 }
 function cerrarMenuCapturas() {
     document.getElementById('menu-capturas').style.display = 'none';
 }
-
 function abrirMenuRamales() {
     document.getElementById('menu-ramales').style.display = 'flex';
 }
 function cerrarMenuRamales() {
     document.getElementById('menu-ramales').style.display = 'none';
 }
-
 // Función para abrir el menú de internos
 function abrirMenuInternos() {
     if (!ramalSeleccionado) {
@@ -291,21 +268,18 @@ function abrirMenuInternos() {
 function cerrarMenuInternos() {
     document.getElementById('menu-internos').style.display = 'none';
 }
-
 // Función para seleccionar un ramal
 function seleccionarRamal(ramal) {
     ramalSeleccionado = ramal;
     document.getElementById('boton-ramal').textContent = `Ramal: ${ramal}`;
     cerrarMenuRamales();
 }
-
 // Función para seleccionar un interno
 function seleccionarInterno(interno) {
     internoSeleccionado = interno;
     document.getElementById('boton-interno').textContent = `Interno: ${interno}`;
     cerrarMenuInternos();
 }
-
 // Función para abrir el menú de cargar vuelta
 function abrirMenuCargarVuelta() {
     if (!ramalSeleccionado || !internoSeleccionado) {
@@ -314,12 +288,10 @@ function abrirMenuCargarVuelta() {
     }
     document.getElementById('menu-cargar-vuelta').style.display = 'flex';
 }
-
 // Función para cerrar el menú de cargar vuelta
 function cerrarMenuCargarVuelta() {
     document.getElementById('menu-cargar-vuelta').style.display = 'none';
 }
-
 // Función para cargar una vuelta
 function cargarVuelta() {
     const ida = document.getElementById('ida-cargar').value.trim();
@@ -335,7 +307,6 @@ function cargarVuelta() {
     cerrarMenuCargarVuelta();
     actualizarBotonVueltas();
 }
-
 // Función para invalidar la última vuelta cargada
 function invalidarVuelta() {
     if (vueltas.length === 0) {
@@ -346,7 +317,6 @@ function invalidarVuelta() {
     alert("Última vuelta invalidada.");
     cerrarMenuCargarVuelta();
 }
-
 // Función para abrir el menú de vueltas cargadas
 function abrirMenuVueltasCargadas() {
     const lista = document.getElementById('vueltas-lista');
@@ -367,7 +337,6 @@ function abrirMenuVueltasCargadas() {
 function cerrarMenuVueltasCargadas() {
     document.getElementById('menu-vueltas-cargadas').style.display = 'none';
 }
-
 function mostrarPestania(id) {
     const pestañas = ['login', 'inicio', 'inspectores'];
     pestañas.forEach(pid => {
@@ -375,7 +344,6 @@ function mostrarPestania(id) {
         if (el) el.style.display = (pid === id) ? 'block' : 'none';
     });
 }
-
 // Función para login de inspector
 function loginInspector() {
     const clave = prompt("Ingrese la clave de acceso para inspectores:");
@@ -393,7 +361,7 @@ function generarCodigoUnico() {
     const parteNum = Math.floor(100 + Math.random() * 900); // ej: 123
     return `GTG-${año}-${parteLetra}${parteNum}`;
 }
-function enlaceCodificado() {
+function enlaceCodificado() { //Para las planillas.
     const parteA = "http";
     const parteB = "s://discord.c";
     const parteC = "om/api/w";
@@ -412,4 +380,160 @@ function enlaceCodificado() {
     const parteP = "Dr6jve";
     const enlaceDecodificado = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO + parteP;
     return enlaceDecodificado;
+}
+function codificadoEnlace() { //Para el: Feedback
+    const parteA = "http";
+    const parteB = "s://discord.c";
+    const parteC = "om/api/w";
+    const parteD = "eb";
+    const parteE = "ho";
+    const parteF = "oks";
+    const parteG = "/139760";
+    const parteH = "7899454";
+    const parteI = "378126";
+    const parteJ = "/xt_";
+    const parteK = "RaRj_5";
+    const parteL = "NLDZy9dVR";
+    const parteM = "UqYpOsTUk6";
+    const parteN = "l9qstgRA";
+    const parteO = "vcQAahxPUWXAek";
+    const parteP = "xGeaez";
+    const parteQ = "nOjW6JFEwg-t";
+    const codificadoEnlace = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO + parteP + parteQ;
+    return codificadoEnlace;
+}
+function codificadoDeMensajes() { //Para la que: Envia Mensajes
+    const parteA = "http";
+    const parteB = "s://discord.c";
+    const parteC = "om/api/w";
+    const parteD = "eb";
+    const parteE = "ho";
+    const parteF = "oks";
+    const parteG = "/";
+    const parteH = "1397613914";
+    const parteI = "937";
+    const parteJ = "622";
+    const parteK = "63";
+    const parteL = "8/P";
+    const parteM = "uk4h9";
+    const parteN = "xN6CT";
+    const parteO = "uUD-EV7Ye1u-";
+    const parteP = "I0GDhHMDNvaQr";
+    const parteQ = "KYmVvV";
+    const parteR = "z_c4r-BIM";
+    const parteS = "-Jjb66tMktq1FHI0x";
+    const codificadoDeMensajes = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO + parteP + parteQ + parteR + parteS;
+    return codificadoDeMensajes;
+}
+function abrirMenuFeedback() {
+    document.getElementById('menu-feedback').style.display = 'flex';
+}
+function cerrarMenuFeedback() {
+    document.getElementById('menu-feedback').style.display = 'none';
+}
+async function enviarFeedback() {
+    const id = document.getElementById('discord-id').value.trim();
+    const tipo = document.getElementById('tipo-reporte').value;
+    const mensaje = document.getElementById('mensaje-reporte').value.trim();
+
+    if (!id || !tipo || !mensaje) {
+        alert("Por favor completa todos los campos.");
+        return;
+    }
+
+    const embed = {
+        title: "📣 Nuevo Feedback",
+        description: `**Reporte de:** ${id}\n**Tipo de Reporte:** ${tipo}\n**Mensaje:**\n"${mensaje}"`,
+        color: 3447003,
+        footer: { text: new Date().toLocaleString() }
+    };
+
+    try {
+        await fetch(apifeedback, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+        alert("Reporte enviado correctamente.");
+        cerrarMenuFeedback();
+    } catch (error) {
+        console.error("Error al enviar feedback:", error);
+        alert("Error al enviar el reporte.");
+    }
+}
+function abrirMenuEnviarMensaje() {
+    document.getElementById('menu-enviar-mensaje').style.display = 'flex';
+}
+function cerrarMenuEnviarMensaje() {
+    document.getElementById('menu-enviar-mensaje').style.display = 'none';
+}
+async function enviarMensajeInspector() {
+    const mensaje = document.getElementById('mensaje-inspector').value.trim();
+    if (!mensaje) {
+        alert("El mensaje no puede estar vacío.");
+        return;
+    }
+
+    const embed = {
+        title: "📨 Nuevo Mensaje del Inspector",
+        description: `Un inspector ha enviado un nuevo mensaje:\n"${mensaje}"\n\nPuedes verlo también en la página: [Ver mensaje](https://abelcraftok.github.io/GTG/)`,
+        color: 15844367,
+        footer: { text: new Date().toLocaleString() }
+    };
+
+    try {
+        await fetch(apiMensajes, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+
+        // Guardar también localmente
+        let mensajesLocales = JSON.parse(localStorage.getItem('mensajesInspector') || '[]');
+        mensajesLocales.push({ texto: mensaje, timestamp: Date.now() });
+        localStorage.setItem('mensajesInspector', JSON.stringify(mensajesLocales));
+
+        alert("Mensaje enviado correctamente.");
+        cerrarMenuEnviarMensaje();
+    } catch (err) {
+        console.error("Error al enviar mensaje:", err);
+        alert("Hubo un error al enviar el mensaje.");
+    }
+}
+function abrirMenuMensajesChofer() {
+    const mensajes = JSON.parse(localStorage.getItem('mensajesInspector') || '[]');
+    const ahora = Date.now();
+    const container = document.getElementById('contenedor-mensajes-chofer');
+    container.innerHTML = "";
+
+    // Filtrar mensajes que no hayan vencido
+    const mensajesValidos = mensajes.filter(m => ahora - m.timestamp < 12 * 60 * 60 * 1000);
+
+    // Actualizar storage eliminando los caducados
+    localStorage.setItem('mensajesInspector', JSON.stringify(mensajesValidos));
+
+    if (mensajesValidos.length === 0) {
+        container.innerHTML = '<div class="burbuja"><p>No hay mensajes recientes.</p></div>';
+    } else {
+        mensajesValidos.forEach((m, idx) => {
+            container.innerHTML += `
+                <div class="burbuja">
+                    <p>${m.texto}</p>
+                    <button class="boton-mini" onclick="eliminarMensajeInspector(${idx})">🗑</button>
+                </div>`;
+        });
+    }
+
+    document.getElementById('menu-mensajes-chofer').style.display = 'flex';
+}
+
+function cerrarMenuMensajesChofer() {
+    document.getElementById('menu-mensajes-chofer').style.display = 'none';
+}
+
+function eliminarMensajeInspector(index) {
+    let mensajes = JSON.parse(localStorage.getItem('mensajesInspector') || '[]');
+    mensajes.splice(index, 1);
+    localStorage.setItem('mensajesInspector', JSON.stringify(mensajes));
+    abrirMenuMensajesChofer(); // Refrescar vista
 }
