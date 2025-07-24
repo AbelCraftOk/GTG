@@ -26,12 +26,12 @@ function horaActual(id) {
 // Función para ver el resumen de todas las planillas (con clave)
 function verResumenVueltas() {
     if (!todasLasPlanillas || todasLasPlanillas.length === 0) {
-    // Intentar cargar desde localStorage si no hay nada
-    const planillasGuardadas = localStorage.getItem('todasLasPlanillas');
-    if (planillasGuardadas) {
-        todasLasPlanillas = JSON.parse(planillasGuardadas);
+        // Intentar cargar desde localStorage si no hay nada
+        const planillasGuardadas = localStorage.getItem('todasLasPlanillas');
+        if (planillasGuardadas) {
+            todasLasPlanillas = JSON.parse(planillasGuardadas);
+        }
     }
-}
     const contenedor = document.getElementById('resumen-vueltas');
     if (todasLasPlanillas.length === 0) {
         contenedor.innerHTML = "<div class='texto-rojo'>No hay planillas cargadas para revisar.</div>";

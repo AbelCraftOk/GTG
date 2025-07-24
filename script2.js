@@ -19,6 +19,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+
 async function guardarPlanilla() {
     const codigoPlanilla = generarCodigoUnico();
     const chofer = document.getElementById('chofer').value.trim();
@@ -47,6 +48,7 @@ async function guardarPlanilla() {
     limpiarCampos();
     abrirMenuCapturas();
 }
+window.guardarPlanilla = guardarPlanilla;
 async function obtenerPlanillas() {
     const querySnapshot = await getDocs(collection(db, "planillas"));
     let planillas = [];
@@ -72,9 +74,23 @@ window.enviarMensajeInspector = async function enviarMensajeInspector() {
         return;
     }
     try {
+        // Guardar en Firestore (Función 1)
         await addDoc(collection(db, "mensajesInspectores"), {
             texto: mensaje,
             timestamp: new Date()
+        });
+        // Enviar al webhook (Función 2)
+        const embed = {
+            title: "📨 Nuevo Mensaje del Inspector",
+            description: `Un inspector ha enviado un nuevo mensaje: "${mensaje}"
+\nPuedes verlo también en la página: [Ver mensaje](https://abelcraftok.github.io/GTG/)`,
+            color: 3447003,
+            footer: { text: new Date().toLocaleString() }
+        };
+        await fetch(apiMensajes, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
         });
         alert("Mensaje enviado correctamente.");
         cerrarMenuEnviarMensaje();
@@ -96,7 +112,8 @@ async function mostrarMensajesInspector() {
             </div>`;
     });
 }
-window.abrirMenuMensajesChofer = mostrarMensajesInspector;
+window.mostrarMensajesInspector = mostrarMensajesInspector;
+
 window.eliminarMensajeInspector = async function eliminarMensajeInspector(id) {
     await deleteDoc(doc(db, "mensajesInspectores", id));
     alert("Mensaje eliminado.");
