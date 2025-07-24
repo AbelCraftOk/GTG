@@ -1,0 +1,133 @@
+En la funcion: "async function obtenerPlanillas()", al utilizarse pueden pasar 2 cosas: 
+Destino 1: No se encuentra nada, entonces se generara un texto color rojo: "No se han encontrado planillas recientes."
+Destino 2: Si se encontraron planillas, se cargara el siguiente formato:
+Lo que se recibira sera lago asi (mostrare que informacion da cada cosa): {
+chofer: "@PRUEBA" [CHOFER]
+(cadena)
+
+codigoPlanilla: "GTG-2025-BT417" [CODIGO DE PLANILLA]
+(cadena)
+
+estado: "pendiente" [ESTADO]
+(cadena)
+
+interno: "1" [INTERNO]
+(cadena)
+
+planillasCount: "10" [PLANILLAS REALIZADAS]
+(cadena)
+
+ramal: "9" [RAMAL]
+(cadena)
+
+timestamp: 24 de julio de 2025, 3:37:53 a.m. UTC-3 [TIEMPO]
+(marca de tiempo)
+
+vueltas (el contenido de todas las vueltas sera guardado como: [VUELTAS])
+(array)
+
+0
+(mapa)
+
+
+ida
+"03:35"
+(cadena)
+
+invalidada (dice si la vuelta es invalida o no)
+false
+(booleano)
+
+vuelta
+"03:35"
+}
+
+Chofer: [CHOFER]
+Ramal: [RAMAL]
+Interno: [INTERNO]
+Planillas Realizadas: [PLANILLAS REALIZADAS]
+[VUELTAS]
+Codigo de Planilla: [CODIGO DE PLANILLA] | [TIEMPO]
+Estado: [ESTADO]
+//Debajo, abran 2 botones: {
+    Boton 1: {"ACEPTAR" - Ejecuta: "window.aceptarPlanilla" - Estilo: "display: block; margin-top: 5px; color: #2ecc71"}
+    Boton 2: {"RECHAZAR" - Ejecuta: "window.denegarPlanilla" - Estilo: "display: block; margin-top: 5px; color: #e74c3c"}
+}
+===============
+Regenera la funcion: "async function aceptarPlanilla(id)": {
+    Al usarse, dependiendo en que planilla estaba, se tomara una ID diferente. Lo que hara la funcio sera: {
+        1- Buscar en: "Base de Datos > planillas >" La planilla correcta (se busca mediante ID, no son las ID que genera la funcion "generarCodigoUnico()", si no la ID que genera la base de datos.)
+        2- Una vez encontrado el documento que tiene la informacion de la planilla deseada. El documento sera llevado a: "Base de Datos > historialPlanillas >".
+        3- En el contenido de este documento, se modificara la linea: "estado: "pendiente"" pasara a ser: "estado: "aprobado"".
+        4- Se avisara a Discord que la planilla fue rechazada, la API del Webhook es: "". Se enviara el siguiente mensaje: (los valores seran sacados del documneto como mostre anteriormente)
+        **Chofer:** [CHOFER]
+**Ramal:** [RAMAL]
+**Interno:** [INTERNO]
+**Planillas Realizadas:** [PLANILLAS REALIZADAS]
+[VUELTAS]
+**Codigo de Planilla: [CODIGO DE PLANILLA]<el que genera "generarCodigoUnico()"> | [TIEMPO]**
+    }
+}
+===============
+Regenera la funcion: "async function denegarPlanilla(id)": {
+    Al usarse, dependiendo en que planilla estaba, se tomara una ID diferente. Lo que hara la funcio sera: {
+        1- Buscar en: "Base de Datos > planillas >" La planilla correcta (se busca mediante ID, no son las ID que genera la funcion "generarCodigoUnico()", si no la ID que genera la base de datos.)
+        2- Una vez encontrado el documento que tiene la informacion de la planilla deseada. El documento sera llevado a: "Base de Datos > historialPlanillas >".
+        3- En el contenido de este documento, se modificara la linea: "estado: "pendiente"" pasara a ser: "estado: "[rechazado]""
+        4- Se avisara a Discord que la planilla fue rechazada, la API del Webhook es: "". Se enviara el siguiente mensaje: (los valores seran sacados del documneto como mostre anteriormente)
+        **Chofer:** [CHOFER]
+**Ramal:** [RAMAL]
+**Interno:** [INTERNO]
+**Planillas Realizadas:** [PLANILLAS REALIZADAS]
+[VUELTAS]
+**Codigo de Planilla: [CODIGO DE PLANILLA]<el que genera "generarCodigoUnico()"> | [TIEMPO]**
+    }
+}
+======================
+En la pestaña: "inspectores" se agregara un nuevo boton: Boton: {"Ver Historial de Planillas" - Funcion: Desbloquea un recuadro ("seccion") y 2 botones}.
+Configuracion del recuadro oculto: {
+    1- Se buscaran datos en: "Base de Datos > historialPlanillas >".
+    2- Adentro de este recuadro se cargaran los datos encontrado de la siguiente forma: {
+        Chofer: [CHOFER]
+        Ramal: [RAMAL]
+        Interno: [INTERNO]
+        Planillas Realizadas: [PLANILLAS REALIZADAS]
+        [VUELTAS]
+        Codigo de Planilla: [CODIGO DE PLANILLA] | [TIEMPO]
+        Estado: [ESTADO]
+        //Separador
+        (asi consecutivamente hasta haber cargado todos los datos.)
+    }
+    Boton 1: {"🗑️" - Funcion: Eliminara el dato/documento mas antiguo que haya}
+    Boton 2: {"Cerrar" - Funcion: Cierra el menu/recuadro oculto.}
+}
+================================================
+Nueva pestaña: "developer": {
+    Boton: {"Agregar actualizacion" - Funcion: Abrira el menu: "actualizar" (el tamaño de este menu sera como el de seleccionar ramal.)}
+    Configuracion del menu "actualizar" {
+        //El tamaño de este menu sera como el de seleccionar ramal.
+        Texto: "Titulo: "[INPUT (se guarda como: [TITULO]) - Sera un INPUT tamaño normal.]
+        Texto: "Mensaje: "[INPUT (se guardara como: [MENSAJE]) - Sera un INPUT grande.]
+        Texto: "Cambios: "[INPUT (se guardara como: [CAMBIOS]) - Sera un INPUT grande.]
+        Boton: {"Enviar" - Ejecuta: "actualizacion"}
+    }
+}
+================================================
+Configuracion de la funcion "actualizacion" {
+    //API para mandar a Discord
+}
+================================================
+Cre un boton: {
+    Nombre: "Re-Join"
+    Funcion: Como si se haya pulsado F5.
+    Ubicacion: Pie de pagina inferior.
+}
+================================================
+Regenera la funcion "loginInspector()": {
+    1. Nuevo nombre: "login()".
+    2. Si el usuario introduce: {
+        "InspectoresGTG" o "InspectoresGTG ", sera llevado a la pestaña: "inspectores".
+        "DeveloperGTG" o "DeveloperGTG ", sera llevado a la pestaña: "developer".
+        Si el usuario introduce otra cosa que no es eso, marcara Alert.
+    }
+}

@@ -2,9 +2,9 @@ let vueltas = [];
 let ramalSeleccionado = "";
 let internoSeleccionado = "";
 let todasLasPlanillas = [];
-const WEBHOOK_URL = enlaceCodificado();
-const apifeedback = codificadoEnlace();
-const apiMensajes = codificadoDeMensajes();
+const WEBHOOK_URL = enlaceCodificado(); //Para planillas
+const apifeedback = codificadoEnlace(); //Para Feedback
+const apiMensajes = codificadoDeMensajes(); //Para Mensajes de Inspectores
 
 // Función para limpiar todos los campos
 function limpiarCampos() {
@@ -22,59 +22,6 @@ function horaActual(id) {
     const horas = ahora.getHours().toString().padStart(2, '0');
     const minutos = ahora.getMinutes().toString().padStart(2, '0');
     document.getElementById(id).value = `${horas}:${minutos}`;
-}
-// Función para ver el resumen de todas las planillas (con clave)
-function verResumenVueltas() {
-    if (!todasLasPlanillas || todasLasPlanillas.length === 0) {
-        // Intentar cargar desde localStorage si no hay nada
-        const planillasGuardadas = localStorage.getItem('todasLasPlanillas');
-        if (planillasGuardadas) {
-            todasLasPlanillas = JSON.parse(planillasGuardadas);
-        }
-    }
-    const contenedor = document.getElementById('resumen-vueltas');
-    if (todasLasPlanillas.length === 0) {
-        contenedor.innerHTML = "<div class='texto-rojo'>No hay planillas cargadas para revisar.</div>";
-        return;
-    }
-    let resumenHTML = "";
-    todasLasPlanillas.forEach(p => {
-        let vueltasHTML = p.vueltas.map((v, i) => {
-            const estadoVuelta = v.invalidada ? '<em>(Invalidada)</em>' : '';
-            return `Vuelta ${i + 1}: Ida ${v.ida} - Vuelta: ${v.vuelta} ${estadoVuelta}`;
-        }).join('<br>');
-        let estadoClase = '';
-        let estadoTexto = '';
-        let botonesAccion = '';
-        if (p.estado === 'aceptada') {
-            estadoClase = 'burbuja-aceptada'; // Nueva clase para estilos de aceptada
-            estadoTexto = '<strong style="color: #2ecc71;">ESTADO: ACEPTADA ✅</strong>';
-        } else if (p.estado === 'denegada') {
-            estadoClase = 'burbuja-denegada'; // Nueva clase para estilos de denegada
-            estadoTexto = '<strong style="color: #e74c3c;">ESTADO: DENEGADA ❌</strong>';
-        } else {
-            estadoClase = 'burbuja-pendiente'; // Nueva clase para estilos de pendiente
-            estadoTexto = '<strong style="color: #f39c12;">ESTADO: PENDIENTE ⏳</strong>';
-            botonesAccion = `
-                <button class="aceptado" onclick="aceptarPlanilla(${p.id})">✅ Aceptar</button>
-                <button class="denegado" onclick="denegarPlanilla(${p.id})">❌ Denegar</button>
-            `;
-        }
-        resumenHTML += `
-            <div class="burbuja ${estadoClase}">
-                <strong>Chofer:</strong> ${p.chofer}<br>
-                <strong>Ramal:</strong> ${p.ramal}, <strong>Interno:</strong> ${p.interno}<br>
-                <strong>Planillas:</strong> ${p.planillasCount}<br>
-                ${vueltasHTML}<br>
-                ${estadoTexto}
-                <div class="acciones-aprobacion">
-                    ${botonesAccion}
-                </div>
-                <small style="display: block; margin-top: 5px; color: ${p.estado === 'aceptada' ? '#2ecc71' : p.estado === 'denegada' ? '#e74c3c' : '#bdc3c7'};">Guardado: ${p.timestamp}</small>
-            </div>
-        `;
-    });
-    contenedor.innerHTML = resumenHTML;
 }
 async function enviarFeedback() {
     const id = document.getElementById('discord-id').value.trim();
@@ -116,7 +63,7 @@ function cerrarMenuMensajesChofer() {
     document.getElementById('menu-mensajes-chofer').style.display = 'none';
 }
 function mostrarPestania(id) {
-    const pestañas = ['login', 'inicio', 'inspectores'];
+    const pestañas = ['login', 'inicio', 'inspectores', 'developer'];
     pestañas.forEach(pid => {
         const el = document.getElementById(pid);
         if (el) el.style.display = (pid === id) ? 'block' : 'none';
@@ -214,11 +161,12 @@ function abrirMenuVueltasCargadas() {
 function cerrarMenuVueltasCargadas() {
     document.getElementById('menu-vueltas-cargadas').style.display = 'none';
 }
-// Función para login de inspector
-function loginInspector() {
-    const clave = prompt("Ingrese la clave de acceso para inspectores:");
-    if (clave === "InspectoresGTG") {
+window.login = function login() {
+    const clave = prompt("Ingrese la clave de acceso:");
+    if (clave === "InspectoresGTG" || clave === "InspectoresGTG ") {
         mostrarPestania('inspectores');
+    } else if (clave === "DeveloperGTG" || clave === "DeveloperGTG ") {
+        mostrarPestania('developer');
     } else if (clave !== null) {
         alert("Clave incorrecta.");
     }
@@ -294,6 +242,29 @@ function codificadoDeMensajes() { //Para la que: Envia Mensajes
     const parteS = "-Jjb66tMktq1FHI0x";
     const codificadoDeMensajes = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO + parteP + parteQ + parteR + parteS;
     return codificadoDeMensajes;
+}
+function apiactu() { //Para enviar actualizaciones
+    const parteA = "http";
+    const parteB = "s://discord.c";
+    const parteC = "om/api/w";
+    const parteD = "eb";
+    const parteE = "ho";
+    const parteF = "oks";
+    const parteG = "/139784659";
+    const parteH = "43759";
+    const parteI = "13545";
+    const parteJ = "/YIAG";
+    const parteK = "y2KC-f8QJpTj";
+    const parteL = "negB3yP";
+    const parteM = "SvVFBKBX";
+    const parteN = "bCPt81";
+    const parteO = "LrrVPvp";
+    const parteP = "zmDq0ASI";
+    const parteQ = "m1Zkt";
+    const parteR = "FLZ8T";
+    const parteS = "TQT8te";
+    const apiactu = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO + parteP + parteQ + parteR + parteS;
+    return apiactu;
 }
 function abrirMenuFeedback() {
     document.getElementById('menu-feedback').style.display = 'flex';
