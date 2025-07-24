@@ -6,63 +6,6 @@ const WEBHOOK_URL = enlaceCodificado();
 const apifeedback = codificadoEnlace();
 const apiMensajes = codificadoDeMensajes();
 
-async function guardarPlanilla() {
-    const codigoPlanilla = generarCodigoUnico();
-    const chofer = document.getElementById('chofer').value.trim();
-    const planillasCount = document.getElementById('planillas').value.trim();
-
-    if (!ramalSeleccionado || !internoSeleccionado || !chofer || !planillasCount || vueltas.length === 0) {
-        alert("Por favor, complete todos los datos (Chofer, Ramal, Interno, Planillas y cargue al menos una vuelta) antes de guardar.");
-        return;
-    }
-    const nuevaPlanilla = {
-        id: Date.now(), // Un ID único para la planilla
-        chofer: chofer,
-        ramal: ramalSeleccionado,
-        interno: internoSeleccionado,
-        planillasCount: planillasCount,
-        vueltas: [...vueltas], // Copia las vueltas actuales
-        estado: 'pendiente', // Estado inicial
-        timestamp: new Date().toLocaleString(), // Para saber cuándo se guardó
-        text: `Codigo de Planilla: ` + codigoPlanilla // Genera un código único para la planilla
-    };
-    todasLasPlanillas.push(nuevaPlanilla);
-    localStorage.setItem('todasLasPlanillas', JSON.stringify(todasLasPlanillas)); // Guarda en localStorage
-    alert("Planilla guardada exitosamente. Codigo de planilla: " + codigoPlanilla);
-    const vueltasDescription = nuevaPlanilla.vueltas.map((v, i) => {
-    const estadoVuelta = v.invalidada ? '(Invalidada)' : '';
-    return `**Vuelta ${i + 1}:** Ida: ${v.ida} - Vuelta: ${v.vuelta} ${estadoVuelta}`;
-}).join('\n');
-const embed = {
-    title: "📥 Nueva Planilla Enviada",
-    description: `
-**Chofer:** ${nuevaPlanilla.chofer}
-**Interno:** ${nuevaPlanilla.interno}
-**Línea:** ${nuevaPlanilla.ramal}
-**Cantidad de Planillas Físicas:** ${nuevaPlanilla.planillasCount}
----
-**Vueltas Cargadas:**
-${vueltasDescription}
-`,
-    color: 3447003, // Azul
-    footer: {
-        text: `${planilla.text} | ${planilla.timestamp}`
-    }
-};
-try {
-    await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ embeds: [embed] }),
-    });
-} catch (error) {
-    console.error('Error al enviar webhook desde guardarPlanilla:', error);
-}
-    limpiarCampos() // Limpia los campos después de guardar la planilla.
-    abrirMenuCapturas(); // Le avisa al usaurio que tiene que enviar las capturas.
-}
 // Función para limpiar todos los campos
 function limpiarCampos() {
     vueltas = [];
@@ -71,15 +14,7 @@ function limpiarCampos() {
     internoSeleccionado = "";
     document.getElementById('boton-interno').textContent = "Indicar Interno";
     document.getElementById('planillas').value = "";
-    actualizarBotonVueltas();
     document.getElementById('resumen-vueltas').innerHTML = ""; // Limpia el resumen del panel privado
-}
-// Función para actualizar el texto del botón del footer con la cantidad de vueltas
-function actualizarBotonVueltas() {
-    const boton = document.getElementById('boton-vueltas-footer');
-    const vueltasValidas = vueltas.filter(v => !v.invalidada);
-    boton.textContent = `${vueltasValidas.length}/3`; // Considera solo vueltas válidas
-    boton.disabled = vueltasValidas.length === 0;
 }
 // Función para establecer la hora actual en un campo de input
 function horaActual(id) {
@@ -87,109 +22,6 @@ function horaActual(id) {
     const horas = ahora.getHours().toString().padStart(2, '0');
     const minutos = ahora.getMinutes().toString().padStart(2, '0');
     document.getElementById(id).value = `${horas}:${minutos}`;
-}
-async function aceptarPlanilla(id) {
-    const planillaIndex = todasLasPlanillas.findIndex(p => p.id === id);
-    if (planillaIndex !== -1) {
-        const planilla = todasLasPlanillas[planillaIndex]; // Obtenemos el objeto planilla
-        planilla.estado = 'aceptada';
-        localStorage.setItem('todasLasPlanillas', JSON.stringify(todasLasPlanillas));
-        // Construir la lista de vueltas para la descripción del embed
-        const vueltasDescription = planilla.vueltas.map((v, i) => {
-            const estadoVuelta = v.invalidada ? '(Invalidada)' : '';
-            return `**Vuelta ${i + 1}:** Ida: ${v.ida} - Vuelta: ${v.vuelta} ${estadoVuelta}`;
-        }).join('\n');
-        // Construir el mensaje específico para "Aceptado"
-        const embed = {
-            title: "✅ Planilla Aceptada",
-            description: `
-**Chofer:** ${planilla.chofer}
-**Interno:** ${planilla.interno}
-**Línea:** ${planilla.ramal}
-**Cantidad de Planillas Físicas:** ${planilla.planillasCount}
----
-**Vueltas Cargadas:**
-${vueltasDescription}
-            `, // Usamos template literals para formato multilinea
-            color: 3066993, // Un color verde (decimal para #2ecc71)
-            footer: {
-                text: `${planilla.text} | ${planilla.timestamp}`
-            }
-        };
-        try {
-            const response = await fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    embeds: [embed]
-                }),
-            });
-            if (response.ok) {
-                alert('Planilla aceptada y notificada en Discord.');
-            } else {
-                alert('Planilla aceptada, pero hubo un error al notificar a Discord.');
-                console.error('Error al enviar webhook de aceptado:', response.status, await response.text());
-            }
-        } catch (error) {
-            alert('Planilla aceptada, pero no se pudo conectar con el servidor de Discord.');
-            console.error('Error de red al enviar webhook de aceptado:', error);
-        }
-        verResumenVueltas();
-    }
-}
-async function denegarPlanilla(id) {
-    const planillaIndex = todasLasPlanillas.findIndex(p => p.id === id);
-    if (planillaIndex !== -1) {
-        const planilla = todasLasPlanillas[planillaIndex]; // Obtenemos el objeto planilla
-        planilla.estado = 'denegada';
-        localStorage.setItem('todasLasPlanillas', JSON.stringify(todasLasPlanillas));
-        // Construir la lista de vueltas para la descripción del embed
-        const vueltasDescription = planilla.vueltas.map((v, i) => {
-            const estadoVuelta = v.invalidada ? '(Invalidada)' : '';
-            return `**Vuelta ${i + 1}:** Ida: ${v.ida} - Vuelta: ${v.vuelta} ${estadoVuelta}`;
-        }).join('\n');
-        // Construir el mensaje específico para "Denegado"
-        const embed = {
-            title: "❌ Planilla Denegada",
-            description: `
-**Chofer:** ${planilla.chofer}
-**Interno:** ${planilla.interno}
-**Línea:** ${planilla.ramal}
-**Cantidad de Planillas Físicas:** ${planilla.planillasCount}
----
-**Vueltas Cargadas:**
-${vueltasDescription}
-            `, // Usamos template literals para formato multilinea
-            color: 15158332, // Un color rojo (decimal para #e74c3c)
-            footer: {
-                text: `${planilla.text} | ${planilla.timestamp}`
-            }
-        };
-        try {
-            const response = await fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    embeds: [embed]
-                }),
-            });
-
-            if (response.ok) {
-                alert('Planilla denegada y notificada en Discord.');
-            } else {
-                alert('Planilla denegada, pero hubo un error al notificar a Discord.');
-                console.error('Error al enviar webhook de denegado:', response.status, await response.text());
-            }
-        } catch (error) {
-            alert('Planilla denegada, pero no se pudo conectar con el servidor de Discord.');
-            console.error('Error de red al enviar webhook de denegado:', error);
-        }
-        verResumenVueltas();
-    }
 }
 // Función para ver el resumen de todas las planillas (con clave)
 function verResumenVueltas() {
@@ -243,6 +75,52 @@ function verResumenVueltas() {
         `;
     });
     contenedor.innerHTML = resumenHTML;
+}
+async function enviarFeedback() {
+    const id = document.getElementById('discord-id').value.trim();
+    const tipo = document.getElementById('tipo-reporte').value;
+    const mensaje = document.getElementById('mensaje-reporte').value.trim();
+
+    if (!id || !tipo || !mensaje) {
+        alert("Por favor completa todos los campos.");
+        return;
+    }
+
+    const embed = {
+        title: "📣 Nuevo Feedback",
+        description: `**Reporte de:** ${id}\n**Tipo de Reporte:** ${tipo}\n**Mensaje:**\n"${mensaje}"`,
+        color: 3447003,
+        footer: { text: new Date().toLocaleString() }
+    };
+
+    try {
+        await fetch(apifeedback, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+        alert("Reporte enviado correctamente.");
+        cerrarMenuFeedback();
+    } catch (error) {
+        console.error("Error al enviar feedback:", error);
+        alert("Error al enviar el reporte.");
+    }
+}
+function abrirMenuEnviarMensaje() {
+    document.getElementById('menu-enviar-mensaje').style.display = 'flex';
+}
+function cerrarMenuEnviarMensaje() {
+    document.getElementById('menu-enviar-mensaje').style.display = 'none';
+}
+function cerrarMenuMensajesChofer() {
+    document.getElementById('menu-mensajes-chofer').style.display = 'none';
+}
+function mostrarPestania(id) {
+    const pestañas = ['login', 'inicio', 'inspectores'];
+    pestañas.forEach(pid => {
+        const el = document.getElementById(pid);
+        if (el) el.style.display = (pid === id) ? 'block' : 'none';
+    });
 }
 function abrirMenuCapturas() {
     document.getElementById('menu-capturas').style.display = 'flex';
@@ -305,7 +183,6 @@ function cargarVuelta() {
     document.getElementById('ida-cargar').value = "";
     document.getElementById('vuelta-cargar').value = "";
     cerrarMenuCargarVuelta();
-    actualizarBotonVueltas();
 }
 // Función para invalidar la última vuelta cargada
 function invalidarVuelta() {
@@ -336,13 +213,6 @@ function abrirMenuVueltasCargadas() {
 // Función para cerrar el menú de vueltas cargadas
 function cerrarMenuVueltasCargadas() {
     document.getElementById('menu-vueltas-cargadas').style.display = 'none';
-}
-function mostrarPestania(id) {
-    const pestañas = ['login', 'inicio', 'inspectores'];
-    pestañas.forEach(pid => {
-        const el = document.getElementById(pid);
-        if (el) el.style.display = (pid === id) ? 'block' : 'none';
-    });
 }
 // Función para login de inspector
 function loginInspector() {
@@ -430,110 +300,4 @@ function abrirMenuFeedback() {
 }
 function cerrarMenuFeedback() {
     document.getElementById('menu-feedback').style.display = 'none';
-}
-async function enviarFeedback() {
-    const id = document.getElementById('discord-id').value.trim();
-    const tipo = document.getElementById('tipo-reporte').value;
-    const mensaje = document.getElementById('mensaje-reporte').value.trim();
-
-    if (!id || !tipo || !mensaje) {
-        alert("Por favor completa todos los campos.");
-        return;
-    }
-
-    const embed = {
-        title: "📣 Nuevo Feedback",
-        description: `**Reporte de:** ${id}\n**Tipo de Reporte:** ${tipo}\n**Mensaje:**\n"${mensaje}"`,
-        color: 3447003,
-        footer: { text: new Date().toLocaleString() }
-    };
-
-    try {
-        await fetch(apifeedback, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ embeds: [embed] })
-        });
-        alert("Reporte enviado correctamente.");
-        cerrarMenuFeedback();
-    } catch (error) {
-        console.error("Error al enviar feedback:", error);
-        alert("Error al enviar el reporte.");
-    }
-}
-function abrirMenuEnviarMensaje() {
-    document.getElementById('menu-enviar-mensaje').style.display = 'flex';
-}
-function cerrarMenuEnviarMensaje() {
-    document.getElementById('menu-enviar-mensaje').style.display = 'none';
-}
-async function enviarMensajeInspector() {
-    const mensaje = document.getElementById('mensaje-inspector').value.trim();
-    if (!mensaje) {
-        alert("El mensaje no puede estar vacío.");
-        return;
-    }
-
-    const embed = {
-        title: "📨 Nuevo Mensaje del Inspector",
-        description: `Un inspector ha enviado un nuevo mensaje:\n"${mensaje}"\n\nPuedes verlo también en la página: [Ver mensaje](https://abelcraftok.github.io/GTG/)`,
-        color: 15844367,
-        footer: { text: new Date().toLocaleString() }
-    };
-
-    try {
-        await fetch(apiMensajes, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ embeds: [embed] })
-        });
-
-        // Guardar también localmente
-        let mensajesLocales = JSON.parse(localStorage.getItem('mensajesInspector') || '[]');
-        mensajesLocales.push({ texto: mensaje, timestamp: Date.now() });
-        localStorage.setItem('mensajesInspector', JSON.stringify(mensajesLocales));
-
-        alert("Mensaje enviado correctamente.");
-        cerrarMenuEnviarMensaje();
-    } catch (err) {
-        console.error("Error al enviar mensaje:", err);
-        alert("Hubo un error al enviar el mensaje.");
-    }
-}
-function abrirMenuMensajesChofer() {
-    const mensajes = JSON.parse(localStorage.getItem('mensajesInspector') || '[]');
-    const ahora = Date.now();
-    const container = document.getElementById('contenedor-mensajes-chofer');
-    container.innerHTML = "";
-
-    // Filtrar mensajes que no hayan vencido
-    const mensajesValidos = mensajes.filter(m => ahora - m.timestamp < 12 * 60 * 60 * 1000);
-
-    // Actualizar storage eliminando los caducados
-    localStorage.setItem('mensajesInspector', JSON.stringify(mensajesValidos));
-
-    if (mensajesValidos.length === 0) {
-        container.innerHTML = '<div class="burbuja"><p>No hay mensajes recientes.</p></div>';
-    } else {
-        mensajesValidos.forEach((m, idx) => {
-            container.innerHTML += `
-                <div class="burbuja">
-                    <p>${m.texto}</p>
-                    <button class="boton-mini" onclick="eliminarMensajeInspector(${idx})">🗑</button>
-                </div>`;
-        });
-    }
-
-    document.getElementById('menu-mensajes-chofer').style.display = 'flex';
-}
-
-function cerrarMenuMensajesChofer() {
-    document.getElementById('menu-mensajes-chofer').style.display = 'none';
-}
-
-function eliminarMensajeInspector(index) {
-    let mensajes = JSON.parse(localStorage.getItem('mensajesInspector') || '[]');
-    mensajes.splice(index, 1);
-    localStorage.setItem('mensajesInspector', JSON.stringify(mensajes));
-    abrirMenuMensajesChofer(); // Refrescar vista
 }

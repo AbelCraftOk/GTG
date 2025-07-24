@@ -1,76 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#2d3e50">
     <link rel="icon" type="image/png" href="./../logo.png">
     <title>Sistema de Planilleo - GTG</title>
     <style>
-        @media screen and (max-width: 600px) {
-    body {
-        font-size: 15px;
-    }
-
-    .seccion {
-        padding: 12px 10px;
-        margin-bottom: 20px;
-    }
-
-    .campo {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .campo label {
-        margin-bottom: 6px;
-        font-size: 14px;
-    }
-
-    .campo input[type="text"],
-    .campo input[type="number"],
-    .campo input[type="time"],
-    .campo select,
-    textarea {
-        width: 100% !important;
-        font-size: 15px;
-    }
-
-    .acciones {
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .acciones button {
-        width: 100%;
-        font-size: 16px;
-    }
-
-    button,
-    .boton-seleccion {
-        font-size: 16px;
-        padding: 12px;
-        width: 100%;
-    }
-
-    .boton-mini {
-        font-size: 18px;
-        padding: 6px 12px;
-    }
-
-    .menu-flotante .menu-contenido {
-        padding: 20px 12px;
-    }
-
-    footer {
-        padding: 20px 10px;
-    }
-
-    .burbuja {
-        font-size: 14px;
-        padding: 12px 10px;
-    }
-}
         body {
             margin: 0;
             min-height: 100vh;
@@ -87,7 +23,7 @@
             left: 0;
             width: 30vw;
             height: 60vh;
-            background: url('./fondo.png') left center/contain no-repeat;
+            background: url('./../fondo.png') left center/contain no-repeat;
             opacity: 1;
             z-index: 0;
             pointer-events: none;
@@ -101,7 +37,7 @@
             right: 0;
             width: 30vw;
             height: 60vh;
-            background: url('./fondo.png') right center/contain no-repeat;
+            background: url('./../fondo.png') right center/contain no-repeat;
             opacity: 1;
             z-index: 0;
             pointer-events: none;
@@ -528,7 +464,7 @@
 </head>
 <body>
     <nav>
-        <img src="./logo.png" alt="Logo.png" class="logo" style="display: block;">
+        <img src="./../logo.png" alt="Logo.png" class="logo" style="display: block;">
     </nav>
     <div id="login" class="contenedor" style="display: block;">
         <h2>Bienvenido al Sistema de Planilleo</h2>
@@ -541,7 +477,7 @@
         <h2>Panel de Inspectores</h2>
         <button type="button" class="theme-toggle-button" onclick="mostrarPestania('login')">📤</button>
         <div class="seccion">
-            <button type="button" class="theme-toggle-button" onclick="verResumenVueltas()">Ver Planillas</button>
+            <button type="button" class="theme-toggle-button" onclick="obtenerPlanillas()">Ver Planillas</button>
             <button type="button" class="theme-toggle-button" onclick="abrirMenuEnviarMensaje()">Enviar Mensaje</button>
         </div>
         <div id="resumen-vueltas"></div>
@@ -686,7 +622,7 @@
         <div class="menu-contenido">
             <h3>Seleccionar Ramal</h3>
             <div class="ramal-item">
-                <img src="./ramales/9.png" class="ramal-img">
+                <img src="./../ramales/9.png" class="ramal-img">
                 <div class="ramal-info">
                     <strong>RAMAL: 9</strong><br>
                     Iniciara recorrido en la terminal de Villa, ubicada cerca del deposito, luego se dirigira a la terminal de Retiro. Una vez sale de retiro, se dirigira por TODA la metrobus que pasa cerca de la diagonal y doblara para ir a la metrobus del "Depo Free" (Urbano).<br>
@@ -704,7 +640,7 @@
             </div>
             <div class="separador"></div>
             <div class="ramal-item">
-                <img src="./ramales/373.png" class="ramal-img">
+                <img src="./../ramales/373.png" class="ramal-img">
                 <div class="ramal-info">
                     <strong>RAMAL: 373</strong><br>
                     La linea 373 iniciara su recorrido en el aeropuerto, de ahi se dirigirá a la terminal de Villa y luego continuara hacia retiro.<br>
@@ -714,7 +650,7 @@
             </div>
             <div class="separador"></div>
             <div class="ramal-item">
-                <img src="./ramales/384.png" class="ramal-img">
+                <img src="./../ramales/384.png" class="ramal-img">
                 <div class="ramal-info">
                     <strong>RAMAL: 384</strong><br>
                     La linea 384 realizara el recorrido mas largo, conectando TODAS las terminales.<br>
@@ -725,7 +661,7 @@
             </div>
             <div class="separador"></div>
             <div class="ramal-item">
-                <img src="./ramales/570.png" class="ramal-img">
+                <img src="./../ramales/570.png" class="ramal-img">
                 <div class="ramal-info">
                     <strong>RAMAL: 570</strong><br>
                     La linea 570 iniciara su recorrido en la Terminal villa, donde continuara para Retiro y de ahi a "La terminal de La Cumbre", luego, continuara su recorrido dirigiendose a Los Altos, donde estara 2 minutos y luego regresara, pasando por Depo Free (Urbanos) y finalizando el recorrido en la metrobus.<br>
@@ -742,7 +678,7 @@
         <div class="menu-contenido">
             <h3>Seleccionar Interno</h3>
             <div class="interno-item">
-                <img src="./internos/1.png" class="interno-img">
+                <img src="./../internos/1.png" class="interno-img">
                 <div class="interno-info">
                     <strong>TodoBus Retiro</strong><br>
                     Empresa: TodoBus<br>
@@ -754,7 +690,7 @@
             </div>
             <div class="separador"></div>
             <div class="interno-item">
-                <img src="./internos/2.png" class="interno-img">
+                <img src="./../internos/2.png" class="interno-img">
                 <div class="interno-info">
                     <strong>TodoBus Palermo</strong><br>
                     Empresa: TodoBus<br>
@@ -766,7 +702,7 @@
             </div>
             <div class="separador"></div>
             <div class="interno-item">
-                <img src="./internos/3.png" class="interno-img">
+                <img src="./../internos/3.png" class="interno-img">
                 <div class="interno-info">
                     <strong>Nuovobus Citta</strong><br>
                     Empresa: Nuovobus<br>
@@ -778,7 +714,7 @@
             </div>
             <div class="separador"></div>
             <div class="interno-item">
-                <img src="./internos/4.png" class="interno-img">
+                <img src="./../internos/4.png" class="interno-img">
                 <div class="interno-info">
                     <strong>Italbus Tropea</strong><br>
                     Empresa: Italbus<br>
@@ -790,7 +726,7 @@
             </div>
             <div class="separador"></div>
             <div class="interno-item">
-                <img src="./internos/5.png" class="interno-img">
+                <img src="./../internos/5.png" class="interno-img">
                 <div class="interno-info">
                     <strong>Metalpar Iguazu 3</strong><br>
                     Empresa: Metalpar<br>
@@ -802,7 +738,7 @@
             </div>
             <div class="separador"></div>
             <div class="interno-item">
-                <img src="./internos/6.png" class="interno-img">
+                <img src="./../internos/6.png" class="interno-img">
                 <div class="interno-info">
                     <strong>Italbus Bello</strong><br>
                     Empresa: Italbus<br>
@@ -814,7 +750,7 @@
             </div>
             <div class="separador"></div>
             <div class="interno-item">
-                <img src="./internos/7.png" class="interno-img">
+                <img src="./../internos/7.png" class="interno-img">
                 <div class="interno-info">
                     <strong>Marcopolo Torino</strong><br>
                     Empresa: Marcopolo<br>
@@ -844,7 +780,7 @@
   border: none;
   cursor: pointer;
 ">💬</button>
-<button onclick="abrirMenuMensajesChofer()" style="
+<button onclick="window.abrirMenuMensajesChofer" style="
   position: fixed;
   bottom: 90px;
   right: 20px;
@@ -858,14 +794,13 @@
   border: none;
   cursor: pointer;
 ">📱</button>
+    <script type="module" src="./../script2.js"></script>
     <script src="./../script.js"></script>
-    <script src="./../planillas.js"></script>
+¿
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    // --- Cambio de tema ---
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    const body = document.body;
-
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
     function actualizarTextoBoton() {
         if (!body.classList.contains('light-mode')) {
             themeToggleBtn.innerHTML = '🌙 – Noche';
