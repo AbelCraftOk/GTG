@@ -1,0 +1,147 @@
+Actualizacion de: "Sistema de Planilleo - GTG"
+==============================================
+- Nuevo boton para los Developers. [Exclisivo Developers]
+- Nuevo sistema de clasificacion de rangos.
+- Regenera la funcion: "function reJoin()".
+- Nueva funcion para revisar lo escrito por el chofer. 
+- Nuevo sistema de opciones para el chofer, (una de esas funciones es para cargar licencias. Esta todavia no esta andando correctamente).
+- Nuevo sistema para agregar licencias. [Exclisivo Inspectores]
+- Nuevo sistema para agregar choferes a la base de datos. [Exclisivo Inspectores y Developers]
+- Nuevo sistema de filtrado en la funcion que permite ver el historial de planillas. [Exclusivo Inspectores y Developers].
+- Nuevo sistema de registro de logueo.
+- Nueva funcion para los Inspectores y Developers.
+
+Nuevo boton para los Developers: {
+    Nombre: "Abrir base de datos"
+    Funcion: Se le abrira al usuario en una nueva ventana el siguiente link: "https://console.firebase.google.com/project/planillasinspectores-53856/firestore/databases/-default-/data/~2FhistorialPlanillas~2FUCNVcoEuXV4tWK2OxLEB?view=panel-view&query=1%7CLIM%7C3%2F100&scopeType=collection&scopeName=%2FhistorialPlanillas"
+}
+
+Regenera la funcion: "function reJoin()": {
+    La idea es que la funcion ejecute el script: "location.reload()"
+}
+
+Nueva funcion para revisar lo escrito por el chofer: {
+    //Preparar para caragar la funcion:
+    "guardarPlanilla()" no se encargara mas de verificar que el usuario haya completado todos los campos.
+    //Lo que hara esta funcion:
+    1. Al ejecutarse la funcion, se verificar que el usaurio haya completado los campo: [
+        Que haya indicado Chofer,
+        Que haya indicado el Ramal,
+        Que haya indicado el Interno,
+        Que haaya cargado minimo una vuelta (esta vuelta no puede estar invalidada),
+        Que haya indicado las planillas realizadas.
+    ]
+    2. {
+        //Asi se encuentra la ID de Discord de los choferes: {
+            1. Se accede a: "Base de Datos > choferes >" ejemplo de un documento de informacion: 
+            Contenido del documento de informacion: Linea 1: "chofer: "@ID.del.chofer""
+        }
+        //Ahora se verificara que la informacion puesta en Chofer no sea falsa: {
+            Se comparara: [lo escrito en Chofer] con los choferes cargados en la base de datos. Ubicacion de esta informacion: "Base de Datos > choferes >", dentro de "choferes" se ubicaran todos los ID de Discord de los choferes.
+            Ahora puden pasar 2 cosas: {
+                1: Si no coinciden, se le pedira al usuario que verifique la introducido en ese INPUT.
+                2: Si coincide la informacion con uno de los ID de Discord de un chofer, se ejecutara la funcion: "guardarPlanilla()".
+            }
+        }
+    }
+}
+
+Nuevo sistema de opciones para el chofer {
+    Cuando el usuario presiona el boton: "🔓 Chofer" ubicado en la pestaña: "login". Ahora abrira el menu: "accion-chofer".
+    Configuracion del menu: "accion-chofer": {
+        Boton: {"Cargar Planilla" - Fucnion: Abre la pestaña: "inicio"}.
+        Boton: {"Cargar Licencia" - Funcion: Abre la pestaña: "licencias"}.
+        Boton: {"Enviar Reporte al Feedback" - Funcion: Abre el menu del Feedback}.
+    }
+}
+
+Nuevo sistema de licencias: {
+    Para agregar una licencia, el usuario debe estar en la pestaña: "licencias".
+    Configuracion de la pestaña: "licencias": {
+        Titulo: "Cargar Licencia"
+        //Se abre: <form id="licencia-form" autocomplete="off">
+        Recuadro: {
+            Texto: "ID de Discord" [INPUT para indicar la ID de Discord].
+            Texto: "ID de Roblox" [INPUT para indicar la ID de Roblox].
+            Texto: "Apodo de Roblox" [INPUT para indicar el apodo de Roblox].
+        }
+        Recuadro: {
+            Texto: "Motivo por la licencia".
+            SELECT: {
+                Opcion 1: "Seleccione un motivo",
+                Opcion 2: "Enfermedad o lesión",
+                Opcion 3: "Emergencia familiar",
+                Opcion 4: "Vacaciones",
+                Opcion 5: "Estudios o capacitación",
+                Opcion 6: "Duelo",
+                Opcion 7: "Razones personales".
+            }
+            Texto: "Indique cuantos tiempo durara su licencia."
+            SELECT: {
+                Opcion 1: "Seleccione el tiempo que durara su licencia"
+                Opcion 2: "1 día",
+                Opcion 3: "2 días",
+                Opcion 4: "3 días",
+                Opcion 5: "4 días",
+                Opcion 6: "5 días",
+                Opcion 7: "6 días",
+                Opcion 8: "1 semana",
+                Opcion 9: "2 semanas",
+                Opcion 10: "3 semanas".
+            }
+            Boton: {"Cargar licencia" - Funcion: "cargarLicencia()"}
+        }
+    }
+    Configuracion de la funcion: "cargarLicencia()" {
+        1. Se recolectaran los valores introducidos en la pestaña: "licencias".
+        2. Esos valores seran colocados en el siguiente formato: 
+       "ID de Discord: [lo colocado]
+        ID de Roblox: [lo colocado]
+        Apodo de Roblox: [lo colocado]
+        Motivo de licencia: [lo elegido en el respectivo SELECT]
+        Tiempo de licencia: [lo elegido en el respectivo SELECT]"
+
+        3. Al rellenar correctamente el formato anterior, se mandara a Discord con la API: "apiLicencia".
+        4. El usuario es enviado a la pestaña: "login".
+    }
+}
+Nuevo sistema para agregar choferes a la base de datos: {
+    //Preguntas clave para la configuracion del sistema:
+    ¿Como se accede al sistema?
+    En la pestaña "developer" y tambien en "inspectores", habra un boton: {"Agregar un nuevo chofer" - Funcion: Se abrira el menu: "agregar-chofer"}
+    ¿Como estara conformado el menu: "agregar-chofer"?
+    Configuracion del menu: "agregar" {
+        Texto: "ID de Discord" [INPUT donde colocara la ID de Discord del chofer].
+        Boton: {"Agregar chofer" - Funcion: "agregarChofer()"}
+    }
+    ¿Como funciona la funcion: "agregarChofer()"?
+    1. Se recolecta el valor colocado en el INPUT del menu "agregar-chofer".
+    2. Se completa el siguiente formato: 
+   "chofer: [lo colocado en el INPUT]"
+
+    3. Por ultimo, la linea de informacion anteriormente generada a traves del formato se subira a la base de datos en la ubicacion: "Base de Datos > choferes >" aqui estara ubicado el nuevo documento de informacion
+}
+
+========
+Nuevo sistema de registro de logueo: {
+    Apenas se habra el HTML se hara lo siguiente:
+    1. Conseguir la hora actual en formato 24 horas.
+    2. Conseguir la fecha actual en formato: dd/mm/yyyy.
+    3.1. Se creara un nuevo documento de informacion en la ubicacion: "Base de Datos > logs >".
+    3.2. Para crear le documento, hay que generar el contenido con el siguiente formato:
+   "dia: [resultado del punto 1]
+    hora: [resultado del punto 2]"
+    3.3. Ahora si se podra crear el nuevo documento de informacion en la base de datos.
+}
+
+Nueva funcion para los Inspectores y Developers: {
+    //Preparativos para hacer funcionar la funcion: {
+        1. Se creara el boton para acceder desde la pestaña de los Inspectores y la pestaña de los Developers.
+        2. Crear un nuevo menu llamado: "logs" y sera parecido a el que tiene la funcion: "abrirMenuHistorialPlanillas()".
+    } 
+    1. Se buscara en la ubicacion: "Base de Datos > logs >", los documneto de informacion que en la linea 1: 'dia: [fecha actual]'.
+    2. Ahora habran 2 opciones: {
+        Opcion 1: Si no se encontro ningun documento con la fecha actual, se mostrara un texto en rojo que dira: "Hoy no se ah conectado nadie (segun la base de datos)".
+        Opcion 2: Si se encontraron documentos con la fecha actual, se mostraran de la misma forma que se muestran en la funcion "abrirMenuHistorialPlanillas()", solo que se mostrara en el menu: "logs".
+    }
+}

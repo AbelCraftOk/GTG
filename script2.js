@@ -8,6 +8,7 @@ import {
     doc,
     updateDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { setDoc, doc as firestoreDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAMIMRcSoBD4pmGJStXNP7HUyQ92LGx25Y",
@@ -22,31 +23,57 @@ const db = getFirestore(app);
 
 async function guardarPlanilla() {
     const codigoPlanilla = generarCodigoUnico();
-    const chofer = document.getElementById('chofer').value.trim();
+    const choferInput = document.getElementById('chofer').value.trim();
     const planillasCount = document.getElementById('planillas').value.trim();
-    if (!ramalSeleccionado || !internoSeleccionado || !chofer || !planillasCount || vueltas.length === 0) {
-        alert("Por favor, complete todos los datos (Chofer, Ramal, Interno, Planillas y cargue al menos una vuelta) antes de guardar.");
+
+    if (!ramalSeleccionado || !internoSeleccionado || !choferInput || !planillasCount || vueltas.length === 0) {
+        alert("Por favor, complete todos los datos (Chofer, Ramal, Interno, Planillas y al menos una vuelta válida).");
         return;
     }
-    const nuevaPlanilla = {
-        chofer: chofer,
-        ramal: ramalSeleccionado,
-        interno: internoSeleccionado,
-        planillasCount: planillasCount,
-        vueltas: [...vueltas],
-        estado: 'pendiente',
-        timestamp: new Date(),
-        codigoPlanilla: codigoPlanilla,
-    };
-    try {
-        await addDoc(collection(db, "planillas"), nuevaPlanilla);
-        alert("Planilla guardada exitosamente.");
-    } catch (error) {
-        alert("Error al guardar la planilla.");
-        console.error(error);
+
+    const vueltasValidas = vueltas.filter(v => !v.invalidada);
+    if (vueltasValidas.length === 0) {
+        alert("Debe haber al menos una vuelta válida cargada.");
+        return;
     }
-    limpiarCampos();
-    abrirMenuCapturas();
+
+    try {
+        // Verificar si el chofer está registrado en la colección "choferes"
+        const choferesSnapshot = await getDocs(collection(db, "choferes"));
+        let choferEncontrado = false;
+
+        choferesSnapshot.forEach(docu => {
+            const data = docu.data();
+            if (data.chofer === `@${choferInput}`) {
+                choferEncontrado = true;
+            }
+        });
+
+        if (!choferEncontrado) {
+            alert(`El ID de Discord "${choferInput}" no está registrado como chofer. Verifica lo escrito.`);
+            return;
+        }
+
+        const nuevaPlanilla = {
+            chofer: choferInput,
+            ramal: ramalSeleccionado,
+            interno: internoSeleccionado,
+            planillasCount: planillasCount,
+            vueltas: [...vueltas],
+            estado: 'pendiente',
+            timestamp: new Date(),
+            codigoPlanilla: codigoPlanilla,
+        };
+
+        await addDoc(collection(db, "planillas"), nuevaPlanilla);
+        alert("✅ Planilla guardada exitosamente.");
+        limpiarCampos();
+        abrirMenuCapturas();
+
+    } catch (error) {
+        console.error("Error al guardar/verificar la planilla:", error);
+        alert("❌ Ocurrió un error al guardar la planilla.");
+    }
 }
 window.guardarPlanilla = guardarPlanilla;
 
@@ -226,41 +253,14 @@ window.abrirMenuHistorialPlanillas = async function abrirMenuHistorialPlanillas(
             const tb = b.timestamp instanceof Date ? b.timestamp : (b.timestamp?.toDate ? b.timestamp.toDate() : new Date(b.timestamp));
             return ta - tb;
         });
-        planillas.forEach(planilla => {
-            let vueltasHtml = '';
-            if (Array.isArray(planilla.vueltas)) {
-                planilla.vueltas.forEach((v, idx) => {
-                    vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
-                });
-            }
-            contenedor.innerHTML += `
-                <div class="burbuja">
-                    <strong>Chofer:</strong> ${planilla.chofer}<br>
-                    <strong>Ramal:</strong> ${planilla.ramal}<br>
-                    <strong>Interno:</strong> ${planilla.interno}<br>
-                    <strong>Planillas Realizadas:</strong> ${planilla.planillasCount}<br>
-                    ${vueltasHtml}
-                    <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla} | ${planilla.timestamp instanceof Date ? planilla.timestamp.toLocaleString() : (planilla.timestamp?.toDate ? planilla.timestamp.toDate().toLocaleString() : planilla.timestamp)}<br>
-                    <strong>Estado:</strong> ${planilla.estado}<br>
-                </div>
-                <div class="separador"></div>
-            `;
-        });
+        historialCache = [...planillas];
+        renderizarHistorial(historialCache);
     }
     menu.style.display = 'flex';
     window._historialPlanillasCache = planillas;
 }
 window.cerrarMenuHistorialPlanillas = function cerrarMenuHistorialPlanillas() {
     document.getElementById('menu-historial-planillas').style.display = 'none';
-}
-window.eliminarPlanillaMasAntigua = async function eliminarPlanillaMasAntigua() {
-    const planillas = window._historialPlanillasCache || [];
-    if (planillas.length === 0) return;
-    const masAntigua = planillas[0];
-    if (confirm('¿Seguro que deseas eliminar la planilla más antigua?')) {
-        await deleteDoc(doc(db, "historialPlanillas", masAntigua.id));
-        window.abrirMenuHistorialPlanillas();
-    }
 }
 window.abrirMenuActualizar = function abrirMenuActualizar() {
     document.getElementById('menu-actualizar').style.display = 'flex';
@@ -296,25 +296,170 @@ window.actualizacion = async function actualizacion() {
         console.error(error);
     }
 }
-function apiactu() { //Para enviar actualizaciones
-    const parteA = "http";
-    const parteB = "s://discord.c";
-    const parteC = "om/api/w";
-    const parteD = "eb";
-    const parteE = "ho";
-    const parteF = "oks";
-    const parteG = "/139784659";
-    const parteH = "43759";
-    const parteI = "13545";
-    const parteJ = "/YIAG";
-    const parteK = "y2KC-f8QJpTj";
-    const parteL = "negB3yP";
-    const parteM = "SvVFBKBX";
-    const parteN = "bCPt81";
-    const parteO = "LrrVPvp";
-    const parteP = "zmDq0ASI";
-    const parteQ = "m1Zkt";
-    const parteR = "FLZ8TTQT8te";
-    const apiactu = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO + parteP + parteQ + parteR;
-    return apiactu;
+function reJoin() {
+    location.reload()
+}
+window.reJoin = reJoin;
+
+window.abrirMenuAgregarChofer = function abrirMenuAgregarChofer() {
+    document.getElementById('agregar-chofer').style.display = 'flex';
+}
+window.cerrarMenuAgregarChofer = function cerrarMenuAgregarChofer() {
+    document.getElementById('agregar-chofer').style.display = 'none';
+}
+window.agregarChofer = async function agregarChofer() {
+    const input = document.getElementById('nuevo-chofer-id');
+    const id = input.value.trim();
+
+    if (!id) {
+        alert("Por favor ingrese el ID de Discord.");
+        return;
+    }
+
+    const data = { chofer: `@${id}` };
+
+    try {
+        await addDoc(collection(db, "choferes"), data);
+        alert(`✅ Chofer @${id} agregado correctamente.`);
+        input.value = "";
+        cerrarMenuAgregarChofer();
+    } catch (error) {
+        console.error("❌ Error al agregar chofer:", error);
+        alert("Error al guardar el nuevo chofer.");
+    }
+}
+let historialCache = []; // Copia del historial cargado
+
+window.abrirMenuFiltroHistorial = function () {
+    document.getElementById('menu-filtro-historial').style.display = 'flex';
+}
+window.cerrarMenuFiltroHistorial = function () {
+    document.getElementById('menu-filtro-historial').style.display = 'none';
+}
+
+function renderizarHistorial(planillas) {
+    const contenedor = document.getElementById('contenedor-historial-planillas');
+    contenedor.innerHTML = '';
+
+    if (planillas.length === 0) {
+        contenedor.innerHTML = '<div class="texto-rojo">No hay historial de planillas.</div>';
+        return;
+    }
+
+    planillas.forEach(planilla => {
+        let vueltasHtml = '';
+        if (Array.isArray(planilla.vueltas)) {
+            planilla.vueltas.forEach((v, idx) => {
+                vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
+            });
+        }
+
+        contenedor.innerHTML += `
+            <div class="burbuja">
+                <strong>Chofer:</strong> ${planilla.chofer}<br>
+                <strong>Ramal:</strong> ${planilla.ramal}<br>
+                <strong>Interno:</strong> ${planilla.interno}<br>
+                <strong>Planillas Realizadas:</strong> ${planilla.planillasCount}<br>
+                ${vueltasHtml}
+                <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla}<br>
+                <strong>Fecha:</strong> ${(planilla.timestamp?.toDate ? planilla.timestamp.toDate().toLocaleString() : planilla.timestamp)}<br>
+                <strong>Estado:</strong> ${planilla.estado}
+            </div>
+            <div class="separador"></div>
+        `;
+    });
+}
+
+// Ordenamientos
+window.filtrarHistorialAZ = function () {
+    const ordenado = [...historialCache].sort((a, b) => a.chofer.localeCompare(b.chofer));
+    renderizarHistorial(ordenado);
+    cerrarMenuFiltroHistorial();
+}
+
+window.filtrarHistorialZA = function () {
+    const ordenado = [...historialCache].sort((a, b) => b.chofer.localeCompare(a.chofer));
+    renderizarHistorial(ordenado);
+    cerrarMenuFiltroHistorial();
+}
+
+window.filtrarHistorialRecientes = function () {
+    const ordenado = [...historialCache].sort((a, b) => {
+        const ta = a.timestamp?.toDate ? a.timestamp.toDate() : new Date(a.timestamp);
+        const tb = b.timestamp?.toDate ? b.timestamp.toDate() : new Date(b.timestamp);
+        return tb - ta;
+    });
+    renderizarHistorial(ordenado);
+    cerrarMenuFiltroHistorial();
+}
+
+window.filtrarHistorialAntiguas = function () {
+    const ordenado = [...historialCache].sort((a, b) => {
+        const ta = a.timestamp?.toDate ? a.timestamp.toDate() : new Date(a.timestamp);
+        const tb = b.timestamp?.toDate ? b.timestamp.toDate() : new Date(b.timestamp);
+        return ta - tb;
+    });
+    renderizarHistorial(ordenado);
+    cerrarMenuFiltroHistorial();
+}
+import { serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+async function registrarLogInicio() {
+    const ahora = new Date();
+
+    const dia = ahora.toLocaleDateString('es-AR');  // "dd/mm/yyyy"
+    const hora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false }); // "HH:mm"
+
+    const logData = {
+        dia: dia,
+        hora: hora,
+        timestamp: serverTimestamp()
+    };
+
+    try {
+        await addDoc(collection(db, "logs"), logData);
+        console.log("✅ Log registrado:", logData);
+    } catch (err) {
+        console.error("❌ Error al registrar log:", err);
+    }
+}
+
+// Ejecutar al cargar la página
+window.addEventListener("DOMContentLoaded", registrarLogInicio);
+window.abrirMenuLogs = async function abrirMenuLogs() {
+    const contenedor = document.getElementById('contenedor-logs');
+    contenedor.innerHTML = '';
+    document.getElementById('menu-logs').style.display = 'flex';
+
+    const logsSnapshot = await getDocs(collection(db, "logs"));
+    const hoy = new Date().toLocaleDateString('es-AR'); // "dd/mm/yyyy"
+
+    const logsDeHoy = [];
+    logsSnapshot.forEach((docu) => {
+        const data = docu.data();
+        if (data.dia === hoy) {
+            logsDeHoy.push(data);
+        }
+    });
+
+    if (logsDeHoy.length === 0) {
+        contenedor.innerHTML = `<div class="texto-rojo">Hoy no se ha conectado nadie (según la base de datos).</div>`;
+        return;
+    }
+
+    // Ordenar por hora (más reciente arriba)
+    logsDeHoy.sort((a, b) => b.hora.localeCompare(a.hora));
+
+    logsDeHoy.forEach(log => {
+        contenedor.innerHTML += `
+            <div class="burbuja">
+                <strong>Hora:</strong> ${log.hora} <br>
+                <strong>Fecha:</strong> ${log.dia}
+            </div>
+        `;
+    });
+}
+
+window.cerrarMenuLogs = function cerrarMenuLogs() {
+    document.getElementById('menu-logs').style.display = 'none';
 }

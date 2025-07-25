@@ -5,6 +5,7 @@ let todasLasPlanillas = [];
 const WEBHOOK_URL = enlaceCodificado(); //Para planillas
 const apifeedback = codificadoEnlace(); //Para Feedback
 const apiMensajes = codificadoDeMensajes(); //Para Mensajes de Inspectores
+const apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo.
 
 // Función para limpiar todos los campos
 function limpiarCampos() {
@@ -63,7 +64,7 @@ function cerrarMenuMensajesChofer() {
     document.getElementById('menu-mensajes-chofer').style.display = 'none';
 }
 function mostrarPestania(id) {
-    const pestañas = ['login', 'inicio', 'inspectores', 'developer'];
+    const pestañas = ['login', 'inicio', 'inspectores', 'developer', 'licencias'];
     pestañas.forEach(pid => {
         const el = document.getElementById(pid);
         if (el) el.style.display = (pid === id) ? 'block' : 'none';
@@ -182,7 +183,7 @@ function generarCodigoUnico() {
 function enlaceCodificado() { //Para las planillas.
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/api/w";
+    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
@@ -202,7 +203,7 @@ function enlaceCodificado() { //Para las planillas.
 function codificadoEnlace() { //Para el: Feedback
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/api/w";
+    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
@@ -223,7 +224,7 @@ function codificadoEnlace() { //Para el: Feedback
 function codificadoDeMensajes() { //Para la que: Envia Mensajes
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/api/w";
+    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
@@ -246,7 +247,7 @@ function codificadoDeMensajes() { //Para la que: Envia Mensajes
 function apiactu() { //Para enviar actualizaciones
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/api/w";
+    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
@@ -266,9 +267,78 @@ function apiactu() { //Para enviar actualizaciones
     const apiactu = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO + parteP + parteQ + parteR + parteS;
     return apiactu;
 }
+function licenciacodificado() { //Para las licencias
+    const parteA = "http";
+    const parteB = "s://discord.c";
+    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
+    const parteD = "eb";
+    const parteE = "ho";
+    const parteF = "oks";
+    const parteG = "/";
+    const parteH = "";
+    const parteI = "";
+    const parteJ = "";
+    const parteK = "";
+    const parteL = "";
+    const parteM = "";
+    const parteN = "";
+    const parteO = "";
+    const parteP = "";
+    const parteQ = "";
+    const parteR = "";
+    const parteS = "";
+    const apiLicencia = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO + parteP + parteQ + parteR + parteS;
+    return apiLicencia;
+}
 function abrirMenuFeedback() {
     document.getElementById('menu-feedback').style.display = 'flex';
 }
 function cerrarMenuFeedback() {
     document.getElementById('menu-feedback').style.display = 'none';
+}
+function abrirMenuAccionChofer() {
+    document.getElementById('accion-chofer').style.display = 'flex';
+}
+function cerrarMenuAccionChofer() {
+    document.getElementById('accion-chofer').style.display = 'none';
+}
+function cargarLicencia() {
+    const idDiscord = document.getElementById('licencia-discord').value.trim();
+    const idRoblox = document.getElementById('licencia-roblox').value.trim();
+    const apodoRoblox = document.getElementById('licencia-apodo').value.trim();
+    const motivo = document.getElementById('licencia-motivo').value;
+    const duracion = document.getElementById('licencia-tiempo').value;
+
+    if (!idDiscord || !idRoblox || !apodoRoblox || !motivo || !duracion || motivo.startsWith("Seleccione") || duracion.startsWith("Seleccione")) {
+        alert("Por favor, complete todos los campos correctamente.");
+        return;
+    }
+
+    const mensaje = 
+`ID de Discord: ${idDiscord}
+ID de Roblox: ${idRoblox}
+Apodo de Roblox: ${apodoRoblox}
+Motivo de licencia: ${motivo}
+Tiempo de licencia: ${duracion}`;
+
+    const embed = {
+        title: "📄 Nueva Solicitud de Licencia",
+        description: mensaje,
+        color: 15844367,
+        footer: { text: new Date().toLocaleString() }
+    };
+
+    fetch(apiLicencia, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ embeds: [embed] })
+    })
+    .then(() => {
+        alert("Licencia enviada correctamente.");
+        mostrarPestania('login');
+    })
+    .catch(err => {
+        console.error("Error al enviar la licencia:", err);
+        alert("Error al enviar la solicitud de licencia.");
+    });
 }

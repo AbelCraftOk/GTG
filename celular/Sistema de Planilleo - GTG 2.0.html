@@ -635,17 +635,32 @@
         <div class="acciones" style="margin-top:32px;">
             <button type="button" onclick="login()">🔐 Developer</button>
             <button type="button" onclick="login()">🔐 Inspector</button>
-            <button type="button" onclick="mostrarPestania('inicio')">🔓 Chofer</button>
+            <button type="button" onclick="abrirMenuAccionChofer()">🔓 Chofer</button>
         </div>
     </div>
+    <div id="accion-chofer" class="menu-flotante" style="display: none;">
+        <div class="menu-contenido">
+            <h3>Menú del Chofer</h3>
+            <div class="acciones">
+                <button onclick="mostrarPestania('inicio'); cerrarMenuAccionChofer();">📝 Cargar Planilla</button>
+                <button onclick="mostrarPestania('licencias'); cerrarMenuAccionChofer();">📄 Cargar Licencia</button>
+                <button onclick="abrirMenuFeedback(); cerrarMenuAccionChofer();">📢 Enviar Reporte</button>
+            </div>
+            <div class="acciones">
+                <button onclick="cerrarMenuAccionChofer()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <div id="inspectores" class="contenedor" style="display: none;">
         <h2>Panel de Inspectores</h2>
         <button type="button" class="theme-toggle-button" onclick="mostrarPestania('login')">📤</button>
         <div class="seccion">
             <button type="button" class="theme-toggle-button" onclick="window.obtenerPlanillas()">Ver Planillas</button>
             <button type="button" class="theme-toggle-button" onclick="abrirMenuEnviarMensaje()">Enviar Mensaje</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuHistorialPlanillas()">Ver Historial de
-                Planillas</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuHistorialPlanillas()">Ver Historial de Planillas</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuAgregarChofer()">Agregar un nuevo chofer</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuLogs()">Ver Logs de Conexión</button>
         </div>
         <div id="resumen-vueltas"></div>
     </div>
@@ -653,11 +668,12 @@
         <h2>Panel de Developer</h2>
         <button type="button" class="theme-toggle-button" onclick="mostrarPestania('login')">📤</button>
         <div class="seccion">
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuActualizar()">Agregar
-                actualización</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuActualizar()">Agregar actualización</button>
             <button type="button" class="theme-toggle-button" onclick="abrirMenuEnviarMensaje()">Enviar Mensaje</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuHistorialPlanillas()">Ver Historial de
-                Planillas</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuHistorialPlanillas()">Ver Historial de Planillas</button>
+            <button type="button" class="theme-toggle-button" onclick="window.open('https://console.firebase.google.com/project/planillasinspectores-53856/firestore/databases/-default-/data/~2FhistorialPlanillas~2FUCNVcoEuXV4tWK2OxLEB?view=panel-view&query=1%7CLIM%7C3%2F100&scopeType=collection&scopeName=%2FhistorialPlanillas', '_blank')">Abrir base de datos</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuAgregarChofer()">Agregar un nuevo chofer</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuLogs()">Ver Logs de Conexión</button>
         </div>
     </div>
     <div id="menu-actualizar" class="menu-flotante ramales" style="display:none;">
@@ -670,13 +686,11 @@
             <div class="campo">
                 <label for="mensaje-actualizacion">Mensaje:</label>
             </div>
-            <textarea id="mensaje-actualizacion" rows="4"
-                style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
+            <textarea id="mensaje-actualizacion" rows="4" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
             <div class="campo">
                 <label for="cambios-actualizacion">Cambios:</label>
             </div>
-            <textarea id="cambios-actualizacion" rows="4"
-                style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
+            <textarea id="cambios-actualizacion" rows="4" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
             <div class="campo">
                 <label for="autor-actualizacion">Autor:</label>
                 <input type="text" id="autor-actualizacion" placeholder="Autor de la actualización">
@@ -684,15 +698,6 @@
             <div class="acciones" style="margin-top:10px;">
                 <button onclick="actualizacion()">Enviar</button>
                 <button onclick="cerrarMenuActualizar()">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    <div id="menu-historial-planillas" class="menu-flotante" style="display:none;">
-        <div class="menu-contenido">
-            <h3>Historial de Planillas</h3>
-            <div id="contenedor-historial-planillas"></div>
-            <div class="acciones">
-                <button type="button" onclick="cerrarMenuHistorialPlanillas()">Cerrar</button>
             </div>
         </div>
     </div>
@@ -705,12 +710,10 @@
                     <input type="text" id="chofer" name="chofer" placeholder="ID de Discord del Chofer" required>
                 </div>
                 <div class="campo">
-                    <button type="button" id="boton-ramal" class="boton-seleccion" onclick="abrirMenuRamales()">Indicar
-                        Ramal</button>
+                    <button type="button" id="boton-ramal" class="boton-seleccion" onclick="abrirMenuRamales()">Indicar Ramal</button>
                 </div>
                 <div class="campo">
-                    <button type="button" id="boton-interno" class="boton-seleccion"
-                        onclick="abrirMenuInternos()">Indicar Interno</button>
+                    <button type="button" id="boton-interno" class="boton-seleccion" onclick="abrirMenuInternos()">Indicar Interno</button>
                 </div>
             </div>
             <div class="seccion">
@@ -733,24 +736,119 @@
             </div>
         </form>
     </div>
+    <div id="agregar-chofer" class="menu-flotante" style="display: none;">
+        <div class="menu-contenido">
+            <h3>Agregar nuevo chofer</h3>
+            <div class="campo">
+                <label for="nuevo-chofer-id">ID de Discord:</label>
+                <input type="text" id="nuevo-chofer-id" placeholder="Ej: usuario123 (sin @)">
+            </div>
+            <div class="acciones">
+                <button onclick="agregarChofer()">Agregar chofer</button>
+                <button onclick="cerrarMenuAgregarChofer()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <div id="menu-historial-planillas" class="menu-flotante" style="display:none;">
+        <div class="menu-contenido" style="max-height: 90vh; overflow-y: auto; width: 90vw;">
+            <button class="theme-toggle-button" onclick="abrirMenuFiltroHistorial()">📂 Filtrar</button>
+            <h3>Historial de Planillas</h3>
+            <div id="contenedor-historial-planillas"></div>
+            <div class="acciones">
+                <button type="button" onclick="cerrarMenuHistorialPlanillas()">Cerrar</button>
+            </div>
+        </div>
+    </div>
+    <div id="menu-logs" class="menu-flotante" style="display:none;">
+        <div class="menu-contenido" style="max-height: 90vh; overflow-y: auto; width: 90vw;">
+            <h3>Registros de Conexión (Hoy)</h3>
+            <div id="contenedor-logs"></div>
+            <div class="acciones">
+                <button type="button" onclick="cerrarMenuLogs()">Cerrar</button>
+            </div>
+        </div>
+    </div>    
+    <div id="menu-filtro-historial" class="menu-flotante" style="display: none;">
+        <div class="menu-contenido">
+            <h3>Filtrar Historial</h3>
+            <div class="acciones">
+                <button onclick="filtrarHistorialAZ()">🔤 A-Z</button>
+                <button onclick="filtrarHistorialZA()">🔡 Z-A</button>
+                <button onclick="filtrarHistorialRecientes()">🕒 Más recientes</button>
+                <button onclick="filtrarHistorialAntiguas()">📜 Más antiguas</button>
+            </div>
+            <div class="acciones">
+                <button onclick="cerrarMenuFiltroHistorial()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <div id="licencias" class="contenedor" style="display: none;">
+    <h2>Cargar Licencia</h2>
+    <form id="licencia-form" autocomplete="off">
+        <div class="seccion">
+            <div class="campo">
+                <label for="licencia-discord">ID Discord:</label>
+                <input type="text" id="licencia-discord" placeholder="Ej: 1234567890">
+            </div>
+            <div class="campo">
+                <label for="licencia-roblox">ID Roblox:</label>
+                <input type="text" id="licencia-roblox" placeholder="Ej: 8394756">
+            </div>
+            <div class="campo">
+                <label for="licencia-apodo">Apodo Roblox:</label>
+                <input type="text" id="licencia-apodo" placeholder="Ej: Pepe_Conductor">
+            </div>
+        </div>
+        <div class="seccion">
+            <div class="campo">
+                <label for="licencia-motivo">Motivo:</label>
+                <select id="licencia-motivo">
+                    <option disabled selected>Seleccione un motivo</option>
+                    <option>Enfermedad o lesión</option>
+                    <option>Emergencia familiar</option>
+                    <option>Vacaciones</option>
+                    <option>Estudios o capacitación</option>
+                    <option>Duelo</option>
+                    <option>Razones personales</option>
+                </select>
+            </div>
+            <div class="campo">
+                <label for="licencia-tiempo">Duración:</label>
+                <select id="licencia-tiempo">
+                    <option disabled selected>Seleccione el tiempo que durará</option>
+                    <option>1 día</option>
+                    <option>2 días</option>
+                    <option>3 días</option>
+                    <option>4 días</option>
+                    <option>5 días</option>
+                    <option>6 días</option>
+                    <option>1 semana</option>
+                    <option>2 semanas</option>
+                    <option>3 semanas</option>
+                </select>
+            </div>
+        </div>
+        <div class="acciones">
+            <button type="button" onclick="cargarLicencia()">📤 Cargar Licencia</button>
+            <button type="button" onclick="mostrarPestania('login')">Cancelar</button>
+        </div>
+    </form>
+</div>
     <footer>
         <div class="footer-bottom">
             <button id="theme-toggle" class="theme-toggle-button">Cambiar Modo</button>
-            <button id="rejoin-btn" class="theme-toggle-button" onclick="location.reload()">Re-Join</button>
+            <button id="rejoin-btn" class="theme-toggle-button" onclick="window.reJoin()">Re-Join</button>
         </div>
         <p>© 2025 General Tomas Guido S.A.C.I.F</p>
     </footer>
     <div id="menu-capturas" class="menu-flotante" style="display:none;">
         <div class="menu-contenido">
             <h2 class="texto-rojo">LEER ATENTAMENTE</h2>
-            <p>Desde este momento tienes 24hs para cargar las capturas de las paradas que hace el ramal en las
-                terminales, cambios de ida a vuelta, etc.</p>
+            <p>Desde este momento tienes 24hs para cargar las capturas de las paradas que hace el ramal en las terminales, cambios de ida a vuelta, etc.</p>
             <p>Si no presentas lo necesario a tiempo, tendras que aceptar las consecuencias...</p>
             <p>Tambien recuerda tener el numero de planilla correcto, por que luego lo vas a necesitar.</p>
-            <button type="button" class="theme-toggle-button" onclick="window.location.href='./imagenes.html'">Enviar
-                Capturas ahora</button>
-            <button type="button" class="theme-toggle-button" onclick="cerrarMenuCapturas()">Enviarlas mas
-                tarde</button>
+            <button type="button" class="theme-toggle-button" onclick="window.location.href='./imagenes.html'">Enviar Capturas ahora</button>
+            <button type="button" class="theme-toggle-button" onclick="cerrarMenuCapturas()">Enviarlas mas tarde</button>
         </div>
     </div>
     <div id="menu-feedback" class="menu-flotante" style="display:none;">
@@ -772,8 +870,7 @@
             <div class="campo">
                 <label for="mensaje-reporte">Mensaje:</label>
             </div>
-            <textarea id="mensaje-reporte" rows="6"
-                style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
+             <textarea id="mensaje-reporte" rows="6" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
             <div class="acciones" style="margin-top:10px;">
                 <button onclick="enviarFeedback()">Enviar Reporte</button>
                 <button onclick="cerrarMenuFeedback()">Cancelar</button>
@@ -786,8 +883,7 @@
             <div class="campo">
                 <label for="mensaje-inspector">Mensaje:</label>
             </div>
-            <textarea id="mensaje-inspector" rows="6"
-                style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
+                <textarea id="mensaje-inspector" rows="6" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
             <div class="acciones" style="margin-top:10px;">
                 <button onclick="enviarMensajeInspector()">Enviar</button>
                 <button onclick="cerrarMenuEnviarMensaje()">Cancelar</button>
@@ -795,18 +891,18 @@
         </div>
     </div>
     <div id="menu-mensajes-chofer" class="menu-flotante" style="display:none;">
-        <div class="menu-contenido">
-            <h3>Mensajes del Inspector</h3>
-            <div id="contenedor-mensajes-chofer">
-                <div class="burbuja">
-                    <p>No hay mensajes aún.</p>
-                </div>
-            </div>
-            <div class="acciones">
-                <button onclick="cerrarMenuMensajesChofer()">Cerrar</button>
-            </div>
-        </div>
+  <div class="menu-contenido">
+    <h3>Mensajes del Inspector</h3>
+    <div id="contenedor-mensajes-chofer">
+      <div class="burbuja">
+        <p>No hay mensajes aún.</p>
+      </div>
     </div>
+    <div class="acciones">
+      <button onclick="cerrarMenuMensajesChofer()">Cerrar</button>
+    </div>
+  </div>
+</div>
     <div id="menu-cargar-vuelta" class="menu-flotante" style="display:none;">
         <div class="menu-contenido">
             <h3>Cargar Vuelta</h3>
@@ -847,12 +943,9 @@
                 <img src="./../ramales/9.png" class="ramal-img">
                 <div class="ramal-info">
                     <strong>RAMAL: 9</strong><br>
-                    Iniciara recorrido en la terminal de Villa, ubicada cerca del deposito, luego se dirigira a la
-                    terminal de Retiro. Una vez sale de retiro, se dirigira por TODA la metrobus que pasa cerca de la
-                    diagonal y doblara para ir a la metrobus del "Depo Free" (Urbano).<br>
+                    Iniciara recorrido en la terminal de Villa, ubicada cerca del deposito, luego se dirigira a la terminal de Retiro. Una vez sale de retiro, se dirigira por TODA la metrobus que pasa cerca de la diagonal y doblara para ir a la metrobus del "Depo Free" (Urbano).<br>
                     Esta linea continuara su recorrido y terminara en la "Terminal de La Cumbre".<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('9')">Seleccionar
-                        Ramal</button>
+                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('9')">Seleccionar Ramal</button>
                 </div>
             </div>
             <div class="separador"></div>
@@ -860,9 +953,7 @@
                 <div class="ramal-info">
                     <strong>RAMAL: 84</strong><br>
                     Se realizara en un futuro<br>
-                    <button type="button" class="boton-seleccion"
-                        onclick="alert('Este ramal no esta disponible por el momento, se realizara en un futuro.')">Seleccionar
-                        Ramal</button>
+                    <button type="button" class="boton-seleccion" onclick="alert('Este ramal no esta disponible por el momento, se realizara en un futuro.')">Seleccionar Ramal</button>
                 </div>
             </div>
             <div class="separador"></div>
@@ -870,12 +961,9 @@
                 <img src="./../ramales/373.png" class="ramal-img">
                 <div class="ramal-info">
                     <strong>RAMAL: 373</strong><br>
-                    La linea 373 iniciara su recorrido en el aeropuerto, de ahi se dirigirá a la terminal de Villa y
-                    luego continuara hacia retiro.<br>
-                    Luego de haber pasado retiro, se dirigirá a "Terminal de La Cumbre" y seguirá hasta Los altos, donde
-                    finalizara su recorrido.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('373')">Seleccionar
-                        Ramal</button>
+                    La linea 373 iniciara su recorrido en el aeropuerto, de ahi se dirigirá a la terminal de Villa y luego continuara hacia retiro.<br>
+                    Luego de haber pasado retiro, se dirigirá a "Terminal de La Cumbre" y seguirá hasta Los altos, donde finalizara su recorrido.<br>
+                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('373')">Seleccionar Ramal</button>
                 </div>
             </div>
             <div class="separador"></div>
@@ -884,16 +972,9 @@
                 <div class="ramal-info">
                     <strong>RAMAL: 384</strong><br>
                     La linea 384 realizara el recorrido mas largo, conectando TODAS las terminales.<br>
-                    Primero iniciara en la terminal de los altos, donde continuara hasta la rotonda y doblara en sentido
-                    Aguas de Oro, luego ira directamente a la terminal, donde frenaria y se deberia mantener ahi por al
-                    menos 2 minutos.<br>
-                    Luego, al salir de terminal, se dirigira a aeropuerto por la ruta alternativa, pero antes debera
-                    pasar el punto centrico de la ciudad, y luego ir a aeropuerto, donde hara lo mismo que en la
-                    terminal de Aguas de Oro y luego continuara hacia la terminal villa, donde solo se detendra por 1
-                    minuto. Al salir de terminal villa, ira hacia "La terminal de La Cumbre" y luego hacia la de retiro,
-                    donde terminara su recorrido.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('384')">Seleccionar
-                        Ramal</button>
+                    Primero iniciara en la terminal de los altos, donde continuara hasta la rotonda y doblara en sentido Aguas de Oro, luego ira directamente a la terminal, donde frenaria y se deberia mantener ahi por al menos 2 minutos.<br>
+                    Luego, al salir de terminal, se dirigira a aeropuerto por la ruta alternativa, pero antes debera pasar el punto centrico de la ciudad, y luego ir a aeropuerto, donde hara lo mismo que en la terminal de Aguas de Oro y luego continuara hacia la terminal villa, donde solo se detendra por 1 minuto. Al salir de terminal villa, ira hacia "La terminal de La Cumbre" y luego hacia la de retiro, donde terminara su recorrido.<br>
+                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('384')">Seleccionar Ramal</button>
                 </div>
             </div>
             <div class="separador"></div>
@@ -901,12 +982,8 @@
                 <img src="./../ramales/570.png" class="ramal-img">
                 <div class="ramal-info">
                     <strong>RAMAL: 570</strong><br>
-                    La linea 570 iniciara su recorrido en la Terminal villa, donde continuara para Retiro y de ahi a "La
-                    terminal de La Cumbre", luego, continuara su recorrido dirigiendose a Los Altos, donde estara 2
-                    minutos y luego regresara, pasando por Depo Free (Urbanos) y finalizando el recorrido en la
-                    metrobus.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('570')">Seleccionar
-                        Ramal</button>
+                    La linea 570 iniciara su recorrido en la Terminal villa, donde continuara para Retiro y de ahi a "La terminal de La Cumbre", luego, continuara su recorrido dirigiendose a Los Altos, donde estara 2 minutos y luego regresara, pasando por Depo Free (Urbanos) y finalizando el recorrido en la metrobus.<br>
+                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('570')">Seleccionar Ramal</button>
                 </div>
             </div>
             <div class="separador"></div>
@@ -926,8 +1003,7 @@
                     Modelo: -<br>
                     Interno GTG: 1<br>
                     Interno: 1234<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('1')">Seleccionar
-                        Interno</button>
+                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('1')">Seleccionar Interno</button>
                 </div>
             </div>
             <div class="separador"></div>
@@ -939,8 +1015,7 @@
                     Modelo: -<br>
                     Interno GTG: 2<br>
                     Interno: 5642<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('2')">Seleccionar
-                        Interno</button>
+                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('2')">Seleccionar Interno</button>
                 </div>
             </div>
             <div class="separador"></div>
@@ -952,8 +1027,7 @@
                     Modelo: Citta<br>
                     Interno GTG: 3<br>
                     Interno: 2321<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('3')">Seleccionar
-                        Interno</button>
+                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('3')">Seleccionar Interno</button>
                 </div>
             </div>
             <div class="separador"></div>
@@ -965,8 +1039,7 @@
                     Modelo: Tropea III (3)<br>
                     Interno GTG: 4<br>
                     Interno: 3453<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('4')">Seleccionar
-                        Interno</button>
+                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('4')">Seleccionar Interno</button>
                 </div>
             </div>
             <div class="separador"></div>
@@ -978,8 +1051,7 @@
                     Modelo: Iguazu 3<br>
                     Interno GTG: 5<br>
                     Interno: 9410<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('5')">Seleccionar
-                        Interno</button>
+                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('5')">Seleccionar Interno</button>
                 </div>
             </div>
             <div class="separador"></div>
@@ -991,8 +1063,7 @@
                     Modelo: Bello<br>
                     Interno GTG: 6<br>
                     Interno: 4321<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('6')">Seleccionar
-                        Interno</button>
+                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('6')">Seleccionar Interno</button>
                 </div>
             </div>
             <div class="separador"></div>
@@ -1004,8 +1075,7 @@
                     Modelo: Torino<br>
                     Interno GTG: 7<br>
                     Interno: 1232<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('7')">Seleccionar
-                        Interno</button>
+                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('7')">Seleccionar Interno</button>
                 </div>
             </div>
             <div class="separador"></div>
@@ -1030,43 +1100,41 @@
 ">💬</button>
     <script type="module" src="./../script2.js"></script>
     <script src="./../script.js"></script>
-    ¿
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const themeToggleBtn = document.getElementById('theme-toggle');
-            const body = document.body;
-            function actualizarTextoBoton() {
-                if (!body.classList.contains('light-mode')) {
-                    themeToggleBtn.innerHTML = '🌙 – Noche';
-                } else {
-                    themeToggleBtn.innerHTML = '☀️ – Día';
-                }
-            }
+        document.addEventListener('DOMContentLoaded', function() {
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+    function actualizarTextoBoton() {
+        if (!body.classList.contains('light-mode')) {
+            themeToggleBtn.innerHTML = '🌙 – Noche';
+        } else {
+            themeToggleBtn.innerHTML = '☀️ – Día';
+        }
+    }
 
-            // Preferencia guardada o sistema
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light-mode') {
-                body.classList.add('light-mode');
-            } else if (savedTheme === 'dark-mode') {
-                body.classList.remove('light-mode');
-            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-                body.classList.add('light-mode');
-            } else {
-                body.classList.remove('light-mode');
-            }
-            actualizarTextoBoton();
+    // Preferencia guardada o sistema
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light-mode') {
+        body.classList.add('light-mode');
+    } else if (savedTheme === 'dark-mode') {
+        body.classList.remove('light-mode');
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        body.classList.add('light-mode');
+    } else {
+        body.classList.remove('light-mode');
+    }
+    actualizarTextoBoton();
 
-            themeToggleBtn.addEventListener('click', () => {
-                body.classList.toggle('light-mode');
-                actualizarTextoBoton();
-                if (body.classList.contains('light-mode')) {
-                    localStorage.setItem('theme', 'light-mode');
-                } else {
-                    localStorage.setItem('theme', 'dark-mode');
-                }
-            });
-        });
+    themeToggleBtn.addEventListener('click', () => {
+        body.classList.toggle('light-mode');
+        actualizarTextoBoton();
+        if (body.classList.contains('light-mode')) {
+            localStorage.setItem('theme', 'light-mode');
+        } else {
+            localStorage.setItem('theme', 'dark-mode');
+        }
+    });
+});
     </script>
 </body>
-
 </html>
