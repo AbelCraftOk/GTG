@@ -562,11 +562,15 @@
                     <label for="planillas">Planillas realizadas:</label>
                     <input type="number" id="planillas" name="planillas" placeholder="##" min="0" step="1" required>
                 </div>
+                <div class="campo">
+                    <label for="imagenes-capturas">Subí tus capturas:</label>
+                    <input type="file" id="imagenes-capturas" accept="image/*" multiple>
+                </div>
             </div>
             <div class="seccion">
                 <h2>Acciones</h2>
                 <div class="acciones">
-                    <button type="button" class="discord" onclick="window.guardarPlanilla">Enviar Planilla</button>
+                    <button type="button" class="discord" onclick="window.guardarPlanilla()">Enviar Planilla</button>
                     <button type="button" onclick="abrirMenuCapturas()">Enviar Capturas</button>
                 </div>
             </div>
