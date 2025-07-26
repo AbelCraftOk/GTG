@@ -247,7 +247,7 @@ function codificadoDeMensajes() { //Para la que: Envia Mensajes
 function apiactu() { //Para enviar actualizaciones
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
+    const parteC = "om/api/w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
@@ -275,18 +275,18 @@ function licenciacodificado() { //Para las licencias
     const parteE = "ho";
     const parteF = "oks";
     const parteG = "/";
-    const parteH = "";
-    const parteI = "";
-    const parteJ = "";
-    const parteK = "";
-    const parteL = "";
-    const parteM = "";
-    const parteN = "";
-    const parteO = "";
-    const parteP = "";
-    const parteQ = "";
-    const parteR = "";
-    const parteS = "";
+    const parteH = "1";
+    const parteI = "2";
+    const parteJ = "3";
+    const parteK = "4";
+    const parteL = "5";
+    const parteM = "6";
+    const parteN = "7";
+    const parteO = "8";
+    const parteP = "9";
+    const parteQ = "10";
+    const parteR = "11";
+    const parteS = "12";
     const apiLicencia = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO + parteP + parteQ + parteR + parteS;
     return apiLicencia;
 }

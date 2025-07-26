@@ -121,8 +121,6 @@ Nuevo sistema para agregar choferes a la base de datos: {
 
     3. Por ultimo, la linea de informacion anteriormente generada a traves del formato se subira a la base de datos en la ubicacion: "Base de Datos > choferes >" aqui estara ubicado el nuevo documento de informacion
 }
-
-========
 Nuevo sistema de registro de logueo: {
     Apenas se habra el HTML se hara lo siguiente:
     1. Conseguir la hora actual en formato 24 horas.
