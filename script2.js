@@ -1,30 +1,25 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  doc,
-  updateDoc
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc,
+    updateDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+import { setDoc, doc as firestoreDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAMIMRcSoBD4pmGJStXNP7HUyQ92LGx25Y",
-  authDomain: "planillasinspectores-53856.firebaseapp.com",
-  projectId: "planillasinspectores-53856",
-  storageBucket: "planillasinspectores-53856.appspot.com",
-  messagingSenderId: "752544495285",
-  appId: "1:752544495285:web:dbf678155d39d1b7d9b0fc"
+    apiKey: "AIzaSyAMIMRcSoBD4pmGJStXNP7HUyQ92LGx25Y",
+    authDomain: "planillasinspectores-53856.firebaseapp.com",
+    projectId: "planillasinspectores-53856",
+    storageBucket: "planillasinspectores-53856.firebasestorage.app",
+    messagingSenderId: "752544495285",
+    appId: "1:752544495285:web:dbf678155d39d1b7d9b0fc"
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const storage = getStorage(app);
 
 async function guardarPlanilla() {
     const codigoPlanilla = generarCodigoUnico();
@@ -43,6 +38,7 @@ async function guardarPlanilla() {
     }
 
     try {
+        // Verificar si el chofer está registrado en la colección "choferes"
         const choferesSnapshot = await getDocs(collection(db, "choferes"));
         let choferEncontrado = false;
 
@@ -58,17 +54,6 @@ async function guardarPlanilla() {
             return;
         }
 
-        // SUBIR IMÁGENES A FIREBASE STORAGE
-        const files = document.getElementById('imagenes-capturas')?.files || [];
-        const imagenesURLs = [];
-
-        for (const file of files) {
-            const fileRef = ref(storage, `capturas/${codigoPlanilla}/${file.name}`);
-            await uploadBytes(fileRef, file);
-            const url = await getDownloadURL(fileRef);
-            imagenesURLs.push(url);
-        }
-
         const nuevaPlanilla = {
             chofer: choferInput,
             ramal: ramalSeleccionado,
@@ -78,13 +63,12 @@ async function guardarPlanilla() {
             estado: 'pendiente',
             timestamp: new Date(),
             codigoPlanilla: codigoPlanilla,
-            imagenes: imagenesURLs // <- se agregan aquí
         };
 
         await addDoc(collection(db, "planillas"), nuevaPlanilla);
-        alert("✅ Planilla guardada con imágenes.");
+        alert("✅ Planilla guardada exitosamente.");
         limpiarCampos();
-        cerrarMenuCapturas(); // si querés cerrarlo automáticamente
+        abrirMenuCapturas();
 
     } catch (error) {
         console.error("Error al guardar/verificar la planilla:", error);
@@ -126,10 +110,6 @@ async function obtenerPlanillas() {
             </div>
             <div class="separador"></div>
         `;
-        let imagenesHtml = '';
-            if (planilla.imagenes && planilla.imagenes.length > 0) {
-            imagenesHtml = `<div><strong>Capturas:</strong><br>${planilla.imagenes.map(url => `<img src="${url}" style="max-width:120px; margin:4px; border-radius:6px;">`).join('')}</div>`;
-        }
     });
 }
 window.obtenerPlanillas = obtenerPlanillas;
@@ -298,7 +278,9 @@ window.actualizacion = async function actualizacion() {
         return;
     }
     const embed = {
-        title: `${titulo}`,
+        title: `# ${titulo}`,
+        title: `#
+         ${titulo}`,
         description: `${mensaje}\n\n**Cambios:**\n${cambios}\nAutor: ${autor}`,
         color: 15844367,
         footer: { text: new Date().toLocaleString() }
@@ -317,6 +299,7 @@ window.actualizacion = async function actualizacion() {
     }
 }
 function reJoin() {
+    location.reload()
     window.location.href='https://abelcraftok.github.io/GTG/'
 }
 window.reJoin = reJoin;
@@ -387,9 +370,6 @@ function renderizarHistorial(planillas) {
             </div>
             <div class="separador"></div>
         `;
-        if (planilla.imagenes && planilla.imagenes.length > 0) {
-            contenedor.innerHTML += `<div><strong>Capturas:</strong><br>${planilla.imagenes.map(url => `<img src="${url}" style="max-width:120px; margin:4px;">`).join('')}</div>`;
-        }
     });
 }
 

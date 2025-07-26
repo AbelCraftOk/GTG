@@ -1,0 +1,3 @@
+Actualizacion de: "Sistema de Planilleo - GTG"
+==============================================
+- Nuevo servicio que permite al chofer subir las capturas de las paradas.

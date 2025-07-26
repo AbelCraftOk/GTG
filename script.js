@@ -318,6 +318,7 @@ Motivo de licencia: ${motivo}
 Tiempo de licencia: ${duracion}`;
 
     const embed = {
+        title: "📄 Nueva Solicitud de Licencia",
         title: "📄 Nueva Licencia",
         description: mensaje,
         color: 15844367,
