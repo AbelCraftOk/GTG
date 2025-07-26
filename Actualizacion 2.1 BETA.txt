@@ -1,0 +1,10 @@
+﻿Actualizacion de: "Sistema de Planilleo - GTG"
+==============================================
+- Cambios en la funcion: "reJoin".
+- Arreglos al momento de crear la licencia.
+- Cambios en el selector del personal.
+- Nuevos nombres asignados a las apis.
+
+Cambios en la funcion: "reJoin" {
+    Haz que la funcion: "reJoin" ahora al ejeuctarse, se cambiara la URL actual por: "https://abelcraftok.github.io/GTG/"
+}

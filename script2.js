@@ -278,7 +278,8 @@ window.actualizacion = async function actualizacion() {
         return;
     }
     const embed = {
-        title: `# ${titulo}`,
+        title: `#
+         ${titulo}`,
         description: `${mensaje}\n\n**Cambios:**\n${cambios}\nAutor: ${autor}`,
         color: 15844367,
         footer: { text: new Date().toLocaleString() }
@@ -297,7 +298,7 @@ window.actualizacion = async function actualizacion() {
     }
 }
 function reJoin() {
-    location.reload()
+    window.location.href='https://abelcraftok.github.io/GTG/'
 }
 window.reJoin = reJoin;
 

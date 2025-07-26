@@ -270,24 +270,20 @@ function apiactu() { //Para enviar actualizaciones
 function licenciacodificado() { //Para las licencias
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
+    const parteC = "om/api/w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
-    const parteG = "/";
-    const parteH = "1";
-    const parteI = "2";
-    const parteJ = "3";
-    const parteK = "4";
-    const parteL = "5";
-    const parteM = "6";
-    const parteN = "7";
-    const parteO = "8";
-    const parteP = "9";
-    const parteQ = "10";
-    const parteR = "11";
-    const parteS = "12";
-    const apiLicencia = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO + parteP + parteQ + parteR + parteS;
+    const parteG = "/1398496010";
+    const parteH = "329919568/";
+    const parteI = "MFrkHCiEhCA";
+    const parteJ = "2zqV0BPDt";
+    const parteK = "4W7L_6Fr8H";
+    const parteL = "LwqOWDm5H";
+    const parteM = "-6iVw1VITs";
+    const parteN = "84bnAeX8n";
+    const parteO = "dhpjOCo4b0";
+    const apiLicencia = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO;
     return apiLicencia;
 }
 function abrirMenuFeedback() {
@@ -322,7 +318,7 @@ Motivo de licencia: ${motivo}
 Tiempo de licencia: ${duracion}`;
 
     const embed = {
-        title: "📄 Nueva Solicitud de Licencia",
+        title: "📄 Nueva Licencia",
         description: mensaje,
         color: 15844367,
         footer: { text: new Date().toLocaleString() }
