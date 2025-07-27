@@ -90,6 +90,7 @@
         .campo input[type="text"],
         .campo input[type="number"],
         .campo input[type="time"],
+        .campo input[type="password"],
         .campo select {
             flex: 1;
             padding: 7px 10px;
@@ -103,6 +104,7 @@
         .campo input[type="text"]:focus,
         .campo input[type="number"]:focus,
         .campo input[type="time"]:focus,
+        .campo input[type="password"]:focus,
         .campo select:focus {
             border-color: #3498db;
             outline: none;
@@ -360,6 +362,7 @@
         body.light-mode .campo input[type="text"],
         body.light-mode .campo input[type="number"],
         body.light-mode .campo input[type="time"],
+        body.light-mode .campo input[type="password"],
         body.light-mode .campo select {
             background: #fff;
             color: #333;
@@ -368,6 +371,7 @@
         body.light-mode .campo input[type="text"]:focus,
         body.light-mode .campo input[type="number"]:focus,
         body.light-mode .campo input[type="time"]:focus,
+        body.light-mode .campo input[type="password"]:focus,
         body.light-mode .campo select:focus {
             border-color: #2980b9;
         }
@@ -463,53 +467,178 @@
     </style>
 </head>
 <body>
+    <nav id="cerrarSesion" style="display: none;">
+        <button type="button" class="theme-toggle-button" onclick="cerrarSesion()">Cerrar Sesion</button>
+    </nav>
     <nav>
         <img src="./../logo.png" alt="Logo.png" class="logo" style="display: block;">
     </nav>
     <div id="login" class="contenedor" style="display: block;">
-        <h2>Bienvenido al Sistema de Planilleo</h2>
-        <div class="acciones" style="margin-top:32px;">
-            <button type="button" onclick="login()">🔐 Developer</button>
-            <button type="button" onclick="login()">🔐 Inspector</button>
-            <button type="button" onclick="abrirMenuAccionChofer()">🔓 Personal</button>
+        <h1 style="text-align:center;">Login</h1>
+        <h3 style="text-align:center;">(es OBLIGATORIO)</h3>
+        <div class="separador"></div>
+        <div class="campo">
+            <label>ID de discord:</label>
+            <input type="text" id="login-user" placeholder="ID de discord sin @">
         </div>
-    </div>
-    <div id="accion-chofer" class="menu-flotante" style="display: none;">
-        <div class="menu-contenido">
-            <h3>Menú del Personal</h3>
-            <div class="acciones">
-                <button onclick="mostrarPestania('inicio'); cerrarMenuAccionChofer();">📝 Cargar Planilla [Choferes]</button>
-                <button onclick="mostrarPestania('licencias'); cerrarMenuAccionChofer();">📄 Cargar Licencia [TTodo el Personal]</button>
-                <button onclick="abrirMenuFeedback(); cerrarMenuAccionChofer();">📢 Enviar Reporte [Cualquier usuario]</button>
-            </div>
-            <div class="acciones">
-                <button onclick="cerrarMenuAccionChofer()">Cancelar</button>
-            </div>
+        <div class="campo">
+            <label>Clave:</label>
+            <input type="password" id="login-password" placeholder="Mantenga su clave segura">
         </div>
-    </div>
-
-    <div id="inspectores" class="contenedor" style="display: none;">
-        <h2>Panel de Inspectores</h2>
-        <button type="button" class="theme-toggle-button" onclick="mostrarPestania('login')">📤</button>
+        <div class="campo">
+            <button onclick="login()">Logear</button>
+        </div>
         <div class="seccion">
-            <button type="button" class="theme-toggle-button" onclick="window.obtenerPlanillas()">Ver Planillas</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuEnviarMensaje()">Enviar Mensaje</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuHistorialPlanillas()">Ver Historial de Planillas</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuAgregarChofer()">Agregar un nuevo chofer</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuLogs()">Ver Logs de Conexión</button>
+            <p>¿No tienes una cuenta? <button onclick="mostrarPestania('register')">Crear una cuenta</button></p>
+            <p>¿Olvidaste la contraseña? <button onclick="alert('Diríjase al canal: CUENTA, ubicado en la categoría WEB y ahí presente su problema... Gracias')">Recuperar Cuenta</button></p>
         </div>
-        <div id="resumen-vueltas"></div>
+    </div>
+    <div id="register" class="contenedor" style="display: none;">
+        <h1>Registrar Cuenta</h1>
+        <div class="seccion">
+            <input type="text" id="register-user" placeholder="Usuario de la cuenta sin @">
+            <input type="password" id="register-password" placeholder="Clave">
+            <button onclick="registrarCuenta()">Registrarme</button>
+            <div class="separador"></div>
+            <p>Si tu eres de algún sector privado como, chofer de la GTG, Inspector o Developer, comunicate con el soporte.</p>
+            <button onclick="document.getElementById('menu-asistencia').style.display = 'flex';">Solicitar Asistencia</button>
+        </div>
+    </div>
+    <div id="admin" class="contenedor" style="display: none;">
+        <h2>Panel para Jefes/Admin</h2>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuActualizar()">Agregar actualización</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuProximaActualizacion()">Cargar una próxima actualización</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuEnviarMensaje()">Enviar Mensaje</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuHistorialPlanillas()">Ver Historial de Planillas</button>
+        <button type="button" class="theme-toggle-button" onclick="window.obtenerPlanillas()">Ver Planillas</button>
+        <button type="button" class="theme-toggle-button" onclick="window.open('https://console.firebase.google.com/project/planillasinspectores-53856/firestore/databases/-default-/data/~2FhistorialPlanillas~2FUCNVcoEuXV4tWK2OxLEB?view=panel-view&query=1%7CLIM%7C3%2F100&scopeType=collection&scopeName=%2FhistorialPlanillas', '_blank')">Abrir base de datos</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuLogs()">Ver Logs de Conexión</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuAgregarChofer()">Agregar un nuevo chofer</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuagregarCuenta()">Agregar una Cuenta</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenueliminarCuenta()">Eliminar una Cuenta</button>
     </div>
     <div id="developer" class="contenedor" style="display: none;">
         <h2>Panel de Developer</h2>
-        <button type="button" class="theme-toggle-button" onclick="mostrarPestania('login')">📤</button>
         <div class="seccion">
+            <h2>Funciones de Developers</h2>
             <button type="button" class="theme-toggle-button" onclick="abrirMenuActualizar()">Agregar actualización</button>
             <button type="button" class="theme-toggle-button" onclick="abrirMenuEnviarMensaje()">Enviar Mensaje</button>
             <button type="button" class="theme-toggle-button" onclick="abrirMenuHistorialPlanillas()">Ver Historial de Planillas</button>
             <button type="button" class="theme-toggle-button" onclick="window.open('https://console.firebase.google.com/project/planillasinspectores-53856/firestore/databases/-default-/data/~2FhistorialPlanillas~2FUCNVcoEuXV4tWK2OxLEB?view=panel-view&query=1%7CLIM%7C3%2F100&scopeType=collection&scopeName=%2FhistorialPlanillas', '_blank')">Abrir base de datos</button>
             <button type="button" class="theme-toggle-button" onclick="abrirMenuAgregarChofer()">Agregar un nuevo chofer</button>
             <button type="button" class="theme-toggle-button" onclick="abrirMenuLogs()">Ver Logs de Conexión</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuProximaActualizacion()">Cargar una próxima actualización</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenueliminarCuenta()">Eliminar una Cuenta</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuagregarCuenta()">Agregar una Cuenta</button>
+        </div>
+        <div class="seccion">
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuAccionChofer()">Menú del Personal</button>
+        </div>
+        <div id="resumen-vueltas"></div>
+    </div>
+    <div id="inspectores" class="contenedor" style="display: none;">
+        <h2>Panel de Inspectores</h2>
+        <div class="seccion">
+            <h2>Funciones de Inspectores</h2>
+            <button type="button" class="theme-toggle-button" onclick="window.obtenerPlanillas()">Ver Planillas</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuEnviarMensaje()">Enviar Mensaje</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuHistorialPlanillas()">Ver Historial de Planillas</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuAgregarChofer()">Agregar un nuevo chofer</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuLogs()">Ver Logs de Conexión</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenueliminarCuenta()">Eliminar una Cuenta</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirMenuagregarCuenta()">Agregar una Cuenta</button>
+        </div>
+        <div id="resumen-vueltas"></div>
+    </div>
+    <div id="personal" class="contenedor" style="display: none;">
+        <h2>Panel del Personal</h2>
+        <div class="acciones">
+            <button onclick="mostrarPestania('inicio')">📝 Cargar Planilla [Choferes]</button>
+            <button onclick="mostrarPestania('licencias')">📄 Cargar Licencia [Todo el Personal]</button>
+        </div>
+    </div>
+    <div id="accion-chofer" class="menu-flotante" style="display: none;">
+        <div class="menu-contenido">
+            <h3>Menú del Personal</h3>
+            <div class="acciones">
+                <button onclick="mostrarPestania('inicio'); cerrarMenuAccionChofer();">📝 Cargar Planilla [Para Choferes]</button>
+                <button onclick="mostrarPestania('licencias'); cerrarMenuAccionChofer();">📄 Cargar Licencia [Para todo el Personal]</button>
+            </div>
+            <div class="acciones">
+                <button onclick="cerrarMenuAccionChofer()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <div id="menu-eliminar-cuenta" class="menu-flotante" style="display:none;">
+    <div class="menu-contenido">
+        <h3>Eliminar Cuenta</h3>
+        <div class="campo">
+            <input type="text" id="usuario-eliminar" placeholder="Usuario de la cuenta sin @">
+            <input type="text" id="motivo-eliminar" placeholder="Motivo">
+        </div>
+        <div class="acciones">
+            <button onclick="eliminarCuenta()">Eliminar Cuenta</button>
+            <button onclick="document.getElementById('menu-eliminar-cuenta').style.display='none';">Cancelar</button>
+        </div>
+    </div>
+</div>
+<div id="menu-agregar-cuenta" class="menu-flotante" style="display:none;">
+    <div class="menu-contenido">
+        <h3>Agregar Cuenta</h3>
+        <div class="campo">
+            <input type="text" id="usuario-agregar" placeholder="Usuario de la cuenta sin @">
+        </div>
+        <div class="campo">
+            <input type="password" id="clave-agregar" placeholder="Clave">
+        </div>
+        <div class="campo">
+            <input type="text" id="rol-agregar" placeholder="Rol">
+        </div>
+        <div class="acciones">
+            <button onclick="agregarCuenta()">Agregar Cuenta</button>
+            <button onclick="document.getElementById('menu-agregar-cuenta').style.display='none';">Cancelar</button>
+        </div>
+    </div>
+</div>
+    <div id="menu-asistencia" class="menu-flotante" style="display:none;">
+        <div class="menu-contenido">
+            <h3>Solicitar Asistencia</h3>
+            <div class="campo">
+                <input type="text" id="asistencia-id" placeholder="Tu ID de Discord sin @">
+            </div>
+            <div class="campo">
+                <p>Tipo de Solicitud:</p>
+                <input type="text" value="Solicitud de Rango en la cuenta" disabled>
+            </div>
+            <div class="acciones">
+                <button onclick="enviarSolicitud()">Enviar Solicitud</button>
+                <button onclick="document.getElementById('menu-asistencia').style.display = 'none';">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <div id="menu-pre-actualizar" class="menu-flotante ramales" style="display:none;">
+        <div class="menu-contenido">
+            <h3>Agregar Pre-Actualización</h3>
+            <div class="campo">
+                <label for="titulo-pre-actualizacion">Titulo:</label>
+                <input type="text" id="titulo-pre-actualizacion" placeholder="Titulo de la actualización">
+            </div>
+            <div class="campo">
+                <label for="mensaje-pre-actualizacion">Mensaje:</label>
+            </div>
+            <textarea id="mensaje-pre-actualizacion" rows="4" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
+            <div class="campo">
+                <label for="cambios-pre-actualizacion">Cambios:</label>
+            </div>
+            <textarea id="cambios-pre-actualizacion" rows="4" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
+            <div class="campo">
+                <label for="autor-pre-actualizacion">Autor:</label>
+                <input type="text" id="autor-pre-actualizacion" placeholder="Autor de la actualización">
+            </div>
+            <div class="acciones" style="margin-top:10px;">
+                <button onclick="enviarPreActualizacion()">Enviar</button>
+                <button onclick="cerrarMenuActualizar()">Cancelar</button>
+            </div>
         </div>
     </div>
     <div id="menu-actualizar" class="menu-flotante ramales" style="display:none;">
@@ -562,16 +691,11 @@
                     <label for="planillas">Planillas realizadas:</label>
                     <input type="number" id="planillas" name="planillas" placeholder="##" min="0" step="1" required>
                 </div>
-                <div class="campo">
-                    <label for="imagenes-capturas">Subí tus capturas:</label>
-                    <input type="file" id="imagenes-capturas" accept="image/*" multiple>
-                </div>
             </div>
             <div class="seccion">
                 <h2>Acciones</h2>
                 <div class="acciones">
-                    <button type="button" class="discord" onclick="window.guardarPlanilla()">Enviar Planilla</button>
-                    <button type="button" onclick="abrirMenuCapturas()">Enviar Capturas</button>
+                    <button type="button" class="discord" onclick="window.guardarPlanilla">Enviar Planilla</button>
                 </div>
             </div>
         </form>
@@ -670,17 +794,10 @@
         </div>
         <div class="acciones">
             <button type="button" onclick="cargarLicencia()">📤 Cargar Licencia</button>
-            <button type="button" onclick="mostrarPestania('login')">Cancelar</button>
+            <button type="button" onclick="redirigirSegunRol()">Cancelar</button>
         </div>
     </form>
 </div>
-    <footer>
-        <div class="footer-bottom">
-            <button id="theme-toggle" class="theme-toggle-button">Cambiar Modo</button>
-            <button id="rejoin-btn" class="theme-toggle-button" onclick="window.reJoin()">Re-Join</button>
-        </div>
-        <p>© 2025 General Tomas Guido S.A.C.I.F</p>
-    </footer>
     <div id="menu-capturas" class="menu-flotante" style="display:none;">
         <div class="menu-contenido">
             <h2 class="texto-rojo">LEER ATENTAMENTE</h2>
@@ -689,6 +806,16 @@
             <p>Tambien recuerda tener el numero de planilla correcto, por que luego lo vas a necesitar.</p>
             <button type="button" class="theme-toggle-button" onclick="window.location.href='./imagenes.html'">Enviar Capturas ahora</button>
             <button type="button" class="theme-toggle-button" onclick="cerrarMenuCapturas()">Enviarlas mas tarde</button>
+        </div>
+    </div>
+    <div id="menu-anun-feedback" class="menu-flotante" style="display:none;">
+        <div class="menu-contenido">
+            <h2>Recuerda que:</h2>
+            <p style="color: red;">Si deseas hacer una peticion de rango, este no es el lugar correcto...</p>
+            <p>Haz clic en el boton "Peticion de Rango" para solicitar un rango especial.</p>
+            <p>Haz clic en el boton "Ir al Feedback" para enviar un reporte.</p>
+            <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-asistencia').style.display = 'flex'; document.getElementById('menu-anun-feedback').style.display = 'none';">Peticion de Rango</button>
+            <button type="button" class="theme-toggle-button" onclick="abrirFeedback()">Ir al Feedback</button>
         </div>
     </div>
     <div id="menu-feedback" class="menu-flotante" style="display:none;">
@@ -924,6 +1051,13 @@
             </div>
         </div>
     </div>
+    <footer>
+        <div class="footer-bottom">
+            <button id="theme-toggle" class="theme-toggle-button">Cambiar Modo</button>
+            <button id="rejoin-btn" class="theme-toggle-button" onclick="window.reJoin()">Re-Join</button>
+        </div>
+        <p>© 2025 General Tomas Guido S.A.C.I.F</p>
+    </footer>
     <button onclick="abrirMenuFeedback()" style="
   position: fixed;
   bottom: 20px;

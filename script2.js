@@ -6,7 +6,9 @@ import {
     getDocs,
     deleteDoc,
     doc,
-    updateDoc
+    updateDoc,
+    query,
+    where
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 import { setDoc, doc as firestoreDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
@@ -279,8 +281,6 @@ window.actualizacion = async function actualizacion() {
     }
     const embed = {
         title: `# ${titulo}`,
-        title: `#
-         ${titulo}`,
         description: `${mensaje}\n\n**Cambios:**\n${cambios}\nAutor: ${autor}`,
         color: 15844367,
         footer: { text: new Date().toLocaleString() }
@@ -462,7 +462,183 @@ window.abrirMenuLogs = async function abrirMenuLogs() {
         `;
     });
 }
-
 window.cerrarMenuLogs = function cerrarMenuLogs() {
     document.getElementById('menu-logs').style.display = 'none';
+}
+window.registrarCuenta = async function () {
+    const usuario = document.getElementById('register-user').value.trim();
+    const clave = document.getElementById('register-password').value.trim();
+    if (!usuario || !clave) {
+        alert("Completa todos los campos.");
+        return;
+    }
+    const datosCuenta = {
+        usuario,
+        clave,
+        rol: "usuario"
+    };
+    const datosCuentaExtra = {
+        usuario,
+        clave,
+        viaje: "0",
+        viajes: "0"
+    };
+    try {
+        await addDoc(collection(db, "cuentas"), datosCuenta);
+        await addDoc(collection(db, "cuenta"), datosCuentaExtra);
+        alert("Cuenta registrada exitosamente.");
+        mostrarPestania('login');
+    } catch (err) {
+        console.error("Error al registrar la cuenta:", err);
+        alert("Error al registrar la cuenta.");
+    }
+};
+window.login = async function () {
+    const usuarioInput = document.getElementById('login-user').value.trim();
+    const claveInput = document.getElementById('login-password').value.trim();
+    const q = query(collection(db, "cuentas"), where("usuario", "==", usuarioInput));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+        alert("El usuario no coincide con las cuentas creadas.");
+        return;
+    }
+    let acceso = false;
+    snapshot.forEach((docu) => {
+        const data = docu.data();
+        if (data.clave === claveInput) {
+            acceso = true;
+            const rol = data.rol;
+
+            window.user = data.usuario;
+            localStorage.setItem("rolUsuario", rol);
+
+            if (rol === "developer") {
+                mostrarPestania('developer');
+                document.getElementById('cerrarSesion').style.display = 'block';
+            }
+            else if (rol === "inspector") {
+                mostrarPestania('inspectores');
+                document.getElementById('cerrarSesion').style.display = 'block';
+            }
+            else if (rol === "personal") {
+                mostrarPestania('personal');
+                document.getElementById('cerrarSesion').style.display = 'block';
+            }
+            else if (rol === "admin") {
+                mostrarPestania('admin');
+                document.getElementById('cerrarSesion').style.display = 'block';
+            }
+            else if (rol === "jefe") {
+                mostrarPestania('admin');
+                document.getElementById('cerrarSesion').style.display = 'block';
+            }
+            else if (rol === "usuario") {
+                mostrarPestania('usuario');
+                document.getElementById('cerrarSesion').style.display = 'block';
+            }
+        } else {
+            alert("La clave es incorrecta.");
+        }
+    });
+    if (!acceso) return;
+};
+window.redirigirSegunRol = function () {
+    const rol = localStorage.getItem("rolUsuario");
+
+    if (!rol) {
+        alert("No se encontró información de rol. Por favor, inicie sesión.");
+        return;
+    }
+    if (rol === "developer") mostrarPestania('developer');
+    else if (rol === "inspector") mostrarPestania('inspectores');
+    else if (rol === "personal") mostrarPestania('personal');
+    else if (rol === "admin") mostrarPestania('admin');
+    else if (rol === "jefe") mostrarPestania('admin');
+    else if (rol === "usuario") mostrarPestania('usuario');
+    else alert("Rol desconocido. Verifique su cuenta.");
+};
+window.enviarSolicitud = async function () {
+    const id = document.getElementById('asistencia-id').value.trim();
+    if (!id) return alert("Completa tu ID de Discord.");
+
+    const embed = {
+        title: "Nueva Solicitud de Asistencia",
+        description: `Usuario: ${id}\nTipo de Solicitud: Solicitud de Rango en la cuenta`,
+        color: 15844367,
+        footer: { text: new Date().toLocaleString() }
+    };
+
+    try {
+        await fetch(solicitudCifrada(), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+        alert("Solicitud enviada.");
+        document.getElementById('menu-asistencia').style.display = 'none';
+    } catch (err) {
+        alert("Error al enviar la solicitud.");
+        console.error(err);
+    }
+};
+window.enviarPreActualizacion = async function () {
+const titulo = document.getElementById('titulo-pre-actualizacion').value.trim();
+    const mensaje = document.getElementById('mensaje-pre-actualizacion').value.trim();
+    const cambios = document.getElementById('cambios-pre-actualizacion').value.trim();
+    const autor = document.getElementById('autor-pre-actualizacion').value.trim();
+    if (!titulo || !mensaje || !cambios || !autor) {
+        alert('Por favor completa todos los campos.');
+        return;
+    }
+    const embed = {
+        title: `# ${titulo}`,
+        description: `${mensaje}\n\n**Cambios:**\n${cambios}\nAutor: ${autor}`,
+        color: 15844367,
+        footer: { text: new Date().toLocaleString() }
+    };
+    try {
+        await fetch(apiactu(), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+        alert('Actualización enviada correctamente.');
+        cerrarMenuActualizar();
+    } catch (error) {
+        alert('Error al enviar la actualización.');
+        console.error(error);
+    }
+};
+async function agregarCuenta() {
+    const usuario = document.getElementById('usuario-agregar').value.trim();
+    const clave = document.getElementById('clave-agregar').value.trim();
+    const rol = document.getElementById('rol-agregar').value.trim();
+
+    if (!usuario || !clave || !rol) {
+        alert("Por favor completa todos los campos.");
+        return;
+    }
+
+    const cuentaDatos = {
+        usuario,
+        clave,
+        rol
+    };
+
+    const cuentaInfo = {
+        usuario,
+        clave,
+        viaje: "0",
+        viajes: "0"
+    };
+
+    try {
+        await firebase.firestore().collection("cuentas").add(cuentaDatos);
+        await firebase.firestore().collection("cuenta").add(cuentaInfo);
+        alert("Cuenta agregada correctamente.");
+        document.getElementById('menu-agregar-cuenta').style.display = 'none';
+    } catch (error) {
+        console.error("Error al agregar la cuenta:", error);
+        alert("Ocurrió un error al agregar la cuenta.");
+    }
 }

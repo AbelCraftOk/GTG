@@ -64,7 +64,7 @@ function cerrarMenuMensajesChofer() {
     document.getElementById('menu-mensajes-chofer').style.display = 'none';
 }
 function mostrarPestania(id) {
-    const pestañas = ['login', 'inicio', 'inspectores', 'developer', 'licencias'];
+    const pestañas = ['login', 'register', 'inicio', 'inspectores', 'developer', 'licencias', 'personal', 'admin'];
     pestañas.forEach(pid => {
         const el = document.getElementById(pid);
         if (el) el.style.display = (pid === id) ? 'block' : 'none';
@@ -161,16 +161,6 @@ function abrirMenuVueltasCargadas() {
 // Función para cerrar el menú de vueltas cargadas
 function cerrarMenuVueltasCargadas() {
     document.getElementById('menu-vueltas-cargadas').style.display = 'none';
-}
-window.login = function login() {
-    const clave = prompt("Ingrese la clave de acceso:");
-    if (clave === "InspectoresGTG" || clave === "InspectoresGTG ") {
-        mostrarPestania('inspectores');
-    } else if (clave === "DeveloperGTG" || clave === "DeveloperGTG ") {
-        mostrarPestania('developer');
-    } else if (clave !== null) {
-        alert("Clave incorrecta.");
-    }
 }
 function generarCodigoUnico() {
     // Crea un código aleatorio estilo GTG-2025-XY123
@@ -286,11 +276,34 @@ function licenciacodificado() { //Para las licencias
     const apiLicencia = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO;
     return apiLicencia;
 }
+function solicitudCifrada() { //Para las solicitudes de rango
+    const parteA = "http";
+    const parteB = "s://discord.c";
+    const parteC = "om/api/w";
+    const parteD = "eb";
+    const parteE = "ho";
+    const parteF = "oks";
+    const parteG = "/139888966";
+    const parteH = "6609938549/1";
+    const parteI = "gLOsGX8u_S";
+    const parteJ = "Qhpgg8kz3MmK";
+    const parteK = "OAq2lvOgmb";
+    const parteL = "DeT4zF05YV9";
+    const parteM = "AXCjil_WK";
+    const parteN = "vvWSMp9fnNC";
+    const parteO = "r7Up";
+    const solicitudCifrada = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO;
+    return solicitudCifrada;
+}
 function abrirMenuFeedback() {
-    document.getElementById('menu-feedback').style.display = 'flex';
+    document.getElementById('menu-anun-feedback').style.display = 'flex';
 }
 function cerrarMenuFeedback() {
     document.getElementById('menu-feedback').style.display = 'none';
+}
+function abrirFeedback() {
+    document.getElementById('menu-anun-feedback').style.display = 'none';
+    document.getElementById('menu-feedback').style.display = 'flex';
 }
 function abrirMenuAccionChofer() {
     document.getElementById('accion-chofer').style.display = 'flex';
@@ -318,7 +331,6 @@ Motivo de licencia: ${motivo}
 Tiempo de licencia: ${duracion}`;
 
     const embed = {
-        title: "📄 Nueva Solicitud de Licencia",
         title: "📄 Nueva Licencia",
         description: mensaje,
         color: 15844367,
@@ -338,4 +350,20 @@ Tiempo de licencia: ${duracion}`;
         console.error("Error al enviar la licencia:", err);
         alert("Error al enviar la solicitud de licencia.");
     });
+}
+function abrirMenuProximaActualizacion() {
+    document.getElementById('menu-pre-actualizar').style.display = 'flex';
+}
+function cerrarMenuProximaActualizacion() {
+    document.getElementById('menu-pre-actualizar').style.display = 'none';
+}
+function abrirMenueliminarCuenta() {
+    document.getElementById('menu-eliminar-cuenta').style.display = 'flex';
+}
+function abrirMenuagregarCuenta() {
+    document.getElementById('menu-agregar-cuenta').style.display = 'flex';
+}
+function cerrarSesion() {
+    document.getElementById('cerrarSesion').style.display = 'none';
+    mostrarPestania('login');
 }
