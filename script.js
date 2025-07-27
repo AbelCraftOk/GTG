@@ -64,7 +64,7 @@ function cerrarMenuMensajesChofer() {
     document.getElementById('menu-mensajes-chofer').style.display = 'none';
 }
 function mostrarPestania(id) {
-    const pestañas = ['login', 'register', 'inicio', 'inspectores', 'developer', 'licencias', 'personal', 'admin'];
+    const pestañas = ['login', 'register', 'inicio', 'inspectores', 'developer', 'licencias', 'personal', 'admin', 'usuario'];
     pestañas.forEach(pid => {
         const el = document.getElementById(pid);
         if (el) el.style.display = (pid === id) ? 'block' : 'none';

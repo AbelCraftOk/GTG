@@ -1,0 +1,9 @@
+Actualizacion de: "Sistema de Planilleo - GTG"
+==============================================
+Titulo: "Arreglos en la version anterior - V: 2.2"
+Mensaje:"
+Arreglamos pequeños detalles de la version 2.1"
+Cambios:
+- Problemas en el estilo de los INPUTs de la pestaña "registrar".
+- Agregamos la pestaña faltante: "usuario".
+- Arreglamos las funciones: "actualizacion()" y "enviarPreActualizacion()".

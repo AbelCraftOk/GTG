@@ -280,7 +280,8 @@ window.actualizacion = async function actualizacion() {
         return;
     }
     const embed = {
-        title: `# ${titulo}`,
+        title: `Nueva Actualizacion:`,
+        title: `${titulo}`,
         description: `${mensaje}\n\n**Cambios:**\n${cambios}\nAutor: ${autor}`,
         color: 15844367,
         footer: { text: new Date().toLocaleString() }
@@ -591,7 +592,8 @@ const titulo = document.getElementById('titulo-pre-actualizacion').value.trim();
         return;
     }
     const embed = {
-        title: `# ${titulo}`,
+        title: `SPOILER de la proxima Actualizacion:`,
+        title: `${titulo}`,
         description: `${mensaje}\n\n**Cambios:**\n${cambios}\nAutor: ${autor}`,
         color: 15844367,
         footer: { text: new Date().toLocaleString() }
