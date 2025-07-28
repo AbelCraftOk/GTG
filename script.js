@@ -64,7 +64,7 @@ function cerrarMenuMensajesChofer() {
     document.getElementById('menu-mensajes-chofer').style.display = 'none';
 }
 function mostrarPestania(id) {
-    const pestañas = ['login', 'register', 'inicio', 'inspectores', 'developer', 'licencias', 'personal', 'admin', 'usuario'];
+    const pestañas = ['login', 'register', 'admin', 'developer', 'inspectores', 'inicio', 'personal', 'licencias', 'usuario', 'comprar-pasajes', 'info-pasajes'];
     pestañas.forEach(pid => {
         const el = document.getElementById(pid);
         if (el) el.style.display = (pid === id) ? 'block' : 'none';
@@ -173,7 +173,7 @@ function generarCodigoUnico() {
 function enlaceCodificado() { //Para las planillas.
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
+    const parteC = "om/w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
@@ -193,7 +193,7 @@ function enlaceCodificado() { //Para las planillas.
 function codificadoEnlace() { //Para el: Feedback
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
+    const parteC = "om/w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
@@ -214,7 +214,7 @@ function codificadoEnlace() { //Para el: Feedback
 function codificadoDeMensajes() { //Para la que: Envia Mensajes
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
+    const parteC = "om/w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
@@ -317,8 +317,9 @@ function cargarLicencia() {
     const apodoRoblox = document.getElementById('licencia-apodo').value.trim();
     const motivo = document.getElementById('licencia-motivo').value;
     const duracion = document.getElementById('licencia-tiempo').value;
+    const sector = document.getElementById('licencia-sector').value;
 
-    if (!idDiscord || !idRoblox || !apodoRoblox || !motivo || !duracion || motivo.startsWith("Seleccione") || duracion.startsWith("Seleccione")) {
+    if (!idDiscord || !idRoblox || !apodoRoblox || !motivo || !duracion || !sector || motivo.startsWith("Seleccione") || duracion.startsWith("Seleccione") || sector === "Seleccione su Sector") {
         alert("Por favor, complete todos los campos correctamente.");
         return;
     }
@@ -327,6 +328,7 @@ function cargarLicencia() {
 `ID de Discord: ${idDiscord}
 ID de Roblox: ${idRoblox}
 Apodo de Roblox: ${apodoRoblox}
+Sector de la Empresa donde sacara licencia: ${sector}
 Motivo de licencia: ${motivo}
 Tiempo de licencia: ${duracion}`;
 
@@ -366,4 +368,25 @@ function abrirMenuagregarCuenta() {
 function cerrarSesion() {
     document.getElementById('cerrarSesion').style.display = 'none';
     mostrarPestania('login');
+}
+function acbotonPestanias() {
+    document.getElementById('activar-boton-pestanias1').style.display = 'none';
+    document.getElementById('activar-boton-pestanias2').style.display = 'none';
+    document.getElementById('activar-boton-pestanias3').style.display = 'none';
+    document.getElementById('desactivar-boton-pestanias1').style.display = 'block';
+    document.getElementById('desactivar-boton-pestanias2').style.display = 'block';
+    document.getElementById('desactivar-boton-pestanias3').style.display = 'block';
+    document.getElementById('boton-pestanias').style.display = 'flex';
+}
+function desacbotonPestanias() {
+    document.getElementById('desactivar-boton-pestanias1').style.display = 'none';
+    document.getElementById('desactivar-boton-pestanias2').style.display = 'none';
+    document.getElementById('desactivar-boton-pestanias3').style.display = 'none';
+    document.getElementById('activar-boton-pestanias1').style.display = 'block';
+    document.getElementById('activar-boton-pestanias2').style.display = 'block';
+    document.getElementById('activar-boton-pestanias3').style.display = 'block';
+    document.getElementById('boton-pestanias').style.display = 'none';
+}
+function botonPestanias() {
+    document.getElementById('menu-pestanias').style.display = 'flex';
 }
