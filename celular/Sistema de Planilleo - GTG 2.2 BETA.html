@@ -635,6 +635,7 @@
     </nav>
     <div id="login" class="contenedor" style="display: block;">
         <h1 style="text-align:center;">Login</h1>
+        <h3 style="text-align:center;">(es OBLIGATORIO)</h3>
         <div class="separador"></div>
         <div class="campo">
             <label>ID de discord:</label>
@@ -671,25 +672,17 @@
         </div>
     </div>
     <div id="admin" class="contenedor" style="display: none;">
-        <div class="seccion">
-            <h2>Panel para Jefes/Admin</h2>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuActualizar()">Agregar actualización</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuProximaActualizacion()">Cargar una próxima actualización</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuEnviarMensaje()">Enviar Mensaje</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuHistorialPlanillas()">Ver Historial de Planillas</button>
-            <button type="button" class="theme-toggle-button" onclick="window.obtenerPlanillas()">Ver Planillas</button>
-            <button type="button" class="theme-toggle-button" onclick="window.open('https://console.firebase.google.com/project/planillasinspectores-53856/firestore/databases/-default-/data/~2FhistorialPlanillas~2FUCNVcoEuXV4tWK2OxLEB?view=panel-view&query=1%7CLIM%7C3%2F100&scopeType=collection&scopeName=%2FhistorialPlanillas', '_blank')">Abrir base de datos</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuLogs()">Ver Logs de Conexión</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuAgregarChofer()">Agregar un nuevo chofer</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuagregarCuenta()">Agregar una Cuenta</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenueliminarCuenta()">Eliminar una Cuenta</button>
-        </div>
-        <div class="seccion">
-            <h2>Acceso Personal de la Empresa</h2>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuAccionChofer()">Menú del Personal</button>
-            <button type="button" id="activar-boton-pestanias1" class="theme-toggle-button" style="display: block;" onclick="acbotonPestanias()">Activar boton de pestañas</button>
-            <button type="button" id="desactivar-boton-pestanias1" class="theme-toggle-button" style="display: none;" onclick="desacbotonPestanias()">Descativar boton de pestañas</button>
-        </div>
+        <h2>Panel para Jefes/Admin</h2>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuActualizar()">Agregar actualización</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuProximaActualizacion()">Cargar una próxima actualización</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuEnviarMensaje()">Enviar Mensaje</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuHistorialPlanillas()">Ver Historial de Planillas</button>
+        <button type="button" class="theme-toggle-button" onclick="window.obtenerPlanillas()">Ver Planillas</button>
+        <button type="button" class="theme-toggle-button" onclick="window.open('https://console.firebase.google.com/project/planillasinspectores-53856/firestore/databases/-default-/data/~2FhistorialPlanillas~2FUCNVcoEuXV4tWK2OxLEB?view=panel-view&query=1%7CLIM%7C3%2F100&scopeType=collection&scopeName=%2FhistorialPlanillas', '_blank')">Abrir base de datos</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuLogs()">Ver Logs de Conexión</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuAgregarChofer()">Agregar un nuevo chofer</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenuagregarCuenta()">Agregar una Cuenta</button>
+        <button type="button" class="theme-toggle-button" onclick="abrirMenueliminarCuenta()">Eliminar una Cuenta</button>
     </div>
     <div id="developer" class="contenedor" style="display: none;">
         <h2>Panel de Developer</h2>
@@ -706,10 +699,7 @@
             <button type="button" class="theme-toggle-button" onclick="abrirMenuagregarCuenta()">Agregar una Cuenta</button>
         </div>
         <div class="seccion">
-            <h2>Acceso Personal de la Empresa</h2>
             <button type="button" class="theme-toggle-button" onclick="abrirMenuAccionChofer()">Menú del Personal</button>
-            <button type="button" id="activar-boton-pestanias2" class="theme-toggle-button" style="display: block;" onclick="acbotonPestanias()">Activar boton de pestañas</button>
-            <button type="button" id="desactivar-boton-pestanias2" class="theme-toggle-button" style="display: none;" onclick="desacbotonPestanias()">Descativar boton de pestañas</button>
         </div>
         <div id="resumen-vueltas"></div>
     </div>
@@ -724,12 +714,6 @@
             <button type="button" class="theme-toggle-button" onclick="abrirMenuLogs()">Ver Logs de Conexión</button>
             <button type="button" class="theme-toggle-button" onclick="abrirMenueliminarCuenta()">Eliminar una Cuenta</button>
             <button type="button" class="theme-toggle-button" onclick="abrirMenuagregarCuenta()">Agregar una Cuenta</button>
-        </div>
-        <div class="seccion">
-            <h2>Acceso Personal de la Empresa</h2>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuAccionChofer()">Menú del Personal</button>
-            <button type="button" id="activar-boton-pestanias3" class="theme-toggle-button" style="display: block;" onclick="acbotonPestanias()">Activar boton de pestañas</button>
-            <button type="button" id="desactivar-boton-pestanias3" class="theme-toggle-button" style="display: none;" onclick="desacbotonPestanias()">Descativar boton de pestañas</button>
         </div>
         <div id="resumen-vueltas"></div>
     </div>
@@ -746,56 +730,15 @@
             <div class="acciones">
                 <button onclick="mostrarPestania('inicio'); cerrarMenuAccionChofer();">📝 Cargar Planilla [Para Choferes]</button>
                 <button onclick="mostrarPestania('licencias'); cerrarMenuAccionChofer();">📄 Cargar Licencia [Para todo el Personal]</button>
-                <div class="separador"></div>
             </div>
             <div class="acciones">
                 <button onclick="cerrarMenuAccionChofer()">Cancelar</button>
             </div>
         </div>
     </div>
-    <div id="menu-pestanias" class="menu-flotante" style="display: none;">
-        <div class="menu-contenido">
-            <h3>Pestañas:</h3>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('login'); document.getElementById('menu-pestanias').style.display = 'none';">"login"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('register'); document.getElementById('menu-pestanias').style.display = 'none';">"register"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('admin'); document.getElementById('menu-pestanias').style.display = 'none';">"admin"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('developer'); document.getElementById('menu-pestanias').style.display = 'none';">"developer"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('inspectores'); document.getElementById('menu-pestanias').style.display = 'none';">"inspectores"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('inicio'); document.getElementById('menu-pestanias').style.display = 'none';">"inicio"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('personal'); document.getElementById('menu-pestanias').style.display = 'none';">"personal"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('licencias'); document.getElementById('menu-pestanias').style.display = 'none';">"licencias"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('usuario'); document.getElementById('menu-pestanias').style.display = 'none';">"usuario"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('comprar-pasajes'); document.getElementById('menu-pestanias').style.display = 'none';">"comprar-pasajes"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('info-pasajes'); document.getElementById('menu-pestanias').style.display = 'none';">"info-pasajes"</button>
-            <div class="separador"></div>
-            <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-pestanias').style.display = 'none';">Cerrar Menu</button>
-        </div>
-    </div>
     <div id="usuario" class="contenedor" style="display: none;">
-      	<h1 style="text-align: center;">Sistema del usuario</h1>
-      	<div class="seccion">
-        	<h2>Comprar pasajes:</h2>
-        	<p>Actualmente hay <span id="contadorPasajes"></span>.</p>
-        	<button onclick="mostrarPestania('comprar-pasajes')">Ir a comprar un pasaje</button>
-      	</div>
-      	<div class="seccion">
-        	<h2>Informacion sobre tus pasajes:</h2>
-        	<button onclick="mostrarPestania('info-pasajes')">Ir a info de pasajes</button>
-      	</div>
-    </div>
-	<div id="comprar-pasajes" class="contenedor" style="display: none;">
-      	<h1 style="text-align: center;">Comprar pasajes</h1>
-      	<div class="seccion">
-        	<h2>Pasajes disponibles</h2>
-        	<div id="pasajesDisponibles"></div>
-      	</div>
-	</div>
-    <div id="info-pasajes" class="contenedor" style="display: none;">
-      	<h1 style="text-align: center;">Informacion sobre tus pasajes</h1>
-      	<div class="seccion">
-        	<h2>Pasajes por Viajar:</h2>
-        	<div id="infoPasajes"></div>
-      	</div>
+        <h2 style="color: red;">Los usuarios todavia no pueden usar la WEB:</h2>
+        <p>Cuando en la empresa General Tomas Guido (quien es dueña de esta web), agregue los colectivos y recorridos larga distancia. Recien ahi los usuarios van a poder usar la app para comprar los viajes.</p>
     </div>
     <div id="menu-eliminar-cuenta" class="menu-flotante" style="display:none;">
     <div class="menu-contenido">
@@ -923,7 +866,7 @@
             <div class="seccion">
                 <h2>Acciones</h2>
                 <div class="acciones">
-                    <button type="button" class="discord" onclick="guardarPlanilla()">Enviar Planilla</button>
+                    <button type="button" class="discord" onclick="window.guardarPlanilla">Enviar Planilla</button>
                 </div>
             </div>
         </form>
@@ -993,20 +936,6 @@
         </div>
         <div class="seccion">
             <div class="campo">
-                <label for="licencia-sector">Sector:</label>
-                <select id="licencia-sector">
-                    <option value="Seleccione su Sector">Seleccione su Sector</option>
-                    <option value="Jefe/Admin">Jefe/Admin</option>
-                    <option value="Moderador">Moderador</option>
-                    <option value="Inspector">Inspector</option>
-                    <option value="Developer">Developer</option>
-                    <option value="Chofer">Chofer</option>
-                    <option value="Auxiliar">Auxiliar</option>
-                </select>
-            </div>
-        </div>
-        <div class="seccion">
-            <div class="campo">
                 <label for="licencia-motivo">Motivo:</label>
                 <select id="licencia-motivo">
                     <option disabled selected>Seleccione un motivo</option>
@@ -1058,7 +987,6 @@
             <p>Haz clic en el boton "Ir al Feedback" para enviar un reporte.</p>
             <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-asistencia').style.display = 'flex'; document.getElementById('menu-anun-feedback').style.display = 'none';">Peticion de Rango</button>
             <button type="button" class="theme-toggle-button" onclick="abrirFeedback()">Ir al Feedback</button>
-            <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-anun-feedback').style.display = 'none';">Cerrar este menu</button>
         </div>
     </div>
     <div id="menu-feedback" class="menu-flotante" style="display:none;">
@@ -1301,36 +1229,20 @@
         </div>
         <p>© 2025 General Tomas Guido S.A.C.I.F</p>
     </footer>
-<button onclick="abrirMenuFeedback()" style="
-    display: flex;
-    position: fixed;
-    bottom: 5px;
-    right: 20px;
-    z-index: 999;
-    background-color: #7289da;
-    border-radius: 50%;
-    padding: 14px 18px;
-    font-size: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    color: white;
-    border: none;
-    cursor: pointer;
+    <button onclick="abrirMenuFeedback()" style="
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 999;
+  background-color: #7289da;
+  border-radius: 50%;
+  padding: 14px 18px;
+  font-size: 20px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  color: white;
+  border: none;
+  cursor: pointer;
 ">💬</button>
-<button onclick="botonPestanias()" id="boton-pestanias" style="
-    display: none;
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    z-index: 999;
-    background-color: #ffd166;
-    border-radius: 50%;
-    padding: 14px 18px;
-    font-size: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    color: white;
-    border: none;
-    cursor: pointer;
-">🚪</button>
     <script type="module" src="./../script2.js"></script>
     <script src="./../script.js"></script>
     <script>
