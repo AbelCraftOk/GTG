@@ -390,3 +390,18 @@ function desacbotonPestanias() {
 function botonPestanias() {
     document.getElementById('menu-pestanias').style.display = 'flex';
 }
+function rotateText() {
+    const textArray = [
+        "Iniciando Sesión",
+        "Iniciando Sesión.",
+        "Iniciando Sesión..",
+        "Iniciando Sesión...",
+    ];
+    let index = 0;
+    const textElement = document.getElementById("logueando");
+    setInterval(() => {
+        textElement.textContent = textArray[index];
+        index = (index + 1) % textArray.length;
+    }, 1000);
+}
+rotateText();

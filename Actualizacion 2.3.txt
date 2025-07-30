@@ -1,0 +1,14 @@
+Titulo: "Unas funciones nuevas y Varios arreglos - V: 2.3"
+Mensaje: "
+Agregamos funciones para que el usuario este mejor informado en momentos de espera y corregimos errores, uno de ellos ubicado en la pestaña "usuario" y las otras que van junto a esta.
+"
+Cambios:"
+- Corregimos errores de la pestaña: "usuario":
+  - La función countpasajesDisponibles() se ha renombrado a countPasajesDisponibles() para seguir las convenciones de nomenclatura.
+  - La función pasajesDisponibles() se ha renombrado a mostrarPasajesDisponibles() para reflejar mejor su propósito.
+  - La función pasajesSinViajar() se ha renombrado a mostrarPasajesSinViajar() para reflejar mejor su propósito.
+  - Se han eliminado los títulos de nivel 1 y 2 de las funciones, ya que no se deben incluir en las respuestas.
+  - Se han mantenido los comentarios de descripción de cada función.
+- Nueva funcion para que el usuario sepa que se esta logueando.
+
+"
