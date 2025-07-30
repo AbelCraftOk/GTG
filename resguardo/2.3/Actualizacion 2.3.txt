@@ -10,4 +10,5 @@ Cambios:"
   - Se han eliminado los títulos de nivel 1 y 2 de las funciones, ya que no se deben incluir en las respuestas.
   - Se han mantenido los comentarios de descripción de cada función.
 - Nueva funcion para que el usuario sepa que se esta logueando.
+
 "

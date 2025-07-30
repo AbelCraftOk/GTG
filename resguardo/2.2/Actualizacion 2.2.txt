@@ -1,0 +1,16 @@
+Actualizacion de: "Pestaña y Funciones para el usuario"
+==============================================
+Titulo: "Pestaña y Funciones para el usuario - V: 2.2"
+Mensaje:"
+Agregamos pestañas y funciones para que los usuarios puedan comprar pasajes, consultar cuantos pasajes tienen, etc.
+Esta pestaña, claramente es una BETA por que todavia no se le asignaron precios (la mayoria gratis), ni tampoco se han agregado los colectivos y recorridos larga distancia en la empresa General Tomas Guido.
+"
+Cambios:
+- Nuevas pestañas.
+- Nuevas funciones JS.
+- Ajuste en el menu del Pesonal.
+- Nueva categoria a responder al crear una licencia (Seleccionar de que sector de la empresa sos).
+- Arreglos en los Scripts de ls archivos.
+
+FALTA AGREGAR!!!!!!!!!!!!!!!!!!!!!!!!
+- 2 Botones de admin para: los inspectores y admins 

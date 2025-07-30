@@ -4,15 +4,13 @@ import {
     collection,
     addDoc,
     getDocs,
-    getDoc,
     deleteDoc,
     doc,
     updateDoc,
     query,
-    where,
-    setDoc,
-    doc as firestoreDoc
+    where
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { setDoc, doc as firestoreDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyAMIMRcSoBD4pmGJStXNP7HUyQ92LGx25Y",
@@ -78,77 +76,61 @@ async function guardarPlanilla() {
         console.error("Error al guardar/verificar la planilla:", error);
         alert("❌ Ocurrió un error al guardar la planilla.");
     }
-    await nuevaPlanilla();
 }
 window.guardarPlanilla = guardarPlanilla;
 
-// ✅ Definir la función como global (si la llamás desde HTML o consola)
-window.obtenerPlanillas = async function obtenerPlanillas() {
-    const contenedor1 = document.getElementById('resumen-vueltas1');
-    const contenedor2 = document.getElementById('resumen-vueltas2');
-    contenedor1.innerHTML = '';
-    contenedor2.innerHTML = '';
-
-    try {
-        const querySnapshot = await getDocs(collection(db, "planillas"));
-        let planillas = [];
-        querySnapshot.forEach((docu) => {
-            planillas.push({ id: docu.id, ...docu.data() });
-        });
-
-        if (planillas.length === 0) {
-            const msg = '<div class="texto-rojo">No se han encontrado planillas recientes.</div>';
-            contenedor1.innerHTML = msg;
-            contenedor2.innerHTML = msg;
-            return;
-        }
-
-        planillas.forEach(planilla => {
-            let vueltasHtml = '';
-            if (Array.isArray(planilla.vueltas)) {
-                planilla.vueltas.forEach((v, idx) => {
-                    vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
-                });
-            }
-
-            const planillaHTML = `
-                <div class="burbuja">
-                    <strong>Chofer:</strong> ${planilla.chofer}<br>
-                    <strong>Ramal:</strong> ${planilla.ramal}<br>
-                    <strong>Interno:</strong> ${planilla.interno}<br>
-                    <strong>Planillas Realizadas:</strong> ${planilla.planillasCount}<br>
-                    ${vueltasHtml}
-                    <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla} | 
-                    ${planilla.timestamp instanceof Date
-                    ? planilla.timestamp.toLocaleString()
-                    : (planilla.timestamp?.toDate
-                        ? planilla.timestamp.toDate().toLocaleString()
-                        : planilla.timestamp)}<br>
-                    <strong>Estado:</strong> ${planilla.estado}<br>
-                    <button onclick="aceptarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #8bc34a; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">ACEPTAR</button>
-                    <button onclick="denegarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #c0392b; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">RECHAZAR</button>
-                </div>
-                <div class="separador"></div>
-            `;
-
-            contenedor1.innerHTML += planillaHTML;
-            contenedor2.innerHTML += planillaHTML;
-        });
-    } catch (error) {
-        console.error("Error al obtener planillas:", error);
+async function obtenerPlanillas() {
+    const contenedor = document.getElementById('resumen-vueltas');
+    contenedor.innerHTML = '';
+    const querySnapshot = await getDocs(collection(db, "planillas"));
+    let planillas = [];
+    querySnapshot.forEach((docu) => {
+        planillas.push({ id: docu.id, ...docu.data() });
+    });
+    if (planillas.length === 0) {
+        contenedor.innerHTML = '<div class="texto-rojo">No se han encontrado planillas recientes.</div>';
+        return;
     }
-};
+    planillas.forEach(planilla => {
+        let vueltasHtml = '';
+        if (Array.isArray(planilla.vueltas)) {
+            planilla.vueltas.forEach((v, idx) => {
+                vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
+            });
+        }
+        contenedor.innerHTML += `
+            <div class="burbuja">
+                <strong>Chofer:</strong> ${planilla.chofer}<br>
+                <strong>Ramal:</strong> ${planilla.ramal}<br>
+                <strong>Interno:</strong> ${planilla.interno}<br>
+                <strong>Planillas Realizadas:</strong> ${planilla.planillasCount}<br>
+                ${vueltasHtml}
+                <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla} | ${planilla.timestamp instanceof Date ? planilla.timestamp.toLocaleString() : (planilla.timestamp?.toDate ? planilla.timestamp.toDate().toLocaleString() : planilla.timestamp)}<br>
+                <strong>Estado:</strong> ${planilla.estado}<br>
+                <button style="display: block; margin-top: 5px; color: #2ecc71" onclick="window.aceptarPlanilla('${planilla.id}')">ACEPTAR</button>
+                <button style="display: block; margin-top: 5px; color: #e74c3c" onclick="window.denegarPlanilla('${planilla.id}')">RECHAZAR</button>
+            </div>
+            <div class="separador"></div>
+        `;
+    });
+}
+window.obtenerPlanillas = obtenerPlanillas;
 
 window.aceptarPlanilla = async function aceptarPlanilla(id) {
     try {
         // 1. Buscar la planilla en 'planillas'
         const planillaRef = doc(db, "planillas", id);
-        const planillaSnap = await getDoc(planillaRef);
-        if (!planillaSnap.exists()) {
+        const planillaSnap = await getDocs(collection(db, "planillas"));
+        let planillaData = null;
+        planillaSnap.forEach((docu) => {
+            if (docu.id === id) {
+                planillaData = { id: docu.id, ...docu.data() };
+            }
+        });
+        if (!planillaData) {
             alert("No se encontró la planilla.");
             return;
         }
-        const planillaData = { id: planillaSnap.id, ...planillaSnap.data() };
         // 2. Modificar estado y mover a historialPlanillas
         planillaData.estado = "aprobado";
         await addDoc(collection(db, "historialPlanillas"), planillaData);
@@ -179,17 +161,21 @@ window.aceptarPlanilla = async function aceptarPlanilla(id) {
         console.error(error);
     }
 }
-
 window.denegarPlanilla = async function denegarPlanilla(id) {
     try {
         // 1. Buscar la planilla en 'planillas'
         const planillaRef = doc(db, "planillas", id);
-        const planillaSnap = await getDoc(planillaRef);
-        if (!planillaSnap.exists()) {
+        const planillaSnap = await getDocs(collection(db, "planillas"));
+        let planillaData = null;
+        planillaSnap.forEach((docu) => {
+            if (docu.id === id) {
+                planillaData = { id: docu.id, ...docu.data() };
+            }
+        });
+        if (!planillaData) {
             alert("No se encontró la planilla.");
             return;
         }
-        const planillaData = { id: planillaSnap.id, ...planillaSnap.data() };
         // 2. Modificar estado y mover a historialPlanillas
         planillaData.estado = "rechazado";
         await addDoc(collection(db, "historialPlanillas"), planillaData);
@@ -220,7 +206,6 @@ window.denegarPlanilla = async function denegarPlanilla(id) {
         console.error(error);
     }
 }
-
 window.enviarMensajeInspector = async function enviarMensajeInspector() {
     const mensaje = document.getElementById('mensaje-inspector').value.trim();
     if (!mensaje) {
@@ -335,11 +320,11 @@ window.agregarChofer = async function agregarChofer() {
         return;
     }
 
-    const data = { chofer: `${id}` };
+    const data = { chofer: `@${id}` };
 
     try {
         await addDoc(collection(db, "choferes"), data);
-        alert(`✅ Chofer ${id} agregado correctamente.`);
+        alert(`✅ Chofer @${id} agregado correctamente.`);
         input.value = "";
         cerrarMenuAgregarChofer();
     } catch (error) {
@@ -510,8 +495,6 @@ window.registrarCuenta = async function () {
     }
 };
 window.login = async function () {
-    document.getElementById('logueandocampo').style.display = 'block';
-    rotateText();
     const usuarioInput = document.getElementById('login-user').value.trim();
     const claveInput = document.getElementById('login-password').value.trim();
     const q = query(collection(db, "cuentas"), where("usuario", "==", usuarioInput));
@@ -537,41 +520,34 @@ window.login = async function () {
                 alert('Logueo exitoso, tu rol es: Developer');
                 mostrarPestania('developer');
                 document.getElementById('cerrarSesion').style.display = 'block';
-                document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "inspector") {
                 alert('Logueo exitoso, tu rol es: Inspector');
                 mostrarPestania('inspectores');
                 document.getElementById('cerrarSesion').style.display = 'block';
-                document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "personal") {
                 alert('Logueo exitoso, tu eres del Perosnal de la empresa GTG');
                 mostrarPestania('personal');
                 document.getElementById('cerrarSesion').style.display = 'block';
-                document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "admin") {
                 alert('Logueo exitoso, tu rol es: Administrador');
                 mostrarPestania('admin');
                 document.getElementById('cerrarSesion').style.display = 'block';
-                document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "jefe") {
                 alert('Logueo exitoso, tu rol es: Jefe');
                 mostrarPestania('admin');
                 document.getElementById('cerrarSesion').style.display = 'block';
-                document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "usuario") {
                 alert('Logueo exitoso');
                 mostrarPestania('usuario');
                 document.getElementById('cerrarSesion').style.display = 'block';
-                document.getElementById('logueandocampo').style.display = 'none';
             }
         } else {
             alert("La clave es incorrecta.");
-            document.getElementById('logueandocampo').style.display = 'none';
         }
     });
     if (!acceso) return;
@@ -644,116 +620,115 @@ const titulo = document.getElementById('titulo-pre-actualizacion').value.trim();
         console.error(error);
     }
 };
-// Función: Contar pasajes disponibles
-async function countPasajesDisponibles() {
-    const docSnap = await getDocs(collection(db, "viaje"));
-    let count = 0;
-    docSnap.forEach(d => {
-        if (d.data().estado === "activo") count++;
-    });
-    return count === 1 ? "1 pasaje disponible" : `${count} pasajes disponibles.`;
-}
+async function agregarCuenta() {
+    const usuario = document.getElementById('usuario-agregar').value.trim();
+    const clave = document.getElementById('clave-agregar').value.trim();
+    const rol = document.getElementById('rol-agregar').value.trim();
 
-// Función: Mostrar pasajes disponibles
-async function mostrarPasajesDisponibles() {
-    const div = document.getElementById("pasajesDisponibles");
-    div.innerHTML = "Cargando...";
-    const docs = await getDocs(collection(db, "viaje"));
-    const activos = [];
-    docs.forEach(d => {
-        if (d.data().estado === "activo") {
-            activos.push({ id: d.id, ...d.data() });
-        }
-    });
-    if (activos.length === 0) {
-        div.innerHTML = "No hay pasajes disponibles.";
+    if (!usuario || !clave || !rol) {
+        alert("Por favor completa todos los campos.");
         return;
     }
-    const random = activos[Math.floor(Math.random() * activos.length)];
-    div.innerHTML = `
-    ID de viaje: ${random.viaje}<br/>
-    Recorrido: ${random.recorrido}<br/>
-    <button onclick="comprarPasaje('${random.viaje}')">Comprar este pasaje</button>
-  `;
-}
 
-// Función: Mostrar información de pasajes sin viajar
-async function mostrarPasajesSinViajar() {
-    const div = document.getElementById("infoPasajes");
-    const cuentaRef = doc(db, "cuenta", $idUsuario$);
-    const userSnap = await getDocs(collection(db, "cuenta"));
-    let viaje = "0";
-    userSnap.forEach(d => {
-        if (d.id === $idUsuario$) viaje = d.data().viaje;
-    });
-    if (viaje === "0") {
-        div.innerText = "No tienes pasajes sin viajar.";
-        return;
-    }
-    const viajesSnap = await getDocs(collection(db, "viaje"));
-    for (const d of viajesSnap.docs) {
-        const data = d.data();
-        if (data.estado === "activo" && data.viaje === viaje) {
-            div.innerHTML = `
-        ID de viaje: ${data.viaje}<br/>
-        Recorrido: ${data.recorrido}<br/>
-        Día de Viaje: ${data.vencimiento}
-      `;
-            return;
-        }
-    }
-}
-
-// Función: Comprar pasaje
-async function comprarPasaje(viajeId) {
-    const cuentaRef = doc(db, "cuenta", $idUsuario$);
-    const userSnap = await getDocs(collection(db, "cuenta"));
-    for (const d of userSnap.docs) {
-        if (d.id === $idUsuario$) {
-            if (parseInt(d.data().viaje) >= 1) {
-                alert("Ya tienes un pasaje asignado.");
-                return;
-            }
-        }
-    }
-    const userData = (await getDocs(collection(db, "cuenta"))).docs.find(d => d.id === $idUsuario$).data();
-    const nuevoData = {
-        clave: userData.clave,
-        usuario: userData.usuario,
-        viaje: viajeId,
-        viajes: userData.viajes
+    const cuentaDatos = {
+        usuario,
+        clave,
+        rol
     };
-    await setDoc(doc(db, "cuenta", $idUsuario$), nuevoData);
-    alert("Pasaje comprado con éxito.");
-    mostrarPestania("usuario");
+
+    const cuentaInfo = {
+        usuario,
+        clave,
+        viaje: "0",
+        viajes: "0"
+    };
+
+    try {
+        await firebase.firestore().collection("cuentas").add(cuentaDatos);
+        await firebase.firestore().collection("cuenta").add(cuentaInfo);
+        alert("Cuenta agregada correctamente.");
+        document.getElementById('menu-agregar-cuenta').style.display = 'none';
+    } catch (error) {
+        console.error("Error al agregar la cuenta:", error);
+        alert("Ocurrió un error al agregar la cuenta.");
+    }
 }
 
-function nuevaPlanilla() {
-    const chofer = document.getElementById('chofer').value;
-    const ramal = document.getElementById('ramal').value;
-    const interno = document.getElementById('interno').value;
-    const planillasRealizadas = document.getElementById('planillasRealizadas').value;
-
-    const vueltas = [];
-    const vueltaElements = document.querySelectorAll('.vuelta');
-    vueltaElements.forEach((vuelta, index) => {
-        const idaHora = vuelta.querySelector('.ida-hora').value;
-        const vueltaHora = vuelta.querySelector('.vuelta-hora').value;
-        vueltas.push(`Texto: "Vuelta (${index + 1}): Ida: ${idaHora} | Vuelta: ${vueltaHora}"`);
-    });
-
-    // 3. Construir el mensaje
-    const mensaje = `
-  Titulo: "Nueva Planilla"
-  Texto: "Chofer: ${chofer}"
-  Texto: "Ramal: ${ramal}"
-  Texto: "Interno: ${interno}"
-  Texto: "Planillas Realizadas: ${planillasRealizadas}"
-  ${vueltas.join('\n')}
-  Texto: "Codigo de Planilla: ${ultimoPlanillaId} | ${new Date().toLocaleString()}"
-  Texto: "Para Aceptarla o Rechazarla, entre al siguiente enlace: https://abelcraftok.github.io/GTG/planilla/${chofer.replace('@', '')}.html"
-  `;
-
-    // 4. Enviar mensaje a la API "insCifrada"
-    enviarMensaje(mensaje);
+async function countpasajesDisponibles() {
+  	const docSnap = await getDocs(collection(db, "viaje"));
+  	let count = 0;
+  	docSnap.forEach(d => {
+    	if (d.data().estado === "activo") count++;
+  	});
+  	return count === 1 ? "1 pasaje disponible" : `${count} pasajes disponibles.`;
 }
+async function pasajesDisponibles() {
+    const div = document.getElementById("pasajesDisponibles");
+  	div.innerHTML = "Cargando...";
+  	const docs = await getDocs(collection(db, "viaje"));
+  	const activos = [];
+	docs.forEach(d => {
+    	if (d.data().estado === "activo") {
+      		activos.push({ id: d.id, ...d.data() });
+    	}
+  	});
+  	if (activos.length === 0) {
+	    div.innerHTML = "No hay pasajes disponibles.";
+    	return;
+  	}
+  	const random = activos[Math.floor(Math.random() * activos.length)];
+  	div.innerHTML = `
+    	ID de viaje: ${random.viaje}<br/>
+		Recorrido: ${random.recorrido}<br/>
+    	<button onclick="comprarPasaje('${random.viaje}')">Comprar este pasaje</button>
+  	`;
+}
+// Función: Info Pasajes Sin Viajar
+async function pasajesSinViajar() {
+  	const div = document.getElementById("infoPasajes");
+  	const cuentaRef = doc(db, "cuenta", $idUsuario$);
+  	const userSnap = await getDocs(collection(db, "cuenta"));
+    let viaje = "0";
+  	userSnap.forEach(d => {
+    	if (d.id === $idUsuario$) viaje = d.data().viaje;
+  	});
+  	if (viaje === "0") {
+    	div.innerText = "No tienes pasajes sin viajar.";
+    	return;
+  	}
+  	const viajesSnap = await getDocs(collection(db, "viaje"));
+  	for (const d of viajesSnap.docs) {
+    	const data = d.data();
+    	if (data.estado === "activo" && data.viaje === viaje) {
+      		div.innerHTML = `
+        		ID de viaje: ${data.viaje}<br/>
+	        	Recorrido: ${data.recorrido}<br/>
+    	    	Día de Viaje: ${data.vencimiento}
+      		`;
+      		return;
+    	}
+  	}
+}
+		// Función: Comprar Pasaje
+		async function comprarPasaje(viajeId) {
+  			const cuentaRef = doc(db, "cuenta", $idUsuario$);
+	  		const userSnap = await getDocs(collection(db, "cuenta"));
+  			for (const d of userSnap.docs) {
+    			if (d.id === $idUsuario$) {
+      				if (parseInt(d.data().viaje) >= 1) {
+	        			alert("Ya tienes un pasaje asignado.");
+    	    			return;
+      				}
+    			}
+  			}
+			const userData = (await getDocs(collection(db, "cuenta"))).docs.find(d => d.id === $idUsuario$).data();
+  			const nuevoData = {
+    			clave: userData.clave,
+	    		usuario: userData.usuario,
+	    		viaje: viajeId,
+    			viajes: userData.viajes
+	  		};
+  			await setDoc(doc(db, "cuenta", $idUsuario$), nuevoData);
+		  	alert("Pasaje comprado con éxito.");
+  			mostrarPestania("usuario");
+		}

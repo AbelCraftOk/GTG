@@ -64,7 +64,7 @@ function cerrarMenuMensajesChofer() {
     document.getElementById('menu-mensajes-chofer').style.display = 'none';
 }
 function mostrarPestania(id) {
-    const pestañas = ['login', 'register', 'admin', 'developer', 'inspectores', 'inicio', 'personal', 'licencias', 'usuario', 'comprar-pasajes', 'info-pasajes'];
+    const pestañas = ['login', 'inicio', 'inspectores', 'developer', 'licencias'];
     pestañas.forEach(pid => {
         const el = document.getElementById(pid);
         if (el) el.style.display = (pid === id) ? 'block' : 'none';
@@ -162,6 +162,16 @@ function abrirMenuVueltasCargadas() {
 function cerrarMenuVueltasCargadas() {
     document.getElementById('menu-vueltas-cargadas').style.display = 'none';
 }
+window.login = function login() {
+    const clave = prompt("Ingrese la clave de acceso:");
+    if (clave === "InspectoresGTG" || clave === "InspectoresGTG ") {
+        mostrarPestania('inspectores');
+    } else if (clave === "DeveloperGTG" || clave === "DeveloperGTG ") {
+        mostrarPestania('developer');
+    } else if (clave !== null) {
+        alert("Clave incorrecta.");
+    }
+}
 function generarCodigoUnico() {
     // Crea un código aleatorio estilo GTG-2025-XY123
     const año = new Date().getFullYear();
@@ -173,7 +183,7 @@ function generarCodigoUnico() {
 function enlaceCodificado() { //Para las planillas.
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/w";
+    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
@@ -193,7 +203,7 @@ function enlaceCodificado() { //Para las planillas.
 function codificadoEnlace() { //Para el: Feedback
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/w";
+    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
@@ -214,7 +224,7 @@ function codificadoEnlace() { //Para el: Feedback
 function codificadoDeMensajes() { //Para la que: Envia Mensajes
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/w";
+    const parteC = "om/apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo./w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
@@ -283,45 +293,23 @@ function solicitudCifrada() { //Para las solicitudes de rango
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
-    const parteG = "/139888966";
-    const parteH = "6609938549/1";
-    const parteI = "gLOsGX8u_S";
-    const parteJ = "Qhpgg8kz3MmK";
-    const parteK = "OAq2lvOgmb";
-    const parteL = "DeT4zF05YV9";
-    const parteM = "AXCjil_WK";
-    const parteN = "vvWSMp9fnNC";
-    const parteO = "r7Up";
+    const parteG = "/";
+    const parteH = "";
+    const parteI = "";
+    const parteJ = "";
+    const parteK = "";
+    const parteL = "";
+    const parteM = "";
+    const parteN = "";
+    const parteO = "";
     const solicitudCifrada = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO;
     return solicitudCifrada;
 }
-function insCifrada() { //Para los avisos a los inspectores
-    const parteA = "http";
-    const parteB = "s://discord.c";
-    const parteC = "om/api/w";
-    const parteD = "eb";
-    const parteE = "ho";
-    const parteF = "oks";
-    const parteG = "/139999338594";
-    const parteH = "278204";
-    const parteI = "4/kuu16-ZR5";
-    const parteJ = "MwI6X4HTlSt8g";
-    const parteK = "98AkBZyWO";
-    const parteL = "8UCYvL5UMM1kxIocTuXT";
-    const parteM = "vpeHa37t";
-    const parteN = "4TSATHXrE";
-    const insCifrada = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN;
-    return insCifrada;
-}
 function abrirMenuFeedback() {
-    document.getElementById('menu-anun-feedback').style.display = 'flex';
+    document.getElementById('menu-feedback').style.display = 'flex';
 }
 function cerrarMenuFeedback() {
     document.getElementById('menu-feedback').style.display = 'none';
-}
-function abrirFeedback() {
-    document.getElementById('menu-anun-feedback').style.display = 'none';
-    document.getElementById('menu-feedback').style.display = 'flex';
 }
 function abrirMenuAccionChofer() {
     document.getElementById('accion-chofer').style.display = 'flex';
@@ -335,9 +323,8 @@ function cargarLicencia() {
     const apodoRoblox = document.getElementById('licencia-apodo').value.trim();
     const motivo = document.getElementById('licencia-motivo').value;
     const duracion = document.getElementById('licencia-tiempo').value;
-    const sector = document.getElementById('licencia-sector').value;
 
-    if (!idDiscord || !idRoblox || !apodoRoblox || !motivo || !duracion || !sector || motivo.startsWith("Seleccione") || duracion.startsWith("Seleccione") || sector === "Seleccione su Sector") {
+    if (!idDiscord || !idRoblox || !apodoRoblox || !motivo || !duracion || motivo.startsWith("Seleccione") || duracion.startsWith("Seleccione")) {
         alert("Por favor, complete todos los campos correctamente.");
         return;
     }
@@ -346,7 +333,6 @@ function cargarLicencia() {
 `ID de Discord: ${idDiscord}
 ID de Roblox: ${idRoblox}
 Apodo de Roblox: ${apodoRoblox}
-Sector de la Empresa donde sacara licencia: ${sector}
 Motivo de licencia: ${motivo}
 Tiempo de licencia: ${duracion}`;
 
@@ -371,49 +357,3 @@ Tiempo de licencia: ${duracion}`;
         alert("Error al enviar la solicitud de licencia.");
     });
 }
-function abrirMenuProximaActualizacion() {
-    document.getElementById('menu-pre-actualizar').style.display = 'flex';
-}
-function cerrarMenuProximaActualizacion() {
-    document.getElementById('menu-pre-actualizar').style.display = 'none';
-}
-function cerrarSesion() {
-    document.getElementById('cerrarSesion').style.display = 'none';
-    mostrarPestania('login');
-}
-function acbotonPestanias() {
-    document.getElementById('activar-boton-pestanias1').style.display = 'none';
-    document.getElementById('activar-boton-pestanias2').style.display = 'none';
-    document.getElementById('activar-boton-pestanias3').style.display = 'none';
-    document.getElementById('desactivar-boton-pestanias1').style.display = 'block';
-    document.getElementById('desactivar-boton-pestanias2').style.display = 'block';
-    document.getElementById('desactivar-boton-pestanias3').style.display = 'block';
-    document.getElementById('boton-pestanias').style.display = 'flex';
-}
-function desacbotonPestanias() {
-    document.getElementById('desactivar-boton-pestanias1').style.display = 'none';
-    document.getElementById('desactivar-boton-pestanias2').style.display = 'none';
-    document.getElementById('desactivar-boton-pestanias3').style.display = 'none';
-    document.getElementById('activar-boton-pestanias1').style.display = 'block';
-    document.getElementById('activar-boton-pestanias2').style.display = 'block';
-    document.getElementById('activar-boton-pestanias3').style.display = 'block';
-    document.getElementById('boton-pestanias').style.display = 'none';
-}
-function botonPestanias() {
-    document.getElementById('menu-pestanias').style.display = 'flex';
-}
-function rotateText() {
-    const textArray = [
-        "Iniciando Sesión",
-        "Iniciando Sesión.",
-        "Iniciando Sesión..",
-        "Iniciando Sesión...",
-    ];
-    let index = 0;
-    const textElement = document.getElementById("logueando");
-    setInterval(() => {
-        textElement.textContent = textArray[index];
-        index = (index + 1) % textArray.length;
-    }, 1000);
-}
-rotateText();

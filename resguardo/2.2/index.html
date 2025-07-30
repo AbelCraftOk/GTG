@@ -6,13 +6,19 @@
   <meta name="theme-color" content="#2d3e50">
   <link rel="icon" type="image/png" href="./logo.png">
   <script>
+    // Esperar al cargar la página
     window.onload = function () {
       const userAgent = navigator.userAgent.toLowerCase();
+
+      // URL base del sitio (reemplazá con tu dominio real si hace falta)
       const urlBase = "https://abelcraftok.github.io/GTG/";
+
+      // Si es móvil
       if (/android|iphone|ipod|ipad/.test(userAgent)) {
-        window.location.href = urlBase + "celular/Sistema%20de%20Planilleo%20-%20GTG%202.4.html";
+        window.location.href = urlBase + "celular/Sistema%20de%20Planilleo%20-%20GTG%202.2.html";
       } else {
-        window.location.href = urlBase + "pc/Sistema%20de%20Planilleo%20-%20GTG%202.4.html";
+        // PC: Windows, Mac, Linux
+        window.location.href = urlBase + "pc/Sistema%20de%20Planilleo%20-%20GTG%202.2.html";
       }
     };
   </script>
