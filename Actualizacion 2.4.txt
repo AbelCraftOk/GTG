@@ -1,6 +1,5 @@
-Titulo: ""
-Mensaje: "
-"
+Titulo: "Arreglos y Cambios muy importantes - V: 2.4"
+Mensaje: "Mira todo lo que hemos echo, somos un verdadero Nueovobus Citta!!!"
 Cambios: "
 - Cambios en el sistema de Aviso de Planilleo.
   - Antes solo se avisaba cuando la planilla de un chofer era aceptada o rechazada. Pero ahora cada vez que se: cargue, acepte o rechace una planilla, los choferes y quienes tienen acceso al canal seran notificados.

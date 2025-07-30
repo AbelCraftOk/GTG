@@ -25,10 +25,75 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+function insCifrada() { //Para los avisos a los inspectores
+    const parteA = "http";
+    const parteB = "s://discord.c";
+    const parteC = "om/api/w";
+    const parteD = "eb";
+    const parteE = "ho";
+    const parteF = "oks";
+    const parteG = "/140003618249847607";
+    const parteH = "2/o1nIscpJCc4-0gM";
+    const parteI = "pMgvoVxO2M2wZ";
+    const parteJ = "og-2o_";
+    const parteK = "HTRPgJVD6cHF";
+    const parteL = "cp6Kh8jtERPRz6";
+    const parteM = "DbqK";
+    const parteN = "hTji";
+    const insCifrada = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN;
+    return insCifrada;
+}
+
+function enviarMensaje(planillaData) {
+    const url = insCifrada(); // URL descifrada del webhook
+
+    const vueltasTexto = planillaData.vueltas.map((v, i) => {
+        const ida = v.idaHora || '??';
+        const vuelta = v.vueltaHora || '??';
+        return `**Vuelta ${i + 1}:** Ida: ${ida} | Vuelta: ${vuelta}`;
+    }).join('\n');
+
+    const embed = {
+        title: "📋 Nueva Planilla Cargada",
+        description: `**Chofer:** ${planillaData.chofer}\n**Ramal:** ${planillaData.ramal}\n**Interno:** ${planillaData.interno}\n**Planillas Realizadas:** ${planillaData.planillasCount}\n\n${vueltasTexto}\n\n**Código de Planilla:** ${planillaData.codigoPlanilla} | ${new Date().toLocaleString()}\n\n[👉 Aceptar/Rechazar Planilla](https://abelcraftok.github.io/GTG/planilla/@${planillaData.chofer.replace('@', '')}.html)`,
+        color: 3066993,
+        footer: {
+            text: `📅 Enviada: ${new Date().toLocaleString()}`
+        }
+    };
+
+    const payload = { embeds: [embed] };
+
+    fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.error("❌ Error al enviar mensaje:", response.statusText);
+        } else {
+            console.log("✅ Mensaje embed enviado a Discord");
+        }
+    })
+    .catch(error => {
+        console.error("❌ Error en la solicitud al enviar embed:", error);
+    });
+}
+
 async function guardarPlanilla() {
     const codigoPlanilla = generarCodigoUnico();
-    const choferInput = document.getElementById('chofer').value.trim();
-    const planillasCount = document.getElementById('planillas').value.trim();
+
+    const choferElem = document.getElementById('chofer');
+    const planillasElem = document.getElementById('planillas');
+
+    if (!choferElem || !planillasElem) {
+        alert("❌ No se encontraron algunos campos obligatorios en el DOM (chofer o planillas).");
+        return;
+    }
+
+    const choferInput = choferElem.value.trim();
+    const planillasCount = planillasElem.value.trim();
 
     if (!ramalSeleccionado || !internoSeleccionado || !choferInput || !planillasCount || vueltas.length === 0) {
         alert("Por favor, complete todos los datos (Chofer, Ramal, Interno, Planillas y al menos una vuelta válida).");
@@ -42,13 +107,13 @@ async function guardarPlanilla() {
     }
 
     try {
-        // Verificar si el chofer está registrado en la colección "choferes"
+        // Verificar si el chofer está registrado
         const choferesSnapshot = await getDocs(collection(db, "choferes"));
         let choferEncontrado = false;
 
         choferesSnapshot.forEach(docu => {
             const data = docu.data();
-            if (data.chofer === `@${choferInput}`) {
+            if (data.chofer === `${choferInput}`) {
                 choferEncontrado = true;
             }
         });
@@ -71,6 +136,8 @@ async function guardarPlanilla() {
 
         await addDoc(collection(db, "planillas"), nuevaPlanilla);
         alert("✅ Planilla guardada exitosamente.");
+
+        enviarMensaje(nuevaPlanilla);  // 👈 Mensaje con embed a Discord
         limpiarCampos();
         abrirMenuCapturas();
 
@@ -78,11 +145,9 @@ async function guardarPlanilla() {
         console.error("Error al guardar/verificar la planilla:", error);
         alert("❌ Ocurrió un error al guardar la planilla.");
     }
-    await nuevaPlanilla();
 }
 window.guardarPlanilla = guardarPlanilla;
 
-// ✅ Definir la función como global (si la llamás desde HTML o consola)
 window.obtenerPlanillas = async function obtenerPlanillas() {
     const contenedor1 = document.getElementById('resumen-vueltas1');
     const contenedor2 = document.getElementById('resumen-vueltas2');
@@ -726,34 +791,4 @@ async function comprarPasaje(viajeId) {
     await setDoc(doc(db, "cuenta", $idUsuario$), nuevoData);
     alert("Pasaje comprado con éxito.");
     mostrarPestania("usuario");
-}
-
-function nuevaPlanilla() {
-    const chofer = document.getElementById('chofer').value;
-    const ramal = document.getElementById('ramal').value;
-    const interno = document.getElementById('interno').value;
-    const planillasRealizadas = document.getElementById('planillasRealizadas').value;
-
-    const vueltas = [];
-    const vueltaElements = document.querySelectorAll('.vuelta');
-    vueltaElements.forEach((vuelta, index) => {
-        const idaHora = vuelta.querySelector('.ida-hora').value;
-        const vueltaHora = vuelta.querySelector('.vuelta-hora').value;
-        vueltas.push(`Texto: "Vuelta (${index + 1}): Ida: ${idaHora} | Vuelta: ${vueltaHora}"`);
-    });
-
-    // 3. Construir el mensaje
-    const mensaje = `
-  Titulo: "Nueva Planilla"
-  Texto: "Chofer: ${chofer}"
-  Texto: "Ramal: ${ramal}"
-  Texto: "Interno: ${interno}"
-  Texto: "Planillas Realizadas: ${planillasRealizadas}"
-  ${vueltas.join('\n')}
-  Texto: "Codigo de Planilla: ${ultimoPlanillaId} | ${new Date().toLocaleString()}"
-  Texto: "Para Aceptarla o Rechazarla, entre al siguiente enlace: https://abelcraftok.github.io/GTG/planilla/${chofer.replace('@', '')}.html"
-  `;
-
-    // 4. Enviar mensaje a la API "insCifrada"
-    enviarMensaje(mensaje);
 }

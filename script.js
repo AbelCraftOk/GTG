@@ -295,24 +295,6 @@ function solicitudCifrada() { //Para las solicitudes de rango
     const solicitudCifrada = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO;
     return solicitudCifrada;
 }
-function insCifrada() { //Para los avisos a los inspectores
-    const parteA = "http";
-    const parteB = "s://discord.c";
-    const parteC = "om/api/w";
-    const parteD = "eb";
-    const parteE = "ho";
-    const parteF = "oks";
-    const parteG = "/139999338594";
-    const parteH = "278204";
-    const parteI = "4/kuu16-ZR5";
-    const parteJ = "MwI6X4HTlSt8g";
-    const parteK = "98AkBZyWO";
-    const parteL = "8UCYvL5UMM1kxIocTuXT";
-    const parteM = "vpeHa37t";
-    const parteN = "4TSATHXrE";
-    const insCifrada = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN;
-    return insCifrada;
-}
 function abrirMenuFeedback() {
     document.getElementById('menu-anun-feedback').style.display = 'flex';
 }
