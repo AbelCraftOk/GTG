@@ -3,7 +3,6 @@ let ramalSeleccionado = "";
 let internoSeleccionado = "";
 let todasLasPlanillas = [];
 const WEBHOOK_URL = enlaceCodificado(); //Para planillas
-const apifeedback = codificadoEnlace(); //Para Feedback
 const apiMensajes = codificadoDeMensajes(); //Para Mensajes de Inspectores
 const apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo.
 
@@ -15,7 +14,6 @@ function limpiarCampos() {
     internoSeleccionado = "";
     document.getElementById('boton-interno').textContent = "Indicar Interno";
     document.getElementById('planillas').value = "";
-    document.getElementById('resumen-vueltas').innerHTML = ""; // Limpia el resumen del panel privado
 }
 // Función para establecer la hora actual en un campo de input
 function horaActual(id) {
@@ -23,36 +21,6 @@ function horaActual(id) {
     const horas = ahora.getHours().toString().padStart(2, '0');
     const minutos = ahora.getMinutes().toString().padStart(2, '0');
     document.getElementById(id).value = `${horas}:${minutos}`;
-}
-async function enviarFeedback() {
-    const id = document.getElementById('discord-id').value.trim();
-    const tipo = document.getElementById('tipo-reporte').value;
-    const mensaje = document.getElementById('mensaje-reporte').value.trim();
-
-    if (!id || !tipo || !mensaje) {
-        alert("Por favor completa todos los campos.");
-        return;
-    }
-
-    const embed = {
-        title: "📣 Nuevo Feedback",
-        description: `**Reporte de:** ${id}\n**Tipo de Reporte:** ${tipo}\n**Mensaje:**\n"${mensaje}"`,
-        color: 3447003,
-        footer: { text: new Date().toLocaleString() }
-    };
-
-    try {
-        await fetch(apifeedback, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ embeds: [embed] })
-        });
-        alert("Reporte enviado correctamente.");
-        cerrarMenuFeedback();
-    } catch (error) {
-        console.error("Error al enviar feedback:", error);
-        alert("Error al enviar el reporte.");
-    }
 }
 function abrirMenuEnviarMensaje() {
     document.getElementById('menu-enviar-mensaje').style.display = 'flex';
@@ -69,12 +37,6 @@ function mostrarPestania(id) {
         const el = document.getElementById(pid);
         if (el) el.style.display = (pid === id) ? 'block' : 'none';
     });
-}
-function abrirMenuCapturas() {
-    document.getElementById('menu-capturas').style.display = 'flex';
-}
-function cerrarMenuCapturas() {
-    document.getElementById('menu-capturas').style.display = 'none';
 }
 function abrirMenuRamales() {
     document.getElementById('menu-ramales').style.display = 'flex';
@@ -185,26 +147,20 @@ function enlaceCodificado() { //Para las planillas.
     const enlaceDecodificado = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK;
     return enlaceDecodificado;
 }
-function codificadoEnlace() { //Para el: Feedback
+function feedback() { //Para Feedback
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/w";
+    const parteC = "om/api/w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
-    const parteG = "/139760";
-    const parteH = "7899454";
-    const parteI = "378126";
-    const parteJ = "/xt_";
-    const parteK = "RaRj_5";
-    const parteL = "NLDZy9dVR";
-    const parteM = "UqYpOsTUk6";
-    const parteN = "l9qstgRA";
-    const parteO = "vcQAahxPUWXAek";
-    const parteP = "xGeaez";
-    const parteQ = "nOjW6JFEwg-t";
-    const codificadoEnlace = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO + parteP + parteQ;
-    return codificadoEnlace;
+    const parteG = "/140060024549409180";
+    const parteH = "7/MVptI62uW3SK7z6rb";
+    const parteI = "g6-kbCuF10FTn9S34Ha";
+    const parteJ = "b9iDI5rtFC_YYLa0Hs0";
+    const parteK = "i00y9pTzWHXs-";
+    const apifeedback = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK;
+    return apifeedback;
 }
 function codificadoDeMensajes() { //Para la que: Envia Mensajes
     const parteA = "http";
@@ -394,3 +350,34 @@ function rotateText() {
     }, 1000);
 }
 rotateText();
+        async function enviarFeedback() {
+    const id = document.getElementById('discord-id').value.trim();
+    const tipo = document.getElementById('tipo-reporte').value;
+    const mensaje = document.getElementById('mensaje-reporte').value.trim();
+    const apifeedback = feedback()
+
+    if (!id || !tipo || !mensaje) {
+        alert("Por favor completa todos los campos.");
+        return;
+    }
+
+    const embed = {
+        title: "📣 Nuevo Feedback",
+        description: `**Reporte de:** ${id}\n**Tipo de Reporte:** ${tipo}\n**Mensaje:**\n${mensaje}`,
+        color: 3447003,
+        footer: { text: new Date().toLocaleString() }
+    };
+
+    try {
+        await fetch(apifeedback, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+        alert("Reporte enviado correctamente.");
+        cerrarMenuFeedback();
+    } catch (error) {
+        console.error("Error al enviar feedback:", error);
+        alert("Error al enviar el reporte.");
+    }
+}

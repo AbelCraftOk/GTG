@@ -138,8 +138,7 @@ async function guardarPlanilla() {
         alert("✅ Planilla guardada exitosamente.");
 
         enviarMensaje(nuevaPlanilla);  // 👈 Mensaje con embed a Discord
-        limpiarCampos();
-        abrirMenuCapturas();
+        limpiarCampos()
 
     } catch (error) {
         console.error("Error al guardar/verificar la planilla:", error);
@@ -360,8 +359,7 @@ window.actualizacion = async function actualizacion() {
         return;
     }
     const embed = {
-        title: `Nueva Actualizacion:`,
-        title: `${titulo}`,
+        title: `Nueva Actualizacion: ${titulo}`,
         description: `${mensaje}\n\n**Cambios:**\n${cambios}\nAutor: ${autor}`,
         color: 15844367,
         footer: { text: new Date().toLocaleString() }
@@ -488,7 +486,7 @@ window.filtrarHistorialAntiguas = function () {
 }
 import { serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
-async function registrarLogInicio() {
+async function registrarLogInicio(usuario) {
     const ahora = new Date();
 
     const dia = ahora.toLocaleDateString('es-AR');  // "dd/mm/yyyy"
@@ -497,7 +495,8 @@ async function registrarLogInicio() {
     const logData = {
         dia: dia,
         hora: hora,
-        timestamp: serverTimestamp()
+        timestamp: serverTimestamp(),
+        usuario: usuario
     };
 
     try {
@@ -508,8 +507,6 @@ async function registrarLogInicio() {
     }
 }
 
-// Ejecutar al cargar la página
-window.addEventListener("DOMContentLoaded", registrarLogInicio);
 window.abrirMenuLogs = async function abrirMenuLogs() {
     const contenedor = document.getElementById('contenedor-logs');
     contenedor.innerHTML = '';
@@ -537,6 +534,7 @@ window.abrirMenuLogs = async function abrirMenuLogs() {
     logsDeHoy.forEach(log => {
         contenedor.innerHTML += `
             <div class="burbuja">
+                <strong>Usuario:</strong> ${log.usuario} <br>
                 <strong>Hora:</strong> ${log.hora} <br>
                 <strong>Fecha:</strong> ${log.dia}
             </div>
@@ -598,40 +596,49 @@ window.login = async function () {
 
             window.user = data.usuario;
 
+            // Registrar el inicio de sesión en los logs
+            registrarLogInicio(data.usuario);
+
             if (rol === "developer") {
                 alert('Logueo exitoso, tu rol es: Developer');
                 mostrarPestania('developer');
                 document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "inspector") {
                 alert('Logueo exitoso, tu rol es: Inspector');
                 mostrarPestania('inspectores');
                 document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "personal") {
                 alert('Logueo exitoso, tu eres del Perosnal de la empresa GTG');
                 mostrarPestania('personal');
                 document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "admin") {
                 alert('Logueo exitoso, tu rol es: Administrador');
                 mostrarPestania('admin');
                 document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "jefe") {
                 alert('Logueo exitoso, tu rol es: Jefe');
                 mostrarPestania('admin');
                 document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "usuario") {
                 alert('Logueo exitoso');
                 mostrarPestania('usuario');
                 document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
         } else {
@@ -690,8 +697,7 @@ const titulo = document.getElementById('titulo-pre-actualizacion').value.trim();
         return;
     }
     const embed = {
-        title: `SPOILER de la proxima Actualizacion:`,
-        title: `${titulo}`,
+        title: `SPOILER de la proxima Actualizacion ${titulo}`,
         description: `${mensaje}\n\n**Cambios:**\n${cambios}\nAutor: ${autor}`,
         color: 15844367,
         footer: { text: new Date().toLocaleString() }
