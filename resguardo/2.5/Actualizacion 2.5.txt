@@ -1,0 +1,143 @@
+Titulo: "Remodelaciones de funciones - V: 2.5"
+Mensaje: "
+Modificamos algunas funciones... Son unas que se ejecutan en segundo plano, así que el usuario no va a encontrar casi ninguna diferencia.
+¿Por que se modifica la función "limpiarCampos()"?
+Se modifica por que esta configurada para ejecutar un script que aplica cambios en un elemento, pero anteriormente habíamos cambiado la ID de ese elemento, entonces al no encontrarlo con la ID anterior, entonces, aunque se allá ejecutado la función correctamente la función, genera un error por ese problema tan mínimo y por ese error, puede confundir al usuario.
+¿Por que se modifica la función "registrarLogInicio()"?
+Se modifica para agregar una nueva funcionalidad, esta nueva funcionalidad, al momento de registrar el Inicio de sesión, también guarda que usuario ah iniciado sesión.
+
+Todavia no se ah podido solucionar el inconveniente con el sistema de avisos a los Inspectores...
+"
+Cambios: "
+- Cambios en unos ajustes en la función: "limpiarCampos()".
+- Cambios en la función: "registrarLogInicio()".
+  - Ahora también registra el usuario de quien ah iniciado sesión.
+- Cambios en las funciones: "actualizacion" y "enviarPreActualizacion()".
+  - Cambio en la funcion "actualizacion": Cambie una linea del Script por que solo mostraba el primer titulo y no los 2 que se cargaban...
+  - Cambio en la funcion "enviarPreActualizacion()": La modifique para que se cierre el menu luego de enviar la Proxima Actualizacion y tambien modifique una linea del Script por que solo mostraba el primer titulo y no los 2 que se cargaban...
+"
+
+Modifica mi funcion para que tambien cargue que usuario se logue, (te dejo: la funcion del login, la funcion que carga los logs (sin este cambio) y menu que le muestra a los administradores los logs de hoy):
+La funcion del login:
+window.login = async function () {
+    document.getElementById('logueandocampo').style.display = 'block';
+    rotateText();
+    const usuarioInput = document.getElementById('login-user').value.trim();
+    const claveInput = document.getElementById('login-password').value.trim();
+    const q = query(collection(db, "cuentas"), where("usuario", "==", usuarioInput));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+        alert("El usuario no coincide con las cuentas creadas.");
+        return;
+    }
+    let acceso = false;
+    snapshot.forEach((docu) => {
+        const data = docu.data();
+        if (data.clave === claveInput) {
+            acceso = true;
+            const rol = data.rol;
+
+            localStorage.setItem("usuario", data.usuario);
+            localStorage.setItem("clave", data.clave);
+            localStorage.setItem("rolUsuario", rol);
+
+            window.user = data.usuario;
+
+            if (rol === "developer") {
+                alert('Logueo exitoso, tu rol es: Developer');
+                mostrarPestania('developer');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "inspector") {
+                alert('Logueo exitoso, tu rol es: Inspector');
+                mostrarPestania('inspectores');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "personal") {
+                alert('Logueo exitoso, tu eres del Perosnal de la empresa GTG');
+                mostrarPestania('personal');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "admin") {
+                alert('Logueo exitoso, tu rol es: Administrador');
+                mostrarPestania('admin');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "jefe") {
+                alert('Logueo exitoso, tu rol es: Jefe');
+                mostrarPestania('admin');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "usuario") {
+                alert('Logueo exitoso');
+                mostrarPestania('usuario');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+        } else {
+            alert("La clave es incorrecta.");
+            document.getElementById('logueandocampo').style.display = 'none';
+        }
+    });
+    if (!acceso) return;
+};
+La funcion que carga los logs (sin este cambio):
+async function registrarLogInicio() {
+    const ahora = new Date();
+
+    const dia = ahora.toLocaleDateString('es-AR');  // "dd/mm/yyyy"
+    const hora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false }); // "HH:mm"
+
+    const logData = {
+        dia: dia,
+        hora: hora,
+        timestamp: serverTimestamp()
+    };
+
+    try {
+        await addDoc(collection(db, "logs"), logData);
+        console.log("✅ Log registrado:", logData);
+    } catch (err) {
+        console.error("❌ Error al registrar log:", err);
+    }
+}
+
+El menu que le muestra a los administradores los logs de hoy:
+window.abrirMenuLogs = async function abrirMenuLogs() {
+    const contenedor = document.getElementById('contenedor-logs');
+    contenedor.innerHTML = '';
+    document.getElementById('menu-logs').style.display = 'flex';
+
+    const logsSnapshot = await getDocs(collection(db, "logs"));
+    const hoy = new Date().toLocaleDateString('es-AR'); // "dd/mm/yyyy"
+
+    const logsDeHoy = [];
+    logsSnapshot.forEach((docu) => {
+        const data = docu.data();
+        if (data.dia === hoy) {
+            logsDeHoy.push(data);
+        }
+    });
+
+    if (logsDeHoy.length === 0) {
+        contenedor.innerHTML = `<div class="texto-rojo">Hoy no se ha conectado nadie (según la base de datos).</div>`;
+        return;
+    }
+
+    // Ordenar por hora (más reciente arriba)
+    logsDeHoy.sort((a, b) => b.hora.localeCompare(a.hora));
+
+    logsDeHoy.forEach(log => {
+        contenedor.innerHTML += `
+            <div class="burbuja">
+                <strong>Hora:</strong> ${log.hora} <br>
+                <strong>Fecha:</strong> ${log.dia}
+            </div>
+        `;
+    });
+}
