@@ -1,0 +1,204 @@
+Titulo: "Arreglos y Cambios muy importantes - V: 2.4"
+Mensaje: "Mira todo lo que hemos echo, somos un verdadero Nueovobus Citta!!!"
+Cambios: "
+- Cambios en el sistema de Aviso de Planilleo.
+  - Antes solo se avisaba cuando la planilla de un chofer era aceptada o rechazada. Pero ahora cada vez que se: cargue, acepte o rechace una planilla, los choferes y quienes tienen acceso al canal seran notificados.
+  - Tambien se generara un enlace que estara junto al mensaje que hay una nueva planilla (ese sera el unico mensaje donde aparecera el enlace). Este enlace servira para que el inspector pueda acceder directamente a esa planilla para Aceptarla o Rechazarla. (De igual manera se podra haacer de la manera tradicional).
+- Funciones de Modeladores fueron eliminadas.
+  - Fue eliminada la funcion: "agregarCuenta()".
+  - Fue eliminada la funcion: "eliminarCuenta()".
+- Cambio de generacion al querer agregar un nuevo chofer a la base de datos.
+  - Antes el Developer/Inspector/Jefe/Admin debia colocar el usuario SIN @. Pero ahora lo debe colocar con el @ (mas que nada por comodidad).
+- Solucion de errores en la funcion que mueve las planillas aceptadas o rechazadas a otro lugar.
+"
+==============================
+Cambios en el sistema de Aviso de Planilleo: {
+    Antes solo se avisaba cuando la planilla de un chofer era aceptada o rechazada. Pero ahora cada vez que se: cargue, acepte o rechace una planilla, los choferes y quienes tienen acceso al canal seran notificados: {
+        Configuracion de la nueva funcion: "nuevaPlanilla()":
+        //Esta funcion sera ejecutada por la funcion: "guardarPlanilla()", luego de haber cargado la planilla en la base de datos.
+        1. Se recolectaran los valores colocados en la pestaña: "inicio".
+        2. Se recolectaran las vueltas que ah cargado el chofer.
+        3. Se colocaran los valores en el siguiente formato: "
+        Titulo: "Nueva Planilla"
+        Texto: "Chofer: "[CHOFER]
+        Texto: "Ramal: "[RAMAL]
+        Texto: "Interno: "[INTERNO]
+        Texto: "Planillas Realizadas: "[PLANILLAS REALIZADAS]
+        (vueltas, formato: 'Texto: "Vuelta (numero de vuelta): Ida: (horario ida) | Vuelta: (horario vuelta))
+        Texto: "Codigo de Planilla: "(el codigo que se genero para la planilla anterior)" | "((dia del envio de la planilla)"/"(mes del envio de la planilla)"/"(año del envio de la planilla)", "(hora del envio de la planilla)":"(minuto del envio de la planilla)":"(segundo del envio de la planilla))
+        Texto: "Para Aceptarla o Rechazarla, entre al siguiente enlace: https://abelcraftok.github.io/GTG/planilla/"[(con: @)CHOFER]".html"
+        "
+        4. Al completar el formato, se enviara a la API: "insCifrada".
+    }
+}
+===================================
+Modificame la siguiente funcion JS para que en vez de mostrar todos los datos que hay en: "Base de Datos > planillas >", solo muestre los datos que estan en: "Base de Datos > planillas > chofer: [chofer]" (que de respuesta al campo "chofer" este el const "chofer").
+
+Mi funcion JS:
+async function mostrarLasPlanillas() {
+    const chofer = @abelcraftok_664
+    const contenedor = document.getElementById('resumen-vueltas');
+    contenedor.innerHTML = '';
+    const querySnapshot = await getDocs(collection(db, "planillas"));
+    let planillas = [];
+    querySnapshot.forEach((docu) => {
+        planillas.push({ id: docu.id, ...docu.data() });
+    });
+    if (planillas.length === 0) {
+        contenedor.innerHTML = '<div class="texto-rojo">No se han encontrado planillas recientes.</div>';
+        return;
+    }
+    planillas.forEach(planilla => {
+        let vueltasHtml = '';
+        if (Array.isArray(planilla.vueltas)) {
+            planilla.vueltas.forEach((v, idx) => {
+                vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
+            });
+        }
+        contenedor.innerHTML += `
+            <div class="burbuja">
+                <strong>Chofer:</strong> ${planilla.chofer}<br>
+                <strong>Ramal:</strong> ${planilla.ramal}<br>
+                <strong>Interno:</strong> ${planilla.interno}<br>
+                <strong>Planillas Realizadas:</strong> ${planilla.planillasCount}<br>
+                ${vueltasHtml}
+                <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla} | ${planilla.timestamp instanceof Date ? planilla.timestamp.toLocaleString() : (planilla.timestamp?.toDate ? planilla.timestamp.toDate().toLocaleString() : planilla.timestamp)}<br>
+                <strong>Estado:</strong> ${planilla.estado}<br>
+                <button style="display: block; margin-top: 5px; color: white; background-color: #8bc34a; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">ACEPTAR</button>
+                <button style="display: block; margin-top: 5px; color: white; background-color: #c0392b; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">RECHAZAR</button>
+            </div>
+            <div class="separador"></div>
+        `;
+    });
+}
+window.mostrarLasPlanillas = mostrarLasPlanillas;
+===================================
+Revisa que las siguientes funciones anden correctamente (me muestra la planilla pero no me deja ni aceptarla o rechazarla):
+
+async function obtenerPlanillas() {
+    const contenedor = document.getElementById('resumen-vueltas');
+    contenedor.innerHTML = '';
+    const querySnapshot = await getDocs(collection(db, "planillas"));
+    let planillas = [];
+    querySnapshot.forEach((docu) => {
+        planillas.push({ id: docu.id, ...docu.data() });
+    });
+    if (planillas.length === 0) {
+        contenedor.innerHTML = '<div class="texto-rojo">No se han encontrado planillas recientes.</div>';
+        return;
+    }
+    planillas.forEach(planilla => {
+        let vueltasHtml = '';
+        if (Array.isArray(planilla.vueltas)) {
+            planilla.vueltas.forEach((v, idx) => {
+                vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
+            });
+        }
+        contenedor.innerHTML += `
+            <div class="burbuja">
+                <strong>Chofer:</strong> ${planilla.chofer}<br>
+                <strong>Ramal:</strong> ${planilla.ramal}<br>
+                <strong>Interno:</strong> ${planilla.interno}<br>
+                <strong>Planillas Realizadas:</strong> ${planilla.planillasCount}<br>
+                ${vueltasHtml}
+                <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla} | ${planilla.timestamp instanceof Date ? planilla.timestamp.toLocaleString() : (planilla.timestamp?.toDate ? planilla.timestamp.toDate().toLocaleString() : planilla.timestamp)}<br>
+                <strong>Estado:</strong> ${planilla.estado}<br>
+                <button style="display: block; margin-top: 5px; color: white; background-color: #8bc34a; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">ACEPTAR</button>
+                <button style="display: block; margin-top: 5px; color: white; background-color: #c0392b; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">RECHAZAR</button>
+            </div>
+            <div class="separador"></div>
+        `;
+    });
+}
+window.obtenerPlanillas = obtenerPlanillas;
+
+window.aceptarPlanilla = async function aceptarPlanilla(id) {
+    try {
+        // 1. Buscar la planilla en 'planillas'
+        const planillaRef = doc(db, "planillas", id);
+        const planillaSnap = await getDocs(collection(db, "planillas"));
+        let planillaData = null;
+        planillaSnap.forEach((docu) => {
+            if (docu.id === id) {
+                planillaData = { id: docu.id, ...docu.data() };
+            }
+        });
+        if (!planillaData) {
+            alert("No se encontró la planilla.");
+            return;
+        }
+        // 2. Modificar estado y mover a historialPlanillas
+        planillaData.estado = "aprobado";
+        await addDoc(collection(db, "historialPlanillas"), planillaData);
+        // 3. Eliminar de planillas
+        await deleteDoc(planillaRef);
+        // 4. Notificar a Discord
+        let vueltasTexto = "";
+        if (Array.isArray(planillaData.vueltas)) {
+            planillaData.vueltas.forEach((v, idx) => {
+                vueltasTexto += `Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '(Invalidada)' : ''}\n`;
+            });
+        }
+        const embed = {
+            title: "Planilla Aprobada",
+            description: `**Chofer:** ${planillaData.chofer}\n**Ramal:** ${planillaData.ramal}\n**Interno:** ${planillaData.interno}\n**Planillas Realizadas:** ${planillaData.planillasCount}\n${vueltasTexto}\n**Codigo de Planilla: ${planillaData.codigoPlanilla} | ${(planillaData.timestamp instanceof Date ? planillaData.timestamp.toLocaleString() : (planillaData.timestamp?.toDate ? planillaData.timestamp.toDate().toLocaleString() : planillaData.timestamp))}**`,
+            color: 3066993,
+            footer: { text: new Date().toLocaleString() }
+        };
+        await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+        alert("Planilla aprobada y movida a historial.");
+        obtenerPlanillas();
+    } catch (error) {
+        alert("Error al aprobar la planilla.");
+        console.error(error);
+    }
+}
+window.denegarPlanilla = async function denegarPlanilla(id) {
+    try {
+        // 1. Buscar la planilla en 'planillas'
+        const planillaRef = doc(db, "planillas", id);
+        const planillaSnap = await getDocs(collection(db, "planillas"));
+        let planillaData = null;
+        planillaSnap.forEach((docu) => {
+            if (docu.id === id) {
+                planillaData = { id: docu.id, ...docu.data() };
+            }
+        });
+        if (!planillaData) {
+            alert("No se encontró la planilla.");
+            return;
+        }
+        // 2. Modificar estado y mover a historialPlanillas
+        planillaData.estado = "rechazado";
+        await addDoc(collection(db, "historialPlanillas"), planillaData);
+        // 3. Eliminar de planillas
+        await deleteDoc(planillaRef);
+        // 4. Notificar a Discord
+        let vueltasTexto = "";
+        if (Array.isArray(planillaData.vueltas)) {
+            planillaData.vueltas.forEach((v, idx) => {
+                vueltasTexto += `Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '(Invalidada)' : ''}\n`;
+            });
+        }
+        const embed = {
+            title: "Planilla Rechazada",
+            description: `**Chofer:** ${planillaData.chofer}\n**Ramal:** ${planillaData.ramal}\n**Interno:** ${planillaData.interno}\n**Planillas Realizadas:** ${planillaData.planillasCount}\n${vueltasTexto}\n**Codigo de Planilla: ${planillaData.codigoPlanilla} | ${(planillaData.timestamp instanceof Date ? planillaData.timestamp.toLocaleString() : (planillaData.timestamp?.toDate ? planillaData.timestamp.toDate().toLocaleString() : planillaData.timestamp))}**`,
+            color: 15158332,
+            footer: { text: new Date().toLocaleString() }
+        };
+        await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+        alert("Planilla rechazada y movida a historial.");
+        obtenerPlanillas();
+    } catch (error) {
+        alert("Error al rechazar la planilla.");
+        console.error(error);
+    }
+}
