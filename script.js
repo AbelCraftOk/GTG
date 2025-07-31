@@ -173,21 +173,16 @@ function generarCodigoUnico() {
 function enlaceCodificado() { //Para las planillas.
     const parteA = "http";
     const parteB = "s://discord.c";
-    const parteC = "om/w";
+    const parteC = "om/api/w";
     const parteD = "eb";
     const parteE = "ho";
     const parteF = "oks";
-    const parteG = "/139";
-    const parteH = "742909339350";
-    const parteI = "239";
-    const parteJ = "9/-7nY9";
-    const parteK = "6q-GeebDg_";
-    const parteL = "WYg1yNWWjQeG";
-    const parteM = "GYyG2NH";
-    const parteN = "RIg0xkRGrvE14Jm";
-    const parteO = "O6GnYawBPZYT5";
-    const parteP = "Dr6jve";
-    const enlaceDecodificado = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteO + parteP;
+    const parteG = "/140035079983779022";
+    const parteH = "9/JHaNa45AB-lQNESqc";
+    const parteI = "mODbDSivf2ZnA0C7mvk";
+    const parteJ = "SnG5ZLm7R0EYE5CpA7l";
+    const parteK = "5TjZLscM1D14z";
+    const enlaceDecodificado = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK;
     return enlaceDecodificado;
 }
 function codificadoEnlace() { //Para el: Feedback
