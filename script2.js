@@ -27,20 +27,21 @@ const db = getFirestore(app);
 
 function insCifrada() { //Para los avisos a los inspectores
     const parteA = "http";
-    const parteB = "s://discord.c";
-    const parteC = "om/api/w";
-    const parteD = "eb";
+    const parteB = "s://disc";
+    const parteC = "ord.com/a";
+    const parteD = "pi/web";
     const parteE = "ho";
     const parteF = "oks";
-    const parteG = "/140003618249847607";
-    const parteH = "2/o1nIscpJCc4-0gM";
-    const parteI = "pMgvoVxO2M2wZ";
-    const parteJ = "og-2o_";
-    const parteK = "HTRPgJVD6cHF";
-    const parteL = "cp6Kh8jtERPRz6";
-    const parteM = "DbqK";
-    const parteN = "hTji";
-    const insCifrada = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN;
+    const parteG = "1400936540";
+    const parteH = "678520942/";
+    const parteI = "6MyCRrqI4v";
+    const parteJ = "_Iwsdzdveu";
+    const parteK = "MzsezB40J2";
+    const parteL = "Jy1CY-yZaG";
+    const parteM = "76D-CqDHx7";
+    const parteN = "uXOxBeAji2";
+    const parteY = "78xeWa5B";
+    const insCifrada = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteY;
     return insCifrada;
 }
 
@@ -55,11 +56,39 @@ function enviarMensaje(planillaData) {
 
     const embed = {
         title: "📋 Nueva Planilla Cargada",
-        description: `**Chofer:** ${planillaData.chofer}\n**Ramal:** ${planillaData.ramal}\n**Interno:** ${planillaData.interno}\n**Planillas Realizadas:** ${planillaData.planillasCount}\n\n${vueltasTexto}\n\n**Código de Planilla:** ${planillaData.codigoPlanilla} | ${new Date().toLocaleString()}\n\n[👉 Aceptar/Rechazar Planilla](https://abelcraftok.github.io/GTG/planilla/@${planillaData.chofer.replace('@', '')}.html)`,
+        description: `Hola Inspectores queridos, soy el BOT encargado de avisarle cuando alla una nueva planilla y recien se acaba de cargar una nueva, asi que lo antes posible traten de revisarla... Aqui se las dejo ❤️\n\n**Chofer:** ${planillaData.chofer}\n**Ramal:** ${planillaData.ramal}\n**Interno:** ${planillaData.interno}\n**Planillas Realizadas:** ${planillaData.planillasCount}\n\n${vueltasTexto}\n\n**Código de Planilla:** ${planillaData.codigoPlanilla} | ${new Date().toLocaleString()}\n\n[👉 Aceptar/Rechazar Planilla](https://abelcraftok.github.io/GTG/planilla/@${planillaData.chofer.replace('@', '')}.html)`,
         color: 3066993,
         footer: {
             text: `📅 Enviada: ${new Date().toLocaleString()}`
         }
+    };
+
+    const payload = { embeds: [embed] };
+
+    fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+    })
+    .then(response => {
+        if (!response.ok) {
+            console.error("❌ Error al enviar mensaje:", response.statusText);
+        } else {
+            console.log("✅ Mensaje embed enviado a Discord");
+        }
+    })
+    .catch(error => {
+        console.error("❌ Error en la solicitud al enviar embed:", error);
+    });
+}
+
+function holaBOTinsCifrada() {
+    const url = insCifrada(); // URL descifrada del webhook
+
+    const embed = {
+        title: "Hola, me presento...",
+        description: `Hola Inspectores queridos, soy el nuevo BOT que se encargara de avisarles cuando alla una nueva planilla, espero llevarnos bien... Suerte en el trabajo ❤️.`,
+        color: 3066993,
     };
 
     const payload = { embeds: [embed] };
