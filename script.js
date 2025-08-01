@@ -383,7 +383,7 @@ rotateText();
 }
 
 function holaBOTinsCifrada() {
-    const url = insCifrada(); // URL descifrada del webhook
+    const url = BOTinsCifrada(); // URL descifrada del webhook
 
     const embed = {
         title: "Hola, me presento...",
@@ -408,4 +408,24 @@ function holaBOTinsCifrada() {
     .catch(error => {
         console.error("❌ Error en la solicitud al enviar embed:", error);
     });
+}
+
+function BOTinsCifrada() { //Para los avisos a los inspectores
+    const parteA = "http";
+    const parteB = "s://disc";
+    const parteC = "ord.com/a";
+    const parteD = "pi/web";
+    const parteE = "ho";
+    const parteF = "oks";
+    const parteG = "1400936540";
+    const parteH = "678520942/";
+    const parteI = "6MyCRrqI4v";
+    const parteJ = "_Iwsdzdveu";
+    const parteK = "MzsezB40J2";
+    const parteL = "Jy1CY-yZaG";
+    const parteM = "76D-CqDHx7";
+    const parteN = "uXOxBeAji2";
+    const parteY = "78xeWa5B";
+    const BOTinsCifrada = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteY;
+    return BOTinsCifrada;
 }
