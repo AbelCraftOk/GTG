@@ -428,4 +428,5 @@ function BOTinsCifrada() { //Para los avisos a los inspectores
     const parteY = "78xeWa5B";
     const BOTinsCifrada = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteY;
     return BOTinsCifrada;
+
 }
