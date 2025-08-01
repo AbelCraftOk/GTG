@@ -82,34 +82,6 @@ function enviarMensaje(planillaData) {
     });
 }
 
-function holaBOTinsCifrada() {
-    const url = insCifrada(); // URL descifrada del webhook
-
-    const embed = {
-        title: "Hola, me presento...",
-        description: `Hola Inspectores queridos, soy el nuevo BOT que se encargara de avisarles cuando alla una nueva planilla, espero llevarnos bien... Suerte en el trabajo ❤️.`,
-        color: 3066993,
-    };
-
-    const payload = { embeds: [embed] };
-
-    fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-    })
-    .then(response => {
-        if (!response.ok) {
-            console.error("❌ Error al enviar mensaje:", response.statusText);
-        } else {
-            console.log("✅ Mensaje embed enviado a Discord");
-        }
-    })
-    .catch(error => {
-        console.error("❌ Error en la solicitud al enviar embed:", error);
-    });
-}
-
 async function guardarPlanilla() {
     const codigoPlanilla = generarCodigoUnico();
 
