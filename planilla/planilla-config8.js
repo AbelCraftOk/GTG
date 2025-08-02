@@ -26,7 +26,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 document.addEventListener("DOMContentLoaded", mostrarLasPlanillas);
 async function mostrarLasPlanillas() {
-    const chofer = "@nacho2104";
+    const chofer = "@nacho02104";
     
     const contenedor = document.getElementById('resumen-vueltas');
     contenedor.innerHTML = '';
@@ -170,4 +170,5 @@ window.denegarPlanilla = async function denegarPlanilla(id) {
         alert("Error al rechazar la planilla.");
         console.error(error);
     }
+
 }
