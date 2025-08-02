@@ -31,13 +31,13 @@ function cerrarMenuEnviarMensaje() {
 function cerrarMenuMensajesChofer() {
     document.getElementById('menu-mensajes-chofer').style.display = 'none';
 }
-function mostrarPestania(id) {
-    const pestañas = ['login', 'register', 'admin', 'developer', 'inspectores', 'inicio', 'personal', 'licencias', 'usuario', 'comprar-pasajes', 'info-pasajes'];
-    pestañas.forEach(pid => {
-        const el = document.getElementById(pid);
-        if (el) el.style.display = (pid === id) ? 'block' : 'none';
-    });
+function mostrarPestania(nombre) {
+    const secciones = document.querySelectorAll(".contenedor");
+    secciones.forEach(s => s.style.display = "none");
+    const actual = document.getElementById(nombre);
+    if (actual) actual.style.display = "block";
 }
+
 function abrirMenuRamales() {
     document.getElementById('menu-ramales').style.display = 'flex';
 }
@@ -428,4 +428,19 @@ function inspectoresActiven() {
     const parte15 = "fbWJ";
     const inspectores = parte1 + parte2 + parte3 + parte4 + parte5 + parte6 + parte7 + parte8 + parte9 + parte10 + parte11 + parte12 + parte13 + parte14 + parte15;
     return inspectores;
+}
+function iniciarTextoRotativo() {
+    const frases = [
+        "Espere a ser logueado automaticamente",
+        "Espere a ser logueado automaticamente.",
+        "Espere a ser logueado automaticamente..",
+        "Espere a ser logueado automaticamente..."
+    ];
+    let i = 0;
+    const rotador = document.getElementById("texto-rotativo"); // Asegúrate de tener este ID en tu HTML
+
+    setInterval(() => {
+        rotador.innerText = frases[i % frases.length];
+        i++;
+    }, 500);
 }

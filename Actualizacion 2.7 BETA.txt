@@ -1,0 +1,175 @@
+Titulo: "Implementacion del sistema de logueo automatico - Version: 2.7 BETA"
+Mensaje: "Implementamos una nueva funcion que, si ya te has logueado anteriormente, al volver a entrar en otro momento, seras logueado automaticamente a la cuenta que has usado anteriormente."
+Cambio: "- Nueva funcion que si ya te has logueado anteriormente, al volver a entrar en otro momento, seras logueado automaticamente a la cuenta que has usado anteriormente."
+
+Ayudame a crear una funcion para logueo automatico:
+Parte 1: Configurar correctamente la funcion que loguea {
+    Esta es mi funcion que se encarga de loguear, aqui agrega un script que el "usuario" y "clave" sean guardados en localStorage como: "loginConfig".
+    Mi funcion que loguea:
+    window.login = async function () {
+    document.getElementById('logueandocampo').style.display = 'block';
+    rotateText();
+    const usuarioInput = document.getElementById('login-user').value.trim();
+    const claveInput = document.getElementById('login-password').value.trim();
+    const q = query(collection(db, "cuentas"), where("usuario", "==", usuarioInput));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+        alert("El usuario no coincide con las cuentas creadas.");
+        return;
+    }
+    let acceso = false;
+    snapshot.forEach((docu) => {
+        const data = docu.data();
+        if (data.clave === claveInput) {
+            acceso = true;
+            const rol = data.rol;
+
+            localStorage.setItem("usuario", data.usuario);
+            localStorage.setItem("clave", data.clave);
+            localStorage.setItem("rolUsuario", rol);
+
+            window.user = data.usuario;
+
+            // Registrar el inicio de sesión en los logs
+            registrarLogInicio(data.usuario);
+
+            if (rol === "developer") {
+                alert('Logueo exitoso, tu rol es: Developer');
+                mostrarPestania('developer');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "inspector") {
+                alert('Logueo exitoso, tu rol es: Inspector');
+                mostrarPestania('inspectores');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "personal") {
+                alert('Logueo exitoso, tu eres del Perosnal de la empresa GTG');
+                mostrarPestania('personal');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "admin") {
+                alert('Logueo exitoso, tu rol es: Administrador');
+                mostrarPestania('admin');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "jefe") {
+                alert('Logueo exitoso, tu rol es: Jefe');
+                mostrarPestania('admin');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "usuario") {
+                alert('Logueo exitoso');
+                mostrarPestania('usuario');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+        } else {
+            alert("La clave es incorrecta.");
+            document.getElementById('logueandocampo').style.display = 'none';
+        }
+    });
+    if (!acceso) return;
+};
+}
+Parte 2: Lo que pasara al momento de ejeuctar el HTML {
+    //Crea una nueva pestaña llamada: "auto-login" y esta sera la que se cargara al iniciar el codigo.
+    1. Se cargara la pestaña: "auto-login".
+    2. Se cargara el texto rotativo: {
+        1- "Espere a ser logueado automaticamente",
+        2- "Espere a ser logueado automaticamente.",
+        3- "Espere a ser logueado automaticamente..",
+        4- "Espere a ser logueado automaticamente...".
+    }
+    3. Se extraeran los datos de ubicados en localStorage: "loginConfig".
+    4. Aqui pueden pasar 2 cosas: {
+        1- Si no se encuentra "loginConfig", el usuario sera llevado a la pestaña: "login" usando el script: "mostrarPestania('login')".
+        2- Si se encontro "loginConfig", se seguira con el punto 5-
+    }
+    5. Se ejecurtara la funcion: "auto-login".
+    //La siguiente funcion llamada "autoLogin" es una representacion de como pienso que podria estar desarrollada la funcion:
+    window.autoLogin = async function () {
+    const usuarioInput = //extraido del localStorage.
+    const claveInput = //extraido del localStorage.
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+        alert("El usuario no coincide con las cuentas creadas.");
+        return;
+    }
+    let acceso = false;
+    snapshot.forEach((docu) => {
+        const data = docu.data();
+        if (data.clave === claveInput) {
+            acceso = true;
+            const rol = data.rol;
+
+            localStorage.setItem("usuario", data.usuario);
+            localStorage.setItem("clave", data.clave);
+            localStorage.setItem("rolUsuario", rol);
+
+            window.user = data.usuario;
+
+            // Registrar el inicio de sesión en los logs
+            registrarLogInicio(data.usuario);
+
+            if (rol === "developer") {
+                alert('Logueo exitoso, tu rol es: Developer');
+                mostrarPestania('developer');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "inspector") {
+                alert('Logueo exitoso, tu rol es: Inspector');
+                mostrarPestania('inspectores');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "personal") {
+                alert('Logueo exitoso, tu eres del Perosnal de la empresa GTG');
+                mostrarPestania('personal');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "admin") {
+                alert('Logueo exitoso, tu rol es: Administrador');
+                mostrarPestania('admin');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "jefe") {
+                alert('Logueo exitoso, tu rol es: Jefe');
+                mostrarPestania('admin');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+            else if (rol === "usuario") {
+                alert('Logueo exitoso');
+                mostrarPestania('usuario');
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+            }
+        } else {
+            alert("La clave es incorrecta.");
+            document.getElementById('logueandocampo').style.display = 'none';
+        }
+    });
+    if (!acceso) return;
+};
+}

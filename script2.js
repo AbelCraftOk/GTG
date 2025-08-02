@@ -551,10 +551,12 @@ window.login = async function () {
             localStorage.setItem("usuario", data.usuario);
             localStorage.setItem("clave", data.clave);
             localStorage.setItem("rolUsuario", rol);
+            localStorage.setItem("loginConfig", JSON.stringify({
+                usuario: data.usuario,
+                clave: data.clave
+            }));
 
             window.user = data.usuario;
-
-            // Registrar el inicio de sesión en los logs
             registrarLogInicio(data.usuario);
 
             if (rol === "developer") {
@@ -606,6 +608,81 @@ window.login = async function () {
     });
     if (!acceso) return;
 };
+window.autoLogin = async function () {
+    const config = localStorage.getItem("loginConfig");
+
+    // Si no hay datos guardados, redirige al login
+    if (!config) {
+        setTimeout(() => {
+            mostrarPestania('login');
+            document.getElementById('auto-login').style.display = 'none';
+        }, 1500);
+        return;
+    }
+
+    const { usuario, clave } = JSON.parse(config);
+    document.getElementById('logueandocampo').style.display = 'block';
+    rotateText();
+
+    try {
+        const q = query(collection(db, "cuentas"), where("usuario", "==", usuario));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+            alert("El usuario no coincide con las cuentas guardadas.");
+            localStorage.removeItem("loginConfig");
+            document.getElementById('logueandocampo').style.display = 'none';
+            mostrarPestania('login');
+            return;
+        }
+
+        let acceso = false;
+        snapshot.forEach((docu) => {
+            const data = docu.data();
+            if (data.clave === clave) {
+                acceso = true;
+                const rol = data.rol;
+
+                // Guardar datos de sesión
+                localStorage.setItem("usuario", data.usuario);
+                localStorage.setItem("clave", data.clave);
+                localStorage.setItem("rolUsuario", rol);
+                window.user = data.usuario;
+                registrarLogInicio(data.usuario);
+
+                let pestania = '';
+                if (rol === "developer") pestania = 'developer';
+                else if (rol === "inspector") pestania = 'inspectores';
+                else if (rol === "personal") pestania = 'personal';
+                else if (rol === "admin" || rol === "jefe") pestania = 'admin';
+                else pestania = 'usuario';
+
+                alert(`Logueo exitoso, tu rol es: ${rol}`);
+                mostrarPestania(pestania);
+                document.getElementById('cerrarSesion').style.display = 'block';
+                document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('logueandocampo').style.display = 'none';
+                document.getElementById('auto-login').style.display = 'none';
+            }
+        });
+
+        // Si no se logró acceso, ir al login
+        if (!acceso) {
+            alert("La clave es incorrecta o el usuario no tiene acceso.");
+            localStorage.removeItem("loginConfig");
+            document.getElementById('logueandocampo').style.display = 'none';
+            document.getElementById('auto-login').style.display = 'none';
+            mostrarPestania('login');
+        }
+    } catch (error) {
+        console.error("Error en auto-login:", error);
+        alert("Hubo un error al intentar loguearte automáticamente.");
+        localStorage.removeItem("loginConfig");
+        document.getElementById('logueandocampo').style.display = 'none';
+        document.getElementById('auto-login').style.display = 'none';
+        mostrarPestania('login');
+    }
+};
 window.redirigirSegunRol = function () {
     const rol = localStorage.getItem("rolUsuario");
 
@@ -655,7 +732,7 @@ const titulo = document.getElementById('titulo-pre-actualizacion').value.trim();
         return;
     }
     const embed = {
-        title: `SPOILER de la proxima Actualizacion ${titulo}`,
+        title: `SPOILER de la proxima Actualizacion: ${titulo}`,
         description: `${mensaje}\n\n**Cambios:**\n${cambios}\nAutor: ${autor}`,
         color: 15844367,
         footer: { text: new Date().toLocaleString() }
@@ -666,7 +743,7 @@ const titulo = document.getElementById('titulo-pre-actualizacion').value.trim();
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ embeds: [embed] })
         });
-        alert('Actualización enviada correctamente.');
+        alert('Pre-Actualización enviada correctamente.');
         cerrarMenuActualizar();
     } catch (error) {
         alert('Error al enviar la actualización.');
