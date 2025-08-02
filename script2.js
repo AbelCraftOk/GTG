@@ -11,6 +11,7 @@ import {
     query,
     where,
     setDoc,
+    serverTimestamp,
     doc as firestoreDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
@@ -25,34 +26,8 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-function insCifrada() { //Para los avisos a los inspectores
-    const parteA = "http";
-    const parteB = "s://disc";
-    const parteC = "ord.com/a";
-    const parteD = "pi/web";
-    const parteE = "ho";
-    const parteF = "oks";
-    const parteG = "1400936540";
-    const parteH = "678520942/";
-    const parteI = "6MyCRrqI4v";
-    const parteJ = "_Iwsdzdveu";
-    const parteK = "MzsezB40J2";
-    const parteL = "Jy1CY-yZaG";
-    const parteM = "76D-CqDHx7";
-    const parteN = "uXOxBeAji2";
-    const parteY = "78xeWa5B";
-    const insCifrada = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteY;
-    return insCifrada;
-}
-
 function enviarMensaje(planillaData) {
-    const url = insCifrada(); // URL descifrada del webhook
-
-    const vueltasTexto = planillaData.vueltas.map((v, i) => {
-        const ida = v.idaHora || '??';
-        const vuelta = v.vueltaHora || '??';
-        return `**Vuelta ${i + 1}:** Ida: ${ida} | Vuelta: ${vuelta}`;
-    }).join('\n');
+    const BOTinsCifrada = BOTinsCifrada();
 
     const embed = {
         title: "📋 Nueva Planilla Cargada",
@@ -65,7 +40,7 @@ function enviarMensaje(planillaData) {
 
     const payload = { embeds: [embed] };
 
-    fetch(url, {
+    fetch(BOTinsCifrada, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -83,6 +58,7 @@ function enviarMensaje(planillaData) {
 }
 
 async function guardarPlanilla() {
+    alert("Enviando planilla, por favor espere...")
     const codigoPlanilla = generarCodigoUnico();
 
     const choferElem = document.getElementById('chofer');
@@ -134,9 +110,9 @@ async function guardarPlanilla() {
             timestamp: new Date(),
             codigoPlanilla: codigoPlanilla,
         };
-
+        
         await addDoc(collection(db, "planillas"), nuevaPlanilla);
-        alert("✅ Planilla guardada exitosamente.");
+        console.log("✅ Planilla registrada");
 
         enviarMensaje(nuevaPlanilla);  // 👈 Mensaje con embed a Discord
         limpiarCampos()
@@ -149,62 +125,64 @@ async function guardarPlanilla() {
 window.guardarPlanilla = guardarPlanilla;
 
 window.obtenerPlanillas = async function obtenerPlanillas() {
-    const contenedor1 = document.getElementById('resumen-vueltas1');
-    const contenedor2 = document.getElementById('resumen-vueltas2');
-    contenedor1.innerHTML = '';
-    contenedor2.innerHTML = '';
+  alert("Obteniendo planillas, por favor espere...")
+  const contenedor = document.getElementById('resumen-vueltas');
+  if (!contenedor) {
+    console.error("El elemento 'resumen-vueltas' no se encontró.");
+    return;
+  }
+  contenedor.innerHTML = '';
 
-    try {
-        const querySnapshot = await getDocs(collection(db, "planillas"));
-        let planillas = [];
-        querySnapshot.forEach((docu) => {
-            planillas.push({ id: docu.id, ...docu.data() });
-        });
+  try {
+    const querySnapshot = await getDocs(collection(db, "planillas"));
+    let planillas = [];
+    querySnapshot.forEach((docu) => {
+      planillas.push({ id: docu.id, ...docu.data() });
+    });
 
-        if (planillas.length === 0) {
-            const msg = '<div class="texto-rojo">No se han encontrado planillas recientes.</div>';
-            contenedor1.innerHTML = msg;
-            contenedor2.innerHTML = msg;
-            return;
-        }
-
-        planillas.forEach(planilla => {
-            let vueltasHtml = '';
-            if (Array.isArray(planilla.vueltas)) {
-                planilla.vueltas.forEach((v, idx) => {
-                    vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
-                });
-            }
-
-            const planillaHTML = `
-                <div class="burbuja">
-                    <strong>Chofer:</strong> ${planilla.chofer}<br>
-                    <strong>Ramal:</strong> ${planilla.ramal}<br>
-                    <strong>Interno:</strong> ${planilla.interno}<br>
-                    <strong>Planillas Realizadas:</strong> ${planilla.planillasCount}<br>
-                    ${vueltasHtml}
-                    <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla} | 
-                    ${planilla.timestamp instanceof Date
-                    ? planilla.timestamp.toLocaleString()
-                    : (planilla.timestamp?.toDate
-                        ? planilla.timestamp.toDate().toLocaleString()
-                        : planilla.timestamp)}<br>
-                    <strong>Estado:</strong> ${planilla.estado}<br>
-                    <button onclick="aceptarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #8bc34a; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">ACEPTAR</button>
-                    <button onclick="denegarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #c0392b; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">RECHAZAR</button>
-                </div>
-                <div class="separador"></div>
-            `;
-
-            contenedor1.innerHTML += planillaHTML;
-            contenedor2.innerHTML += planillaHTML;
-        });
-    } catch (error) {
-        console.error("Error al obtener planillas:", error);
+    if (planillas.length === 0) {
+      const msg = '<div class="texto-rojo">No se han encontrado planillas recientes.</div>';
+      contenedor.innerHTML = msg;
+      return;
     }
+
+    planillas.forEach(planilla => {
+      let vueltasHtml = '';
+      if (Array.isArray(planilla.vueltas)) {
+        planilla.vueltas.forEach((v, idx) => {
+          vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
+        });
+      }
+
+      const planillaHTML = `
+        <div class="burbuja">
+          <strong>Chofer:</strong> ${planilla.chofer}<br>
+          <strong>Ramal:</strong> ${planilla.ramal}<br>
+          <strong>Interno:</strong> ${planilla.interno}<br>
+          <strong>Planillas Realizadas:</strong> ${planilla.planillasCount}<br>
+          ${vueltasHtml}
+          <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla} | 
+          ${planilla.timestamp instanceof Date
+            ? planilla.timestamp.toLocaleString()
+            : (planilla.timestamp?.toDate
+              ? planilla.timestamp.toDate().toLocaleString()
+              : planilla.timestamp)}<br>
+          <strong>Estado:</strong> ${planilla.estado}<br>
+          <button onclick="aceptarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #8bc34a; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">ACEPTAR</button>
+          <button onclick="denegarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #c0392b; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">RECHAZAR</button>
+        </div>
+        <div class="separador"></div>
+      `;
+
+      contenedor.innerHTML += planillaHTML;
+    });
+  } catch (error) {
+    console.error("Error al obtener planillas:", error);
+  }
 };
 
 window.aceptarPlanilla = async function aceptarPlanilla(id) {
+    alert("Aceptando planilla, por favor espere...")
     try {
         // 1. Buscar la planilla en 'planillas'
         const planillaRef = doc(db, "planillas", id);
@@ -246,6 +224,7 @@ window.aceptarPlanilla = async function aceptarPlanilla(id) {
 }
 
 window.denegarPlanilla = async function denegarPlanilla(id) {
+    alert("Rechazando planilla, por favor espere...")
     try {
         // 1. Buscar la planilla en 'planillas'
         const planillaRef = doc(db, "planillas", id);
@@ -283,38 +262,6 @@ window.denegarPlanilla = async function denegarPlanilla(id) {
     } catch (error) {
         alert("Error al rechazar la planilla.");
         console.error(error);
-    }
-}
-
-window.enviarMensajeInspector = async function enviarMensajeInspector() {
-    const mensaje = document.getElementById('mensaje-inspector').value.trim();
-    if (!mensaje) {
-        alert("El mensaje no puede estar vacío.");
-        return;
-    }
-    try {
-        // Guardar en Firestore (Función 1)
-        await addDoc(collection(db, "mensajesInspectores"), {
-            texto: mensaje,
-            timestamp: new Date()
-        });
-        // Enviar al webhook (Función 2)
-        const embed = {
-            title: "📨 Nuevo Mensaje del Inspector",
-            description: `Un inspector ha enviado un nuevo mensaje: "${mensaje}"`,
-            color: 3447003,
-            footer: { text: new Date().toLocaleString() }
-        };
-        await fetch(apiMensajes, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ embeds: [embed] })
-        });
-        alert("Mensaje enviado correctamente.");
-        cerrarMenuEnviarMensaje();
-    } catch (err) {
-        alert("Error al enviar el mensaje.");
-        console.error(err);
     }
 }
 window.abrirMenuHistorialPlanillas = async function abrirMenuHistorialPlanillas() {
@@ -485,7 +432,6 @@ window.filtrarHistorialAntiguas = function () {
     renderizarHistorial(ordenado);
     cerrarMenuFiltroHistorial();
 }
-import { serverTimestamp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
 async function registrarLogInicio(usuario) {
     const ahora = new Date();
@@ -546,32 +492,43 @@ window.cerrarMenuLogs = function cerrarMenuLogs() {
     document.getElementById('menu-logs').style.display = 'none';
 }
 window.registrarCuenta = async function () {
-    const usuario = document.getElementById('register-user').value.trim();
-    const clave = document.getElementById('register-password').value.trim();
-    if (!usuario || !clave) {
-        alert("Completa todos los campos.");
-        return;
+  const usuario = document.getElementById('register-user').value.trim();
+  const clave = document.getElementById('register-password').value.trim();
+  if (!usuario || !clave) {
+    alert("Completa todos los campos.");
+    return;
+  }
+  const datosCuenta = {
+    usuario,
+    clave,
+    rol: "usuario"
+  };
+  const datosCuentaExtra = {
+    usuario,
+    clave,
+    viaje: "0",
+    viajes: "0"
+  };
+  try {
+    const querySnapshot = await getDocs(collection(db, "cuentas"));
+    let existeCuenta = false;
+    querySnapshot.forEach((docu) => {
+      if (docu.data().usuario === usuario) {
+        existeCuenta = true;
+      }
+    });
+    if (existeCuenta) {
+      alert("Ya existe una cuenta con ese usuario.");
+      return;
     }
-    const datosCuenta = {
-        usuario,
-        clave,
-        rol: "usuario"
-    };
-    const datosCuentaExtra = {
-        usuario,
-        clave,
-        viaje: "0",
-        viajes: "0"
-    };
-    try {
-        await addDoc(collection(db, "cuentas"), datosCuenta);
-        await addDoc(collection(db, "cuenta"), datosCuentaExtra);
-        alert("Cuenta registrada exitosamente.");
-        mostrarPestania('login');
-    } catch (err) {
-        console.error("Error al registrar la cuenta:", err);
-        alert("Error al registrar la cuenta.");
-    }
+    await addDoc(collection(db, "cuentas"), datosCuenta);
+    await addDoc(collection(db, "cuenta"), datosCuentaExtra);
+    alert("Cuenta registrada exitosamente.");
+    mostrarPestania('login');
+  } catch (err) {
+    console.error("Error al registrar la cuenta:", err);
+    alert("Error al registrar la cuenta.");
+  }
 };
 window.login = async function () {
     document.getElementById('logueandocampo').style.display = 'block';

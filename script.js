@@ -383,7 +383,7 @@ rotateText();
 }
 
 function holaBOTinsCifrada() {
-    const url = BOTinsCifrada(); // URL descifrada del webhook
+    const hook = inspectoresActiven(); // URL descifrada del webhook
 
     const embed = {
         title: "Hola, me presento...",
@@ -393,7 +393,7 @@ function holaBOTinsCifrada() {
 
     const payload = { embeds: [embed] };
 
-    fetch(url, {
+    fetch(hook, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -410,23 +410,22 @@ function holaBOTinsCifrada() {
     });
 }
 
-function BOTinsCifrada() { //Para los avisos a los inspectores
-    const parteA = "http";
-    const parteB = "s://disc";
-    const parteC = "ord.com/a";
-    const parteD = "pi/web";
-    const parteE = "ho";
-    const parteF = "oks";
-    const parteG = "1400936540";
-    const parteH = "678520942/";
-    const parteI = "6MyCRrqI4v";
-    const parteJ = "_Iwsdzdveu";
-    const parteK = "MzsezB40J2";
-    const parteL = "Jy1CY-yZaG";
-    const parteM = "76D-CqDHx7";
-    const parteN = "uXOxBeAji2";
-    const parteY = "78xeWa5B";
-    const BOTinsCifrada = parteA + parteB + parteC + parteD + parteE + parteF + parteG + parteH + parteI + parteJ + parteK + parteL + parteM + parteN + parteY;
-    return BOTinsCifrada;
-
+function inspectoresActiven() {
+    const parte1 = "http";
+    const parte2 = "s://discord.c";
+    const parte3 = "om/api/w";
+    const parte4 = "eb";
+    const parte5 = "ho";
+    const parte6 = "oks";
+    const parte7 = "/14011025293";
+    const parte8 = "78521110/g";
+    const parte9 = "pfcMNIJNzinVs";
+    const parte10 = "w4clfLIN_x";
+    const parte11 = "rPWDCNNXczl9G";
+    const parte12 = "GGdODJi8";
+    const parte13 = "FBVDThurZy";
+    const parte14 = "5nu4cnkqf";
+    const parte15 = "fbWJ";
+    const inspectores = parte1 + parte2 + parte3 + parte4 + parte5 + parte6 + parte7 + parte8 + parte9 + parte10 + parte11 + parte12 + parte13 + parte14 + parte15;
+    return inspectores;
 }

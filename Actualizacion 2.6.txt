@@ -1,0 +1,122 @@
+Titulo: "Version: 2.6"
+Mensaje: "
+Ahora habra un solo link para ambos dispositivos, no como antes que habia una version para PC y otra diferente para Celulares.
+Tambien agregamos un par de animaciones...
+
+**SPOILER:** En la version 2.6 BETA, inplementaremos una nueva funcion que, si ya te has logueado anteriormente, al volver a entrar en otro momento, seras logueado automaticamente a la cuenta que has usado anteriormente.
+"
+Cambios: "
+- Solo habra una version para ambos tipos de dispositivos.
+- Agregamos las siguientes animaciones: 
+  - Le avisa al usuario que se esta registrando en el sistema.
+  - Le avisa al superior (inspector o admin/jefe) que se esta aceptando o rechazando la planilla.
+  - Aplica en la pestaña: "inspectores" y tambien en la web individual de cada chofer.
+  - Le avisa al chofer que se esta enviando la planilla.
+  - Le avisa al personal que se esta cargando la licencia.
+- Nuevo procedimiento que se hara al querer registrarse, entonces la lista de procedimientos queda asi:
+  - Se obtienen los valores de los campos de usuario y contraseña del formulario de registro.
+  - Se verifica si ambos campos están completos. Si no, se muestra una alerta y se sale de la función.
+  - Se crea un objeto datosCuenta con los datos del usuario, contraseña y rol.
+  - Se crea un objeto datosCuentaExtra con los datos del usuario, contraseña, viaje y viajes.
+  - Se realiza una consulta a la colección "cuentas" en la base de datos para verificar si ya existe una cuenta con el mismo usuario.
+  - Se itera sobre los documentos devueltos por la consulta y se verifica si el usuario coincide con alguno de ellos.
+  - Si se encuentra una coincidencia, se muestra una alerta indicando que ya existe una cuenta con ese usuario y se sale de la función.
+  - Si no se encuentra una cuenta con el mismo usuario, se procede a registrar la nueva cuenta:
+  - Se agrega un nuevo documento a la colección "cuentas" con los datos de datosCuenta.
+  - Se agrega un nuevo documento a la colección "cuenta" con los datos de datosCuentaExtra.
+  - Después de registrar la cuenta exitosamente, se muestra una alerta indicando que la cuenta se registró correctamente y se llama a la función mostrarPestania('login') para mostrar la pestaña de inicio de sesión.
+  - Si ocurre algún error durante el registro, se muestra una alerta indicando que hubo un error y se registra el error en la consola.
+- Arreglos en la funcion: "obtenerPlanillas()"
+"
+
+Nuevo procedimiento que se hara al querer registrarse: {
+    En la siguiente funcion, antes de cargarse una nueva cuenta a la base de datos, se verificara que no alla una cuenta con el mismo usuario. Si el usuario coincide se le avisara al usaurio que ya exite una cuenta con ese usuario.
+    Mi funcion para que le apliques los cambios:
+    window.registrarCuenta = async function () {
+    const usuario = document.getElementById('register-user').value.trim();
+    const clave = document.getElementById('register-password').value.trim();
+    if (!usuario || !clave) {
+        alert("Completa todos los campos.");
+        return;
+    }
+    const datosCuenta = {
+        usuario,
+        clave,
+        rol: "usuario"
+    };
+    const datosCuentaExtra = {
+        usuario,
+        clave,
+        viaje: "0",
+        viajes: "0"
+    };
+    try {
+        await addDoc(collection(db, "cuentas"), datosCuenta);
+        await addDoc(collection(db, "cuenta"), datosCuentaExtra);
+        alert("Cuenta registrada exitosamente.");
+        mostrarPestania('login');
+    } catch (err) {
+        console.error("Error al registrar la cuenta:", err);
+        alert("Error al registrar la cuenta.");
+    }
+};
+}
+Arreglos en la funcion: "obtenerPlanillas()": {
+    Arregla mi funcion para que ande correctamente, sufre el error:
+    script2.js:127 Uncaught (in promise) TypeError: Cannot set properties of null (setting 'innerHTML')
+    at obtenerPlanillas (script2.js:127:26)
+    at HTMLButtonElement.onclick (Sistema de Planilleo…GTG 2.5.html:551:92)
+
+    Mi codigo es:
+    window.obtenerPlanillas = async function obtenerPlanillas() {
+    const contenedor = document.getElementById('resumen-vueltas');
+    contenedor.innerHTML = '';
+
+    try {
+        const querySnapshot = await getDocs(collection(db, "planillas"));
+        let planillas = [];
+        querySnapshot.forEach((docu) => {
+            planillas.push({ id: docu.id, ...docu.data() });
+        });
+
+        if (planillas.length === 0) {
+            const msg = '<div class="texto-rojo">No se han encontrado planillas recientes.</div>';
+            contenedor.innerHTML = msg;
+            return;
+        }
+
+        planillas.forEach(planilla => {
+            let vueltasHtml = '';
+            if (Array.isArray(planilla.vueltas)) {
+                planilla.vueltas.forEach((v, idx) => {
+                    vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
+                });
+            }
+
+            const planillaHTML = `
+                <div class="burbuja">
+                    <strong>Chofer:</strong> ${planilla.chofer}<br>
+                    <strong>Ramal:</strong> ${planilla.ramal}<br>
+                    <strong>Interno:</strong> ${planilla.interno}<br>
+                    <strong>Planillas Realizadas:</strong> ${planilla.planillasCount}<br>
+                    ${vueltasHtml}
+                    <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla} | 
+                    ${planilla.timestamp instanceof Date
+                    ? planilla.timestamp.toLocaleString()
+                    : (planilla.timestamp?.toDate
+                        ? planilla.timestamp.toDate().toLocaleString()
+                        : planilla.timestamp)}<br>
+                    <strong>Estado:</strong> ${planilla.estado}<br>
+                    <button onclick="aceptarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #8bc34a; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">ACEPTAR</button>
+                    <button onclick="denegarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #c0392b; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">RECHAZAR</button>
+                </div>
+                <div class="separador"></div>
+            `;
+
+            contenedor.innerHTML += planillaHTML;
+        });
+    } catch (error) {
+        console.error("Error al obtener planillas:", error);
+    }
+};
+}

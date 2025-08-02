@@ -91,6 +91,7 @@ window.mostrarLasPlanillas = mostrarLasPlanillas;
     }
 
 window.aceptarPlanilla = async function aceptarPlanilla(id) {
+    alert("Aceptando planilla, por favor espere...")
     try {
         // 1. Buscar la planilla en 'planillas'
         const planillaRef = doc(db, "planillas", id);
@@ -132,6 +133,7 @@ window.aceptarPlanilla = async function aceptarPlanilla(id) {
 }
 
 window.denegarPlanilla = async function denegarPlanilla(id) {
+    alert("Rechazando planilla, por favor espere...")
     try {
         // 1. Buscar la planilla en 'planillas'
         const planillaRef = doc(db, "planillas", id);
@@ -170,5 +172,4 @@ window.denegarPlanilla = async function denegarPlanilla(id) {
         alert("Error al rechazar la planilla.");
         console.error(error);
     }
-
 }
