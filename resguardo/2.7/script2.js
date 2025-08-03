@@ -27,7 +27,18 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 function enviarMensaje(planillaData) {
-    const BOTinsCifrada = BOTinsCifrada();
+    const inspectores = inspectoresActiven();
+
+    let vueltasTexto = "";
+
+    if (Array.isArray(planillaData.vueltas) && planillaData.vueltas.length > 0) {
+        vueltasTexto = "**🌀 Vueltas:**\n";
+        planillaData.vueltas.forEach((v, i) => {
+            vueltasTexto += `• Vuelta ${i + 1}: ${v.hora || 'sin hora'} - ${v.comentario || 'sin comentario'}\n`;
+        });
+    } else {
+        vueltasTexto = "Sin vueltas registradas.";
+    }
 
     const embed = {
         title: "📋 Nueva Planilla Cargada",
@@ -40,7 +51,7 @@ function enviarMensaje(planillaData) {
 
     const payload = { embeds: [embed] };
 
-    fetch(BOTinsCifrada, {
+    fetch(inspectores, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
@@ -50,13 +61,13 @@ function enviarMensaje(planillaData) {
             console.error("❌ Error al enviar mensaje:", response.statusText);
         } else {
             console.log("✅ Mensaje embed enviado a Discord");
+            redirigirSegunRol();
         }
     })
     .catch(error => {
         console.error("❌ Error en la solicitud al enviar embed:", error);
     });
 }
-
 async function guardarPlanilla() {
     alert("Enviando planilla, por favor espere...")
     const codigoPlanilla = generarCodigoUnico();
