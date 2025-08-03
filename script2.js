@@ -27,7 +27,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 function enviarMensaje(planillaData) {
-    const BOTinsCifrada = BOTinsCifrada();
+    const inspectores = inspectoresActiven();
 
     const embed = {
         title: "📋 Nueva Planilla Cargada",
@@ -40,7 +40,7 @@ function enviarMensaje(planillaData) {
 
     const payload = { embeds: [embed] };
 
-    fetch(inspectoresActiven, {
+    fetch(inspectores, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
