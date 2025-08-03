@@ -40,7 +40,7 @@ function enviarMensaje(planillaData) {
 
     const payload = { embeds: [embed] };
 
-    fetch(BOTinsCifrada, {
+    fetch(inspectoresActiven, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
