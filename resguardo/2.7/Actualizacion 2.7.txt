@@ -1,0 +1,19 @@
+Titulo: "Menu de administracion de Almacenamiento localStorage - V: 2.7"
+Mensaje: "Cree varios elementos que ayudaran al usuario a poder administrar los datos del Almacenamiento localStorage guardado por la web... Mas adelante veras los cambios."
+Cambios: "
+- Nuevo menu para administrar el Almacenamiento localStorage guardado por la web.
+  - Para acceder al menu: Habra un boton que se desbloqueara al ser loguedo, al usar este boton se desplegara el menu.
+  - Funciones que encontraras en el menu: Podras eliminar los datos guardados al iniciar sesion (los que permiten al logueo automatico hacerlo sin equivocaciones), y tambien hay otra funcion para eliminar los datos que utiliza la funcion que cambia el tema de Dia a Noche o bisebersa.
+- Notificacion al usuario al ser logueado.
+"
+Nuevo menu para administrar el Almacenamiento localStorage guardado por la web: {
+    Para acceder al menu: Habra un boton que se desbloqueara al ser loguedo, al usar este boton se desplegara el menu: {
+        Botón: {Nombre: icono de configuración - Ejecuta: "document.getElementById('menu-configuracion').style.display = 'none';" - Ubicacion: Arriba derecha (junto al logo).}
+    }
+    Funciones que encontraras en el menu: Podras eliminar los datos guardados al iniciar sesion (los que permiten al logueo automatico hacerlo sin equivocaciones), y tambien hay otra funcion para eliminar los datos que utiliza la funcion que cambia el tema de Dia a Noche o bisebersa: {
+    //Configuración del menú "configuración":
+        Boton: {Nombre: "Eliminar información del login automatico" - Ejecuta: "localStorage.removeItem("loginConfig");"}
+        Botón: {Nombre: "Eliminar información del cambiador de tema" - Ejecuta: "localStorage.removeItem("theme");"}
+        Botón: {Nombre: "Cerrar menu" - Ejecuta: "document.getElementById('menu-configuracion').style.display = 'none';"}
+    }
+}
