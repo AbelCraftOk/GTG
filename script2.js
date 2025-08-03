@@ -29,6 +29,17 @@ const db = getFirestore(app);
 function enviarMensaje(planillaData) {
     const inspectores = inspectoresActiven();
 
+    let vueltasTexto = "";
+
+    if (Array.isArray(planillaData.vueltas) && planillaData.vueltas.length > 0) {
+        vueltasTexto = "**🌀 Vueltas:**\n";
+        planillaData.vueltas.forEach((v, i) => {
+            vueltasTexto += `• Vuelta ${i + 1}: ${v.hora || 'sin hora'} - ${v.comentario || 'sin comentario'}\n`;
+        });
+    } else {
+        vueltasTexto = "Sin vueltas registradas.";
+    }
+
     const embed = {
         title: "📋 Nueva Planilla Cargada",
         description: `Hola Inspectores queridos, soy el BOT encargado de avisarle cuando alla una nueva planilla y recien se acaba de cargar una nueva, asi que lo antes posible traten de revisarla... Aqui se las dejo ❤️\n\n**Chofer:** ${planillaData.chofer}\n**Ramal:** ${planillaData.ramal}\n**Interno:** ${planillaData.interno}\n**Planillas Realizadas:** ${planillaData.planillasCount}\n\n${vueltasTexto}\n\n**Código de Planilla:** ${planillaData.codigoPlanilla} | ${new Date().toLocaleString()}\n\n[👉 Aceptar/Rechazar Planilla](https://abelcraftok.github.io/GTG/planilla/@${planillaData.chofer.replace('@', '')}.html)`,
@@ -50,13 +61,13 @@ function enviarMensaje(planillaData) {
             console.error("❌ Error al enviar mensaje:", response.statusText);
         } else {
             console.log("✅ Mensaje embed enviado a Discord");
+            redirigirSegunRol();
         }
     })
     .catch(error => {
         console.error("❌ Error en la solicitud al enviar embed:", error);
     });
 }
-
 async function guardarPlanilla() {
     alert("Enviando planilla, por favor espere...")
     const codigoPlanilla = generarCodigoUnico();
