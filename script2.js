@@ -432,7 +432,6 @@ window.filtrarHistorialAntiguas = function () {
     renderizarHistorial(ordenado);
     cerrarMenuFiltroHistorial();
 }
-
 async function registrarLogInicio(usuario) {
     const ahora = new Date();
 
@@ -555,10 +554,11 @@ window.login = async function () {
                 usuario: data.usuario,
                 clave: data.clave
             }));
-
+            
             window.user = data.usuario;
             registrarLogInicio(data.usuario);
-
+            
+            document.getElementById('myAudio').play()
             if (rol === "developer") {
                 alert('Logueo exitoso, tu rol es: Developer');
                 mostrarPestania('developer');
@@ -623,6 +623,7 @@ window.autoLogin = async function () {
     const { usuario, clave } = JSON.parse(config);
     document.getElementById('logueandocampo').style.display = 'block';
     rotateText();
+    document.getElementById('myAudio').play()
 
     try {
         const q = query(collection(db, "cuentas"), where("usuario", "==", usuario));
