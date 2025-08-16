@@ -653,7 +653,7 @@
             <button type="button" class="theme-toggle-button" onclick="mostrarPestania('usuario'); document.getElementById('menu-pestanias').style.display = 'none';">"usuario"</button>
             <button type="button" class="theme-toggle-button" onclick="mostrarPestania('comprar-pasajes'); document.getElementById('menu-pestanias').style.display = 'none';">"comprar-pasajes"</button>
             <button type="button" class="theme-toggle-button" onclick="mostrarPestania('info-pasajes'); document.getElementById('menu-pestanias').style.display = 'none';">"info-pasajes"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('micro'); document.getElementById('menu-pestanias').style.display = 'none';">"micro"</button>
+            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('micro'); refrescarColectivos(); document.getElementById('menu-pestanias').style.display = 'none';">"micro"</button>
             <div class="separador"></div>
             <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-pestanias').style.display = 'none';">Cerrar Menu</button>
         </div>
@@ -671,7 +671,7 @@
       	</div>
         <div class="seccion">
             <h2>Ver Colectivos Activos</h2>
-            <button class="theme-toggle-button" onclick=" refrescarColectivos(); mostrarPestania('micro');">Ver Colectivos Activos</button>
+            <button class="theme-toggle-button" onclick="refrescarColectivos(); mostrarPestania('micro');">Ver Colectivos Activos</button>
         </div>
     </div>
 	<div id="comprar-pasajes" class="contenedor" style="display: none;">
@@ -1181,7 +1181,7 @@
     border: none;
     cursor: pointer;
 ">💬</button>
-<button onclick="mostrarPestania('micro')" id="micro-btn" style="
+<button onclick="refrescarColectivos(); mostrarPestania('micro');" id="micro-btn" style="
     display: none;
     position: fixed;
     bottom: 5px;
