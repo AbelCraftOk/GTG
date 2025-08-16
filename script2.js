@@ -575,6 +575,7 @@ window.login = async function () {
                 mostrarPestania('developer');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "inspector") {
@@ -582,6 +583,7 @@ window.login = async function () {
                 mostrarPestania('inspectores');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "personal") {
@@ -589,6 +591,7 @@ window.login = async function () {
                 mostrarPestania('personal');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "admin") {
@@ -596,6 +599,7 @@ window.login = async function () {
                 mostrarPestania('admin');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "jefe") {
@@ -603,6 +607,7 @@ window.login = async function () {
                 mostrarPestania('admin');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "usuario") {
@@ -610,6 +615,7 @@ window.login = async function () {
                 mostrarPestania('usuario');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
         } else {
@@ -673,6 +679,7 @@ window.autoLogin = async function () {
                 mostrarPestania(pestania);
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
+                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
                 document.getElementById('auto-login').style.display = 'none';
             }
@@ -794,7 +801,7 @@ async function mostrarPasajesDisponibles() {
     <button onclick="comprarPasaje('${random.viaje}')">Comprar este pasaje</button>
   `;
 }
-
+window.mostrarPasajesDisponibles = mostrarPasajesDisponibles;
 // Función: Mostrar información de pasajes sin viajar
 async function mostrarPasajesSinViajar() {
     const div = document.getElementById("infoPasajes");
@@ -821,7 +828,7 @@ async function mostrarPasajesSinViajar() {
         }
     }
 }
-
+window.mostrarPasajesSinViajar = mostrarPasajesSinViajar;
 // Función: Comprar pasaje
 async function comprarPasaje(viajeId) {
     const cuentaRef = doc(db, "cuenta", $idUsuario$);
@@ -845,3 +852,83 @@ async function comprarPasaje(viajeId) {
     alert("Pasaje comprado con éxito.");
     mostrarPestania("usuario");
 }
+window.comprarPasaje = comprarPasaje;
+async function guardarUbicacion(ubicacion) {
+    const chofer = document.getElementById('chofer').value.trim();
+    const ramal = document.getElementById('boton-ramal').innerText.trim(); 
+
+    if (!chofer) {
+        alert('Debes indicar el chofer antes de guardar la ubicación.');
+        return;
+    }
+    if (!ramal || ramal === "Indicar Ramal") {
+        alert('Debes indicar el ramal antes de guardar la ubicación.');
+        return;
+    }
+
+    const fecha = new Date();
+    const horaFormato = `${fecha.getHours().toString().padStart(2,'0')}:` +
+                        `${fecha.getMinutes().toString().padStart(2,'0')}`
+
+    try {
+        await setDoc(doc(db, "ubication", chofer), {
+            chofer: chofer,
+            ubicacion: ubicacion,
+            time: horaFormato,
+            ramal: ramal
+        });
+        console.log(`Ubicación "${ubicacion}" guardada para el chofer ${chofer}, ramal ${ramal}`);
+    } catch (error) {
+        console.error("Error guardando ubicación: ", error);
+    }
+}
+window.guardarUbicacion = guardarUbicacion;
+async function enviarPlanilla() {
+    const chofer = document.getElementById('chofer').value.trim();
+    if (!chofer) {
+        alert("Debes indicar el chofer antes de enviar la planilla.");
+        return;
+    }
+    guardarPlanilla();
+    await eliminarUbicacionesChofer(chofer);
+}
+window.enviarPlanilla = enviarPlanilla;
+async function eliminarUbicacionesChofer(chofer) {
+    try {
+        const q = query(collection(db, "ubication"), where("chofer", "==", chofer));
+        const snapshot = await getDocs(q);
+        if (snapshot.empty) {
+            console.log("No había ubicaciones para eliminar.");
+            return;
+        }
+        const deletes = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
+        await Promise.all(deletes);
+        console.log(`Se eliminaron ${snapshot.size} ubicaciones del chofer ${chofer}`);
+    } catch (error) {
+        console.error("Error eliminando ubicaciones:", error);
+    }
+}
+async function refrescarColectivos() {
+    const listaDiv = document.getElementById("colectivos-lista");
+    listaDiv.innerHTML = "Cargando...";
+    try {
+        const snapshot = await getDocs(collection(db, "ubication"));
+        if (snapshot.empty) {
+            listaDiv.innerHTML = "No hay colectivos circulando.";
+            return;
+        }
+        listaDiv.innerHTML = "";
+        snapshot.forEach(docSnap => {
+            const data = docSnap.data();
+            const linea = `[${data.ramal}] - ${data.chofer} - ${data.ubicacion} - ${data.time}`;
+            const p = document.createElement("p");
+            p.textContent = linea;
+            p.classList.add("colectivo-linea");
+            listaDiv.appendChild(p);
+        });
+    } catch (error) {
+        console.error("Error al cargar colectivos:", error);
+        listaDiv.innerHTML = "Error al cargar la información.";
+    }
+}
+window.refrescarColectivos = refrescarColectivos;

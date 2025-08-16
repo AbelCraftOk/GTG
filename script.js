@@ -59,7 +59,7 @@ function cerrarMenuInternos() {
 // Función para seleccionar un ramal
 function seleccionarRamal(ramal) {
     ramalSeleccionado = ramal;
-    document.getElementById('boton-ramal').textContent = `Ramal: ${ramal}`;
+    document.getElementById('boton-ramal').textContent = `${ramal}`;
     cerrarMenuRamales();
 }
 // Función para seleccionar un interno
@@ -76,10 +76,6 @@ function abrirMenuCargarVuelta() {
     }
     document.getElementById('menu-cargar-vuelta').style.display = 'flex';
 }
-// Función para cerrar el menú de cargar vuelta
-function cerrarMenuCargarVuelta() {
-    document.getElementById('menu-cargar-vuelta').style.display = 'none';
-}
 // Función para cargar una vuelta
 function cargarVuelta() {
     const ida = document.getElementById('ida-cargar').value.trim();
@@ -92,7 +88,6 @@ function cargarVuelta() {
     alert(`Vuelta cargada: Ida ${ida} - Vuelta ${vuelta}`);
     document.getElementById('ida-cargar').value = "";
     document.getElementById('vuelta-cargar').value = "";
-    cerrarMenuCargarVuelta();
 }
 // Función para invalidar la última vuelta cargada
 function invalidarVuelta() {
@@ -102,7 +97,6 @@ function invalidarVuelta() {
     }
     vueltas[vueltas.length - 1].invalidada = true;
     alert("Última vuelta invalidada.");
-    cerrarMenuCargarVuelta();
 }
 // Función para abrir el menú de vueltas cargadas
 function abrirMenuVueltasCargadas() {
@@ -437,10 +431,30 @@ function iniciarTextoRotativo() {
         "Espere a ser logueado automaticamente..."
     ];
     let i = 0;
-    const rotador = document.getElementById("texto-rotativo"); // Asegúrate de tener este ID en tu HTML
-
+    const rotador = document.getElementById("texto-rotativo");
     setInterval(() => {
         rotador.innerText = frases[i % frases.length];
         i++;
     }, 500);
+}
+let alarmaInterval;
+let audio = new Audio('./alarm.mp3');
+audio.loop = true;
+function iniciarAlarma() {
+    alarmaInterval = setInterval(() => {
+        document.getElementById('menu-alarma').style.display = 'flex';
+        audio.play();
+    }, 90 * 1000); // 1 minuto 30 segundos
+}
+function entendidoAlarma() {
+    console.log("✅ Arrancado sistema de Alarma");
+    audio.pause();
+    audio.currentTime = 0;
+    document.getElementById('menu-alarma').style.display = 'none';
+}
+function horaActual(inputId) {
+    const ahora = new Date();
+    const horas = String(ahora.getHours()).padStart(2, '0');
+    const minutos = String(ahora.getMinutes()).padStart(2, '0');
+    document.getElementById(inputId).value = `${horas}:${minutos}`;
 }
