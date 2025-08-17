@@ -403,7 +403,6 @@ function holaBOTinsCifrada() {
         console.error("❌ Error en la solicitud al enviar embed:", error);
     });
 }
-
 function inspectoresActiven() {
     const parte1 = "http";
     const parte2 = "s://discord.c";
@@ -457,4 +456,18 @@ function horaActual(inputId) {
     const horas = String(ahora.getHours()).padStart(2, '0');
     const minutos = String(ahora.getMinutes()).padStart(2, '0');
     document.getElementById(inputId).value = `${horas}:${minutos}`;
+}
+function enlaces() { 
+    const parteA1 = "http";
+    const parteB2 = "s://discord.c";
+    const parteC3 = "om/api/w";
+    const parteD4 = "eb";
+    const parteE5 = "ho";
+    const parteF6 = "oks";
+    const parteG7 = "/140641807071668";
+    const parteH8 = "2441/HTIo9888_35X3HFFuO";
+    const parteI9 = "5lri8lA4TqmzjQdV-WPE";
+    const parteJ10 = "YH-m-vmfwa1UiEoxBqzDvIm3Mk6gFs";
+    const enlacesDecodificados = parteA1 + parteB2 + parteC3 + parteD4 + parteE5 + parteF6 + parteG7 + parteH8 + parteI9 + parteJ10;
+    return enlacesDecodificados;
 }

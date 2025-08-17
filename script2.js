@@ -32,7 +32,7 @@ function enviarMensaje(planillaData) {
     let vueltasTexto = "";
 
     if (Array.isArray(planillaData.vueltas) && planillaData.vueltas.length > 0) {
-        vueltasTexto = "**🌀 Vueltas:**\n";
+        vueltasTexto = "**Vueltas:**\n";
         planillaData.vueltas.forEach((v, i) => {
             vueltasTexto += `• Vuelta ${i + 1}: ${v.hora || 'sin hora'} - ${v.comentario || 'sin comentario'}\n`;
         });
@@ -853,35 +853,6 @@ async function comprarPasaje(viajeId) {
     mostrarPestania("usuario");
 }
 window.comprarPasaje = comprarPasaje;
-async function guardarUbicacion(ubicacion) {
-    const chofer = document.getElementById('chofer').value.trim();
-    const ramal = document.getElementById('boton-ramal').innerText.trim(); 
-
-    if (!chofer) {
-        alert('Debes indicar el chofer antes de guardar la ubicación.');
-        return;
-    }
-    if (!ramal || ramal === "Indicar Ramal") {
-        alert('Debes indicar el ramal antes de guardar la ubicación.');
-        return;
-    }
-
-    const fecha = new Date();
-    const horaFormato = `${fecha.getHours().toString().padStart(2,'0')}:` +
-                        `${fecha.getMinutes().toString().padStart(2,'0')}`
-
-    try {
-        await setDoc(doc(db, "ubication", chofer), {
-            chofer: chofer,
-            ubicacion: ubicacion,
-            time: horaFormato,
-            ramal: ramal
-        });
-        console.log(`Ubicación "${ubicacion}" guardada para el chofer ${chofer}, ramal ${ramal}`);
-    } catch (error) {
-        console.error("Error guardando ubicación: ", error);
-    }
-}
 window.guardarUbicacion = guardarUbicacion;
 async function enviarPlanilla() {
     const chofer = document.getElementById('chofer').value.trim();
@@ -932,3 +903,54 @@ async function refrescarColectivos() {
     }
 }
 window.refrescarColectivos = refrescarColectivos;
+async function guardarUbicacion(ubicacion) {
+    const chofer = document.getElementById('chofer').value.trim();
+    const ramal = document.getElementById('boton-ramal').innerText.trim(); 
+
+    if (!chofer || chofer === "Indicar Chofer") {
+        alert('Debes indicar el chofer antes de guardar la ubicación.');
+        return;
+    }
+    if (!ramal || ramal === "Indicar Ramal") {
+        alert('Debes indicar el ramal antes de guardar la ubicación.');
+        return;
+    }
+
+    const fecha = new Date();
+    const horaFormato = `${fecha.getHours().toString().padStart(2,'0')}:` +
+                        `${fecha.getMinutes().toString().padStart(2,'0')}`;
+
+    try {
+        // Guardar en Firestore
+        await setDoc(doc(db, "ubication", chofer), {
+            chofer: chofer,
+            ubicacion: ubicacion,
+            time: horaFormato,
+            ramal: ramal
+        });
+        console.log(`✅ Ubicación "${ubicacion}" guardada para el chofer ${chofer}, ramal ${ramal}`);
+
+        // Enviar embed a Discord
+        const webhookUrl = enlaces(); // Usa tu función/constante de webhook
+        const embed = {
+            title: "🚌 Nueva Ubicación Registrada",
+            description: `El chofer @${chofer.replace('@', '')} ha guardado una nueva ubicación.\n\n` +
+                         `📍 Ubicación: **${ubicacion}**\n` +
+                         `🛣️ Ramal: **${ramal}**\n\n` +
+                         `[Visualizar Últimas Ubicaciones de Recorridos Actuales](https://abelcraftok.github.io/GTG/ubication.html)`,
+            color: 3447003,
+            footer: { text: `📅 Horario: ${new Date().toLocaleString()}` }
+        };
+
+        await fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+        console.log("✅ Mensaje embed enviado a Discord");
+
+    } catch (error) {
+        console.error("❌ Error guardando ubicación o enviando embed:", error);
+    }
+}
+window.guardarUbicacion = guardarUbicacion;
