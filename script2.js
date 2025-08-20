@@ -895,13 +895,13 @@ async function refrescarColectivos() {
             const p = document.createElement("p");
             p.classList.add("colectivo-linea");
             p.innerHTML = `
-                <span style="color: #00BFFF; font-weight: bold;">[${data.ramal}]</span>
-                <span style="color: white; font-weight: bold;"> - </span>
-                <span style="color: #FF0000; font-weight: bold;">${data.chofer}</span>
-                <span style="color: white; font-weight: bold;"> - </span>
-                <span style="color: #32CD32; font-weight: bold;">${data.ubicacion}</span>
+                <span style="color: #00BFFF; font-weight: bold;">Línea General Tomas Guido [${data.ramal}]</span>
                 <span style="color: white; font-weight: bold;"> - </span>
                 <span style="color: #FFA500; font-weight: bold;">${data.sentido}</span>
+                <span style="color: white; font-weight: bold;"> - </span>
+                <span style="color: #32CD32; font-weight: bold;">En: ${data.ubicacion}</span>
+                <span style="color: white; font-weight: bold;"> - </span>
+                <span style="color: #FF0000; font-weight: bold;">Chofer: ${data.chofer}</span>
                 <span style="color: white; font-weight: bold;"> - </span>
                 <span style="color: #008000; font-weight: bold;">${data.time}</span>
             `;
