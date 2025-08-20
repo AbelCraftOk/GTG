@@ -885,17 +885,28 @@ async function refrescarColectivos() {
     try {
         const snapshot = await getDocs(collection(db, "ubication"));
         if (snapshot.empty) {
-            listaDiv.innerHTML = "No hay colectivos circulando.";
+            listaDiv.innerHTML = '<span style="color:red; font-weight:bold;">No hay colectivos circulando.</span>';
             return;
         }
         listaDiv.innerHTML = "";
         snapshot.forEach(docSnap => {
             const data = docSnap.data();
-            const linea = `[${data.ramal}] - ${data.chofer} - ${data.ubicacion} - ${data.time}`;
+            const linea = `[${data.ramal}] - ${data.chofer} - ${data.ubicacion} - ${data.sentido} - ${data.time}`;
             const p = document.createElement("p");
-            p.textContent = linea;
             p.classList.add("colectivo-linea");
+            p.innerHTML = `
+                <span style="color: #00BFFF; font-weight: bold;">[${data.ramal}]</span>
+                <span style="color: white; font-weight: bold;"> - </span>
+                <span style="color: #FF0000; font-weight: bold;">${data.chofer}</span>
+                <span style="color: white; font-weight: bold;"> - </span>
+                <span style="color: #32CD32; font-weight: bold;">${data.ubicacion}</span>
+                <span style="color: white; font-weight: bold;"> - </span>
+                <span style="color: #FFA500; font-weight: bold;">${data.sentido}</span>
+                <span style="color: white; font-weight: bold;"> - </span>
+                <span style="color: #008000; font-weight: bold;">${data.time}</span>
+            `;
             listaDiv.appendChild(p);
+            listaDiv.appendChild(document.createElement("div"));
         });
     } catch (error) {
         console.error("Error al cargar colectivos:", error);
@@ -905,8 +916,8 @@ async function refrescarColectivos() {
 window.refrescarColectivos = refrescarColectivos;
 async function guardarUbicacion(ubicacion) {
     const chofer = document.getElementById('chofer').value.trim();
-    const ramal = document.getElementById('boton-ramal').innerText.trim(); 
-
+    const ramal = document.getElementById('boton-ramal').innerText.trim();
+    const sentido = document.getElementById('sentido').value;
     if (!chofer || chofer === "Indicar Chofer") {
         alert('Debes indicar el chofer antes de guardar la ubicación.');
         return;
@@ -915,40 +926,39 @@ async function guardarUbicacion(ubicacion) {
         alert('Debes indicar el ramal antes de guardar la ubicación.');
         return;
     }
-
+    if (!sentido) {
+        alert('Debes seleccionar el sentido (IDA o VUELTA).');
+        return;
+    }
     const fecha = new Date();
     const horaFormato = `${fecha.getHours().toString().padStart(2,'0')}:` +
                         `${fecha.getMinutes().toString().padStart(2,'0')}`;
-
     try {
-        // Guardar en Firestore
         await setDoc(doc(db, "ubication", chofer), {
             chofer: chofer,
             ubicacion: ubicacion,
             time: horaFormato,
-            ramal: ramal
+            ramal: ramal,
+            sentido: sentido
         });
-        console.log(`✅ Ubicación "${ubicacion}" guardada para el chofer ${chofer}, ramal ${ramal}`);
-
-        // Enviar embed a Discord
-        const webhookUrl = enlaces(); // Usa tu función/constante de webhook
+        console.log(`✅ Ubicación "${ubicacion}" guardada para ${chofer}, ramal ${ramal}, sentido ${sentido}`);
+        const webhookUrl = enlaces();
         const embed = {
             title: "🚌 Nueva Ubicación Registrada",
             description: `El chofer @${chofer.replace('@', '')} ha guardado una nueva ubicación.\n\n` +
                          `📍 Ubicación: **${ubicacion}**\n` +
-                         `🛣️ Ramal: **${ramal}**\n\n` +
+                         `🛣️ Ramal: **${ramal}**\n` +
+                         `➡️ Sentido: **${sentido}**\n\n` +
                          `[Visualizar Últimas Ubicaciones de Recorridos Actuales](https://abelcraftok.github.io/GTG/ubication.html)`,
             color: 3447003,
             footer: { text: `📅 Horario: ${new Date().toLocaleString()}` }
         };
-
         await fetch(webhookUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ embeds: [embed] })
         });
         console.log("✅ Mensaje embed enviado a Discord");
-
     } catch (error) {
         console.error("❌ Error guardando ubicación o enviando embed:", error);
     }
