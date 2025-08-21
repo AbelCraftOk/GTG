@@ -2,43 +2,29 @@ let vueltas = [];
 let ramalSeleccionado = "";
 let internoSeleccionado = "";
 let todasLasPlanillas = [];
-const WEBHOOK_URL = enlaceCodificado(); //Para planillas
-const apiMensajes = codificadoDeMensajes(); //Para Mensajes de Inspectores
-const apiLicencia = licenciacodificado(); //Para las licencias. Hay que configurarlo.
-
-// Función para limpiar todos los campos
+const WEBHOOK_URL = enlaceCodificado();
+const apiMensajes = codificadoDeMensajes();
+const apiLicencia = licenciacodificado();
 function limpiarCampos() {
-    // Variables globales
     ramalSeleccionado = "";
     internoSeleccionado = "";
-
-    // Botones de selección
     document.getElementById('boton-ramal').textContent = "Indicar Ramal";
     document.getElementById('boton-interno').textContent = "Indicar Interno";
-
-    // Recorrido asignado
     document.getElementById('recorrido-info').value = "";
-
-    // Nuevos campos de la planilla
     document.getElementById('ida1').value = "";
     document.getElementById('ida2').value = "";
     document.getElementById('descanso').value = "";
     document.getElementById('descanso2').value = "";
     document.getElementById('vuelta1').value = "";
     document.getElementById('vuelta2').value = "";
-
-    // Contadores de planillas
     document.getElementById('planillas1').value = "";
     document.getElementById('planillas2').value = "";
     document.getElementById('planillas3').value = "";
-
-    // Si existía el campo viejo 'planillas', también lo vaciamos por compatibilidad
     const planillasOld = document.getElementById('planillas');
     if (planillasOld) {
         planillasOld.value = "";
     }
 }
-// Función para establecer la hora actual en un campo de input
 function horaActual(id) {
     const ahora = new Date();
     const horas = ahora.getHours().toString().padStart(2, '0');
@@ -60,14 +46,12 @@ function mostrarPestania(nombre) {
     const actual = document.getElementById(nombre);
     if (actual) actual.style.display = "block";
 }
-
 function abrirMenuRamales() {
     document.getElementById('menu-ramales').style.display = 'flex';
 }
 function cerrarMenuRamales() {
     document.getElementById('menu-ramales').style.display = 'none';
 }
-// Función para abrir el menú de internos
 function abrirMenuInternos() {
     if (!ramalSeleccionado) {
         alert("Seleccione un ramal primero.");
@@ -75,24 +59,20 @@ function abrirMenuInternos() {
     }
     document.getElementById('menu-internos').style.display = 'flex';
 }
-// Función para cerrar el menú de internos
 function cerrarMenuInternos() {
     document.getElementById('menu-internos').style.display = 'none';
 }
-// Función para seleccionar un ramal
 function seleccionarRamal(ramal) {
     ramalSeleccionado = ramal;
     document.getElementById('boton-ramal').textContent = `${ramal}`;
     actualizarRecorrido();
     cerrarMenuRamales();
 }
-// Función para seleccionar un interno
 function seleccionarInterno(interno) {
     internoSeleccionado = interno;
     document.getElementById('boton-interno').textContent = `Interno: ${interno}`;
     cerrarMenuInternos();
 }
-// Función para abrir el menú de cargar vuelta
 function abrirMenuCargarVuelta() {
     if (!ramalSeleccionado || !internoSeleccionado) {
         alert("Seleccione ramal e interno primero.");
@@ -100,7 +80,6 @@ function abrirMenuCargarVuelta() {
     }
     document.getElementById('menu-cargar-vuelta').style.display = 'flex';
 }
-// Función para cargar una vuelta
 function cargarVuelta() {
     const ida = document.getElementById('ida-cargar').value.trim();
     const vuelta = document.getElementById('vuelta-cargar').value.trim();
@@ -113,7 +92,6 @@ function cargarVuelta() {
     document.getElementById('ida-cargar').value = "";
     document.getElementById('vuelta-cargar').value = "";
 }
-// Función para invalidar la última vuelta cargada
 function invalidarVuelta() {
     if (vueltas.length === 0) {
         alert("No hay vueltas para invalidar.");
@@ -122,7 +100,6 @@ function invalidarVuelta() {
     vueltas[vueltas.length - 1].invalidada = true;
     alert("Última vuelta invalidada.");
 }
-// Función para abrir el menú de vueltas cargadas
 function abrirMenuVueltasCargadas() {
     const lista = document.getElementById('vueltas-lista');
     if (vueltas.length === 0) {
@@ -138,12 +115,10 @@ function abrirMenuVueltasCargadas() {
     }
     document.getElementById('menu-vueltas-cargadas').style.display = 'flex';
 }
-// Función para cerrar el menú de vueltas cargadas
 function cerrarMenuVueltasCargadas() {
     document.getElementById('menu-vueltas-cargadas').style.display = 'none';
 }
 function generarCodigoUnico() {
-    // Crea un código aleatorio estilo GTG-2025-XY123
     const año = new Date().getFullYear();
     const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const parteLetra = letras[Math.floor(Math.random() * letras.length)] + letras[Math.floor(Math.random() * letras.length)];
@@ -287,12 +262,10 @@ function cargarLicencia() {
     const motivo = document.getElementById('licencia-motivo').value;
     const duracion = document.getElementById('licencia-tiempo').value;
     const sector = document.getElementById('licencia-sector').value;
-
     if (!idDiscord || !idRoblox || !apodoRoblox || !motivo || !duracion || !sector || motivo.startsWith("Seleccione") || duracion.startsWith("Seleccione") || sector === "Seleccione su Sector") {
         alert("Por favor, complete todos los campos correctamente.");
         return;
     }
-
     const mensaje = 
 `ID de Discord: ${idDiscord}
 ID de Roblox: ${idRoblox}
@@ -300,14 +273,12 @@ Apodo de Roblox: ${apodoRoblox}
 Sector de la Empresa donde sacara licencia: ${sector}
 Motivo de licencia: ${motivo}
 Tiempo de licencia: ${duracion}`;
-
     const embed = {
         title: "📄 Nueva Licencia",
         description: mensaje,
         color: 15844367,
         footer: { text: new Date().toLocaleString() }
     };
-
     fetch(apiLicencia, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -368,24 +339,21 @@ function rotateText() {
     }, 1000);
 }
 rotateText();
-        async function enviarFeedback() {
+async function enviarFeedback() {
     const id = document.getElementById('discord-id').value.trim();
     const tipo = document.getElementById('tipo-reporte').value;
     const mensaje = document.getElementById('mensaje-reporte').value.trim();
     const apifeedback = feedback()
-
     if (!id || !tipo || !mensaje) {
         alert("Por favor completa todos los campos.");
         return;
     }
-
     const embed = {
         title: "📣 Nuevo Feedback",
         description: `**Reporte de:** ${id}\n**Tipo de Reporte:** ${tipo}\n**Mensaje:**\n${mensaje}`,
         color: 3447003,
         footer: { text: new Date().toLocaleString() }
     };
-
     try {
         await fetch(apifeedback, {
             method: 'POST',
@@ -399,18 +367,14 @@ rotateText();
         alert("Error al enviar el reporte.");
     }
 }
-
 function holaBOTinsCifrada() {
-    const hook = inspectoresActiven(); // URL descifrada del webhook
-
+    const hook = inspectoresActiven();
     const embed = {
         title: "Hola, me presento...",
         description: `Hola Inspectores queridos, soy el nuevo BOT que se encargara de avisarles cuando alla una nueva planilla, espero llevarnos bien... Suerte en el trabajo ❤️.`,
         color: 3066993,
     };
-
     const payload = { embeds: [embed] };
-
     fetch(hook, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

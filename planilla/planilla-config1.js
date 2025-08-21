@@ -26,7 +26,6 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 document.addEventListener("DOMContentLoaded", mostrarLasPlanillas);
 async function mostrarLasPlanillas() {
-    
     const contenedor = document.getElementById('resumen-vueltas');
     contenedor.innerHTML = '';
 
@@ -47,22 +46,42 @@ async function mostrarLasPlanillas() {
     }
 
     planillas.forEach(planilla => {
-        let vueltasHtml = '';
         document.getElementById('cargando-planilla').style.display = 'none';
-        if (Array.isArray(planilla.vueltas)) {
-            planilla.vueltas.forEach((v, idx) => {
-                vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
-            });
+
+        // Formatear timestamp
+        let timestamp = '';
+        if (planilla.timestamp instanceof Date) {
+            timestamp = planilla.timestamp.toLocaleString();
+        } else if (planilla.timestamp?.toDate) {
+            timestamp = planilla.timestamp.toDate().toLocaleString();
+        } else {
+            timestamp = planilla.timestamp || '';
         }
+
         contenedor.innerHTML += `
             <div class="burbuja">
                 <strong>Chofer:</strong> ${planilla.chofer}<br>
                 <strong>Ramal:</strong> ${planilla.ramal}<br>
                 <strong>Interno:</strong> ${planilla.interno}<br>
-                <strong>Planillas Realizadas:</strong> ${planilla.planillasCount}<br>
-                ${vueltasHtml}
-                <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla} | ${planilla.timestamp instanceof Date ? planilla.timestamp.toLocaleString() : (planilla.timestamp?.toDate ? planilla.timestamp.toDate().toLocaleString() : planilla.timestamp)}<br>
+                <strong>Recorrido:</strong> ${planilla.recorrido}<br>
+                <strong>Planillas Generales:</strong> ${planilla.planillas1}<br>
+                <strong>Planillas Semanales:</strong> ${planilla.planillas2}<br>
+                <strong>Planillas Diarias:</strong> ${planilla.planillas3}<br>
+                
+                <strong>IDA:</strong><br>
+                &nbsp;&nbsp;Salida: ${planilla.ida1 || '-'}<br>
+                &nbsp;&nbsp;Llegada: ${planilla.ida2 || '-'}<br>
+                
+                <strong>VUELTA:</strong><br>
+                &nbsp;&nbsp;Salida: ${planilla.vuelta1 || '-'}<br>
+                &nbsp;&nbsp;Llegada: ${planilla.vuelta2 || '-'}<br>
+                
+                <strong>Descanso 1:</strong> ${planilla.descanso || '-'}<br>
+                <strong>Descanso 2:</strong> ${planilla.descanso2 || '-'}<br>
+                
+                <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla} | ${timestamp}<br>
                 <strong>Estado:</strong> ${planilla.estado}<br>
+                
                 <button onclick="aceptarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #8bc34a; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">ACEPTAR</button>
                 <button onclick="denegarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #c0392b; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">RECHAZAR</button>
             </div>
@@ -70,6 +89,7 @@ async function mostrarLasPlanillas() {
         `;
     });
 }
+
 
 window.mostrarLasPlanillas = mostrarLasPlanillas;
     const WEBHOOK_URL = enlaceCodificado(); //Para planillas
@@ -90,41 +110,56 @@ window.mostrarLasPlanillas = mostrarLasPlanillas;
     }
 
 window.aceptarPlanilla = async function aceptarPlanilla(id) {
-    alert("Aceptando planilla, por favor espere...")
+    alert("Aceptando planilla, por favor espere...");
     try {
-        // 1. Buscar la planilla en 'planillas'
         const planillaRef = doc(db, "planillas", id);
         const planillaSnap = await getDoc(planillaRef);
         if (!planillaSnap.exists()) {
             alert("No se encontró la planilla.");
             return;
         }
+
         const planillaData = { id: planillaSnap.id, ...planillaSnap.data() };
-        // 2. Modificar estado y mover a historialPlanillas
         planillaData.estado = "aprobado";
+
+        // Mover a historialPlanillas
         await addDoc(collection(db, "historialPlanillas"), planillaData);
-        // 3. Eliminar de planillas
         await deleteDoc(planillaRef);
-        // 4. Notificar a Discord
-        let vueltasTexto = "";
-        if (Array.isArray(planillaData.vueltas)) {
-            planillaData.vueltas.forEach((v, idx) => {
-                vueltasTexto += `Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '(Invalidada)' : ''}\n`;
-            });
-        }
+
+        // Construir texto de vueltas
+        const vueltasTexto = `
+IDA:
+  Salida: ${planillaData.ida1 || '-'}
+  Llegada: ${planillaData.ida2 || '-'}
+VUELTA:
+  Salida: ${planillaData.vuelta1 || '-'}
+  Llegada: ${planillaData.vuelta2 || '-'}
+`;
+
         const embed = {
             title: "Planilla Aprobada",
-            description: `**Chofer:** ${planillaData.chofer}\n**Ramal:** ${planillaData.ramal}\n**Interno:** ${planillaData.interno}\n**Planillas Realizadas:** ${planillaData.planillasCount}\n${vueltasTexto}\n**Codigo de Planilla: ${planillaData.codigoPlanilla} | ${(planillaData.timestamp instanceof Date ? planillaData.timestamp.toLocaleString() : (planillaData.timestamp?.toDate ? planillaData.timestamp.toDate().toLocaleString() : planillaData.timestamp))}**`,
+            description: `**Chofer:** ${planillaData.chofer}
+**Ramal:** ${planillaData.ramal}
+**Interno:** ${planillaData.interno}
+**Recorrido:** ${planillaData.recorrido}
+**Planillas Generales:** ${planillaData.planillas1}
+**Planillas Semanales:** ${planillaData.planillas2}
+**Planillas Diarias:** ${planillaData.planillas3}
+${vueltasTexto}
+**Codigo de Planilla:** ${planillaData.codigoPlanilla} | ${(planillaData.timestamp instanceof Date ? planillaData.timestamp.toLocaleString() : (planillaData.timestamp?.toDate ? planillaData.timestamp.toDate().toLocaleString() : planillaData.timestamp))}
+`,
             color: 3066993,
             footer: { text: new Date().toLocaleString() }
         };
+
         await fetch(WEBHOOK_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ embeds: [embed] })
         });
+
         alert("Planilla aprobada y movida a historial.");
-        mostrarLasPlanillas()
+        obtenerPlanillas();
     } catch (error) {
         alert("Error al aprobar la planilla.");
         console.error(error);
@@ -132,41 +167,54 @@ window.aceptarPlanilla = async function aceptarPlanilla(id) {
 }
 
 window.denegarPlanilla = async function denegarPlanilla(id) {
-    alert("Rechazando planilla, por favor espere...")
+    alert("Rechazando planilla, por favor espere...");
     try {
-        // 1. Buscar la planilla en 'planillas'
         const planillaRef = doc(db, "planillas", id);
         const planillaSnap = await getDoc(planillaRef);
         if (!planillaSnap.exists()) {
             alert("No se encontró la planilla.");
             return;
         }
+
         const planillaData = { id: planillaSnap.id, ...planillaSnap.data() };
-        // 2. Modificar estado y mover a historialPlanillas
         planillaData.estado = "rechazado";
+
         await addDoc(collection(db, "historialPlanillas"), planillaData);
-        // 3. Eliminar de planillas
         await deleteDoc(planillaRef);
-        // 4. Notificar a Discord
-        let vueltasTexto = "";
-        if (Array.isArray(planillaData.vueltas)) {
-            planillaData.vueltas.forEach((v, idx) => {
-                vueltasTexto += `Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '(Invalidada)' : ''}\n`;
-            });
-        }
+
+        const vueltasTexto = `
+IDA:
+  Salida: ${planillaData.ida1 || '-'}
+  Llegada: ${planillaData.ida2 || '-'}
+VUELTA:
+  Salida: ${planillaData.vuelta1 || '-'}
+  Llegada: ${planillaData.vuelta2 || '-'}
+`;
+
         const embed = {
             title: "Planilla Rechazada",
-            description: `**Chofer:** ${planillaData.chofer}\n**Ramal:** ${planillaData.ramal}\n**Interno:** ${planillaData.interno}\n**Planillas Realizadas:** ${planillaData.planillasCount}\n${vueltasTexto}\n**Codigo de Planilla: ${planillaData.codigoPlanilla} | ${(planillaData.timestamp instanceof Date ? planillaData.timestamp.toLocaleString() : (planillaData.timestamp?.toDate ? planillaData.timestamp.toDate().toLocaleString() : planillaData.timestamp))}**`,
+            description: `**Chofer:** ${planillaData.chofer}
+**Ramal:** ${planillaData.ramal}
+**Interno:** ${planillaData.interno}
+**Recorrido:** ${planillaData.recorrido}
+**Planillas Generales:** ${planillaData.planillas1}
+**Planillas Semanales:** ${planillaData.planillas2}
+**Planillas Diarias:** ${planillaData.planillas3}
+${vueltasTexto}
+**Codigo de Planilla:** ${planillaData.codigoPlanilla} | ${(planillaData.timestamp instanceof Date ? planillaData.timestamp.toLocaleString() : (planillaData.timestamp?.toDate ? planillaData.timestamp.toDate().toLocaleString() : planillaData.timestamp))}
+`,
             color: 15158332,
             footer: { text: new Date().toLocaleString() }
         };
+
         await fetch(WEBHOOK_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ embeds: [embed] })
         });
+
         alert("Planilla rechazada y movida a historial.");
-        mostrarLasPlanillas()
+        obtenerPlanillas();
     } catch (error) {
         alert("Error al rechazar la planilla.");
         console.error(error);
