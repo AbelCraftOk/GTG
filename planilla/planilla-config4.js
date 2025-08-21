@@ -24,10 +24,9 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const chofer = "@ianelpeque10";
 document.addEventListener("DOMContentLoaded", mostrarLasPlanillas);
-async function mostrarLasPlanillas() {
-    const chofer = "@ianelpeque10";
-    
+async function mostrarLasPlanillas() { 
     const contenedor = document.getElementById('resumen-vueltas');
     contenedor.innerHTML = '';
 
@@ -48,29 +47,52 @@ async function mostrarLasPlanillas() {
     }
 
     planillas.forEach(planilla => {
-        let vueltasHtml = '';
         document.getElementById('cargando-planilla').style.display = 'none';
-        if (Array.isArray(planilla.vueltas)) {
-            planilla.vueltas.forEach((v, idx) => {
-                vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
-            });
-        }
+
         contenedor.innerHTML += `
             <div class="burbuja">
                 <strong>Chofer:</strong> ${planilla.chofer}<br>
                 <strong>Ramal:</strong> ${planilla.ramal}<br>
-                <strong>Interno:</strong> ${planilla.interno}<br>
-                <strong>Planillas Realizadas:</strong> ${planilla.planillasCount}<br>
-                ${vueltasHtml}
-                <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla} | ${planilla.timestamp instanceof Date ? planilla.timestamp.toLocaleString() : (planilla.timestamp?.toDate ? planilla.timestamp.toDate().toLocaleString() : planilla.timestamp)}<br>
-                <strong>Estado:</strong> ${planilla.estado}<br>
-                <button onclick="aceptarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #8bc34a; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">ACEPTAR</button>
-                <button onclick="denegarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #c0392b; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">RECHAZAR</button>
+                <strong>Recorrido:</strong> ${planilla.recorrido}<br>
+                <strong>Interno:</strong> ${planilla.interno}<br><br>
+
+                <u><b>IDA</b></u><br>
+                • Salida: ${planilla.ida1 || '—'}<br>
+                • Llegada: ${planilla.ida2 || '—'}<br><br>
+
+                <u><b>DESCANSOS</b></u><br>
+                • Descanso 1: ${planilla.descanso || '—'}<br>
+                ${planilla.descanso2 ? `• Descanso 2: ${planilla.descanso2}<br>` : ''}<br>
+
+                <u><b>VUELTA</b></u><br>
+                • Salida: ${planilla.vuelta1 || '—'}<br>
+                • Llegada: ${planilla.vuelta2 || '—'}<br><br>
+
+                <u><b>PLANILLAS</b></u><br>
+                • Generales: ${planilla.planillas1 || 0}<br>
+                • Semanales: ${planilla.planillas2 || 0}<br>
+                • Mensuales: ${planilla.planillas3 || 0}<br><br>
+
+                <strong>Código de Planilla:</strong> ${planilla.codigoPlanilla}<br>
+                <strong>Fecha:</strong> ${planilla.timestamp instanceof Date 
+                    ? planilla.timestamp.toLocaleString() 
+                    : (planilla.timestamp?.toDate ? planilla.timestamp.toDate().toLocaleString() : planilla.timestamp)}<br>
+                <strong>Estado:</strong> ${planilla.estado}<br><br>
+
+                <button onclick="aceptarPlanilla('${planilla.id}')" 
+                    style="display: block; margin-top: 5px; color: white; background-color: #8bc34a; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                    ACEPTAR
+                </button>
+                <button onclick="denegarPlanilla('${planilla.id}')" 
+                    style="display: block; margin-top: 5px; color: white; background-color: #c0392b; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">
+                    RECHAZAR
+                </button>
             </div>
             <div class="separador"></div>
         `;
     });
 }
+
 
 window.mostrarLasPlanillas = mostrarLasPlanillas;
     const WEBHOOK_URL = enlaceCodificado(); //Para planillas

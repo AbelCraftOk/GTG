@@ -8,12 +8,35 @@ const apiLicencia = licenciacodificado(); //Para las licencias. Hay que configur
 
 // Función para limpiar todos los campos
 function limpiarCampos() {
-    vueltas = [];
+    // Variables globales
     ramalSeleccionado = "";
-    document.getElementById('boton-ramal').textContent = "Indicar Ramal";
     internoSeleccionado = "";
+
+    // Botones de selección
+    document.getElementById('boton-ramal').textContent = "Indicar Ramal";
     document.getElementById('boton-interno').textContent = "Indicar Interno";
-    document.getElementById('planillas').value = "";
+
+    // Recorrido asignado
+    document.getElementById('recorrido-info').value = "";
+
+    // Nuevos campos de la planilla
+    document.getElementById('ida1').value = "";
+    document.getElementById('ida2').value = "";
+    document.getElementById('descanso').value = "";
+    document.getElementById('descanso2').value = "";
+    document.getElementById('vuelta1').value = "";
+    document.getElementById('vuelta2').value = "";
+
+    // Contadores de planillas
+    document.getElementById('planillas1').value = "";
+    document.getElementById('planillas2').value = "";
+    document.getElementById('planillas3').value = "";
+
+    // Si existía el campo viejo 'planillas', también lo vaciamos por compatibilidad
+    const planillasOld = document.getElementById('planillas');
+    if (planillasOld) {
+        planillasOld.value = "";
+    }
 }
 // Función para establecer la hora actual en un campo de input
 function horaActual(id) {
@@ -60,6 +83,7 @@ function cerrarMenuInternos() {
 function seleccionarRamal(ramal) {
     ramalSeleccionado = ramal;
     document.getElementById('boton-ramal').textContent = `${ramal}`;
+    actualizarRecorrido();
     cerrarMenuRamales();
 }
 // Función para seleccionar un interno

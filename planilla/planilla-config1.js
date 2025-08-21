@@ -13,7 +13,6 @@ import {
     setDoc,
     doc as firestoreDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
 const firebaseConfig = {
     apiKey: "AIzaSyAMIMRcSoBD4pmGJStXNP7HUyQ92LGx25Y",
     authDomain: "planillasinspectores-53856.firebaseapp.com",
@@ -22,11 +21,11 @@ const firebaseConfig = {
     messagingSenderId: "752544495285",
     appId: "1:752544495285:web:dbf678155d39d1b7d9b0fc"
 };
+const chofer = "@abelcraft_ok664";
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 document.addEventListener("DOMContentLoaded", mostrarLasPlanillas);
 async function mostrarLasPlanillas() {
-    const chofer = "@abelcraft_ok664";
     
     const contenedor = document.getElementById('resumen-vueltas');
     contenedor.innerHTML = '';

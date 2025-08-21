@@ -24,7 +24,7 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const chofer = "@sebass_2011";
+const chofer = "@crism_027_21463";
 document.addEventListener("DOMContentLoaded", mostrarLasPlanillas);
 async function mostrarLasPlanillas() { 
     const contenedor = document.getElementById('resumen-vueltas');

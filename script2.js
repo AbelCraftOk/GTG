@@ -28,29 +28,42 @@ const db = getFirestore(app);
 
 function enviarMensaje(planillaData) {
     const inspectores = inspectoresActiven();
-
-    let vueltasTexto = "";
-
-    if (Array.isArray(planillaData.vueltas) && planillaData.vueltas.length > 0) {
-        vueltasTexto = "**Vueltas:**\n";
-        planillaData.vueltas.forEach((v, i) => {
-            vueltasTexto += `• Vuelta ${i + 1}: ${v.hora || 'sin hora'} - ${v.comentario || 'sin comentario'}\n`;
-        });
-    } else {
-        vueltasTexto = "Sin vueltas registradas.";
+    let descansosTexto = `• Descanso 1: ${planillaData.descanso || 'sin dato'}\n`;
+    if (planillaData.descanso2) {
+        descansosTexto += `• Descanso 2: ${planillaData.descanso2}\n`;
     }
-
     const embed = {
         title: "📋 Nueva Planilla Cargada",
-        description: `Hola Inspectores queridos, soy el BOT encargado de avisarle cuando alla una nueva planilla y recien se acaba de cargar una nueva, asi que lo antes posible traten de revisarla... Aqui se las dejo ❤️\n\n**Chofer:** ${planillaData.chofer}\n**Ramal:** ${planillaData.ramal}\n**Interno:** ${planillaData.interno}\n**Planillas Realizadas:** ${planillaData.planillasCount}\n\n${vueltasTexto}\n\n**Código de Planilla:** ${planillaData.codigoPlanilla} | ${new Date().toLocaleString()}\n\n[👉 Aceptar/Rechazar Planilla](https://abelcraftok.github.io/GTG/planilla/@${planillaData.chofer.replace('@', '')}.html)`,
+        description: 
+            `Hola Inspectores, se acaba de cargar una nueva planilla 🚍\n\n` +
+            `**Chofer:** ${planillaData.chofer}\n` +
+            `**Interno:** ${planillaData.interno}\n` +
+            `**Recorrido:** ${planillaData.recorrido}   |   **Linea:** ${planillaData.ramal}\n\n` +
+
+            `__**IDA**__\n` +
+            `• Salida: ${planillaData.ida1 || 'sin dato'}\n` +
+            `• Llegada: ${planillaData.ida2 || 'sin dato'}\n\n` +
+
+            `__**Descansos**__\n${descansosTexto}\n` +
+
+            `__**VUELTA**__\n` +
+            `• Salida: ${planillaData.vuelta1 || 'sin dato'}\n` +
+            `• Llegada: ${planillaData.vuelta2 || 'sin dato'}\n\n` +
+
+            `__**Planillas**__\n` +
+            `• Generales: ${planillaData.planillas1 || 0}\n` +
+            `• Semanales: ${planillaData.planillas2 || 0}\n` +
+            `• Mensuales: ${planillaData.planillas3 || 0}\n\n` +
+
+            `**Código de Planilla:** ${planillaData.codigoPlanilla}\n` +
+            `📅 Enviada: ${new Date().toLocaleString()}\n\n` +
+            `[👉 Aceptar/Rechazar Planilla](https://abelcraftok.github.io/GTG/planilla/@${planillaData.chofer.replace('@', '')}.html)`,
         color: 3066993,
         footer: {
-            text: `📅 Enviada: ${new Date().toLocaleString()}`
+            text: `📅 Registrada: ${new Date().toLocaleString()}`
         }
     };
-
     const payload = { embeds: [embed] };
-
     fetch(inspectores, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -69,129 +82,95 @@ function enviarMensaje(planillaData) {
     });
 }
 async function guardarPlanilla() {
-    alert("Enviando planilla, por favor espere...")
+    alert("Enviando planilla, por favor espere...");
     const codigoPlanilla = generarCodigoUnico();
-
-    const choferElem = document.getElementById('chofer');
-    const planillasElem = document.getElementById('planillas');
-
-    if (!choferElem || !planillasElem) {
-        alert("❌ No se encontraron algunos campos obligatorios en el DOM (chofer o planillas).");
+    const chofer = document.getElementById('chofer').value.trim();
+    const planillas1 = document.getElementById('planillas1').value.trim();
+    const planillas2 = document.getElementById('planillas2').value.trim();
+    const planillas3 = document.getElementById('planillas3').value.trim();
+    const ida1 = document.getElementById('ida1').value.trim();
+    const ida2 = document.getElementById('ida2').value.trim();
+    const descanso = document.getElementById('descanso').value.trim();
+    const descanso2 = document.getElementById('descanso2').value.trim();
+    const vuelta1 = document.getElementById('vuelta1').value.trim();
+    const vuelta2 = document.getElementById('vuelta2').value.trim();
+    if (!chofer || !ramalSeleccionado || !internoSeleccionado || !planillas1 || !ida1 || !ida2 || !descanso || !vuelta1 || !vuelta2) {
+        alert("⚠️ Faltan campos obligatorios");
         return;
     }
-
-    const choferInput = choferElem.value.trim();
-    const planillasCount = planillasElem.value.trim();
-
-    if (!ramalSeleccionado || !internoSeleccionado || !choferInput || !planillasCount || vueltas.length === 0) {
-        alert("Por favor, complete todos los datos (Chofer, Ramal, Interno, Planillas y al menos una vuelta válida).");
-        return;
-    }
-
-    const vueltasValidas = vueltas.filter(v => !v.invalidada);
-    if (vueltasValidas.length === 0) {
-        alert("Debe haber al menos una vuelta válida cargada.");
-        return;
-    }
-
     try {
-        // Verificar si el chofer está registrado
-        const choferesSnapshot = await getDocs(collection(db, "choferes"));
-        let choferEncontrado = false;
-
-        choferesSnapshot.forEach(docu => {
-            const data = docu.data();
-            if (data.chofer === `${choferInput}`) {
-                choferEncontrado = true;
-            }
-        });
-
-        if (!choferEncontrado) {
-            alert(`El ID de Discord "${choferInput}" no está registrado como chofer. Verifica lo escrito.`);
-            return;
-        }
-
         const nuevaPlanilla = {
-            chofer: choferInput,
-            ramal: ramalSeleccionado,
+            chofer,
             interno: internoSeleccionado,
-            planillasCount: planillasCount,
-            vueltas: [...vueltas],
-            estado: 'pendiente',
+            ramal: ramalSeleccionado,
+            recorrido: document.getElementById('recorrido-info').value,
+            ida1,
+            ida2,
+            descanso,
+            descanso2: descanso2 || null,
+            vuelta1,
+            vuelta2,
+            planillas1,
+            planillas2: planillas2 || 0,
+            planillas3: planillas3 || 0,
+            estado: "pendiente",
             timestamp: new Date(),
-            codigoPlanilla: codigoPlanilla,
+            codigoPlanilla
         };
-        
         await addDoc(collection(db, "planillas"), nuevaPlanilla);
         console.log("✅ Planilla registrada");
-
-        enviarMensaje(nuevaPlanilla);  // 👈 Mensaje con embed a Discord
-        limpiarCampos()
-
+        enviarMensaje(nuevaPlanilla);
+        limpiarCampos();
     } catch (error) {
-        console.error("Error al guardar/verificar la planilla:", error);
-        alert("❌ Ocurrió un error al guardar la planilla.");
+        console.error("Error al guardar planilla:", error);
+        alert("❌ Error al guardar planilla.");
     }
 }
 window.guardarPlanilla = guardarPlanilla;
-
 window.obtenerPlanillas = async function obtenerPlanillas() {
-  alert("Obteniendo planillas, por favor espere...")
-  const contenedor = document.getElementById('resumen-vueltas');
-  if (!contenedor) {
-    console.error("El elemento 'resumen-vueltas' no se encontró.");
-    return;
-  }
-  contenedor.innerHTML = '';
+    alert("Obteniendo planillas, por favor espere...");
+    const contenedor = document.getElementById('resumen-vueltas');
+    if (!contenedor) return;
 
-  try {
-    const querySnapshot = await getDocs(collection(db, "planillas"));
-    let planillas = [];
-    querySnapshot.forEach((docu) => {
-      planillas.push({ id: docu.id, ...docu.data() });
-    });
+    contenedor.innerHTML = '';
+    try {
+        const querySnapshot = await getDocs(collection(db, "planillas"));
+        let planillas = [];
+        querySnapshot.forEach(docu => planillas.push({ id: docu.id, ...docu.data() }));
 
-    if (planillas.length === 0) {
-      const msg = '<div class="texto-rojo">No se han encontrado planillas recientes.</div>';
-      contenedor.innerHTML = msg;
-      return;
-    }
+        if (planillas.length === 0) {
+            contenedor.innerHTML = '<div class="texto-rojo">No se han encontrado planillas recientes.</div>';
+            return;
+        }
 
-    planillas.forEach(planilla => {
-      let vueltasHtml = '';
-      if (Array.isArray(planilla.vueltas)) {
-        planilla.vueltas.forEach((v, idx) => {
-          vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
+        planillas.forEach(planilla => {
+            const planillaHTML = `
+                <div class="burbuja">
+                    <strong>Chofer:</strong> ${planilla.chofer}<br>
+                    <strong>Interno:</strong> ${planilla.interno}<br>
+                    <strong>Recorrido:</strong> ${planilla.recorrido} | <strong>Linea:</strong> ${planilla.ramal}<br>
+                    <h3>IDA</h3>
+                    Salida: ${planilla.ida1} | Llegada: ${planilla.ida2}<br>
+                    <h3>Descansos</h3>
+                    ${planilla.descanso} ${planilla.descanso2 ? "| " + planilla.descanso2 : ""}<br>
+                    <h3>VUELTA</h3>
+                    Salida: ${planilla.vuelta1} | Llegada: ${planilla.vuelta2}<br>
+                    <strong>Planillas Generales:</strong> ${planilla.planillas1}<br>
+                    <strong>Planillas Semanales:</strong> ${planilla.planillas2}<br>
+                    <strong>Planillas Mensuales:</strong> ${planilla.planillas3}<br>
+                    <strong>Codigo:</strong> ${planilla.codigoPlanilla} |
+                    ${planilla.timestamp?.toDate ? planilla.timestamp.toDate().toLocaleString() : planilla.timestamp}<br>
+                    <strong>Estado:</strong> ${planilla.estado}<br>
+                    <button onclick="aceptarPlanilla('${planilla.id}')">ACEPTAR</button>
+                    <button onclick="denegarPlanilla('${planilla.id}')">RECHAZAR</button>
+                </div>
+                <div class="separador"></div>`;
+            contenedor.innerHTML += planillaHTML;
         });
-      }
-
-      const planillaHTML = `
-        <div class="burbuja">
-          <strong>Chofer:</strong> ${planilla.chofer}<br>
-          <strong>Ramal:</strong> ${planilla.ramal}<br>
-          <strong>Interno:</strong> ${planilla.interno}<br>
-          <strong>Planillas Realizadas:</strong> ${planilla.planillasCount}<br>
-          ${vueltasHtml}
-          <strong>Codigo de Planilla:</strong> ${planilla.codigoPlanilla} | 
-          ${planilla.timestamp instanceof Date
-            ? planilla.timestamp.toLocaleString()
-            : (planilla.timestamp?.toDate
-              ? planilla.timestamp.toDate().toLocaleString()
-              : planilla.timestamp)}<br>
-          <strong>Estado:</strong> ${planilla.estado}<br>
-          <button onclick="aceptarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #8bc34a; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">ACEPTAR</button>
-          <button onclick="denegarPlanilla('${planilla.id}')" style="display: block; margin-top: 5px; color: white; background-color: #c0392b; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">RECHAZAR</button>
-        </div>
-        <div class="separador"></div>
-      `;
-
-      contenedor.innerHTML += planillaHTML;
-    });
-  } catch (error) {
-    console.error("Error al obtener planillas:", error);
-  }
+    } catch (error) {
+        console.error("Error al obtener planillas:", error);
+    }
 };
-
 window.aceptarPlanilla = async function aceptarPlanilla(id) {
     alert("Aceptando planilla, por favor espere...")
     try {
@@ -916,51 +895,55 @@ async function refrescarColectivos() {
 window.refrescarColectivos = refrescarColectivos;
 async function guardarUbicacion(ubicacion) {
     const chofer = document.getElementById('chofer').value.trim();
-    const ramal = document.getElementById('boton-ramal').innerText.trim();
+    const ramal = ramalSeleccionado;
     const sentido = document.getElementById('sentido').value;
-    if (!chofer || chofer === "Indicar Chofer") {
-        alert('Debes indicar el chofer antes de guardar la ubicación.');
+
+    if (!chofer || !ramal || !sentido) {
+        alert("⚠️ Faltan datos para guardar la ubicación.");
         return;
     }
-    if (!ramal || ramal === "Indicar Ramal") {
-        alert('Debes indicar el ramal antes de guardar la ubicación.');
-        return;
-    }
-    if (!sentido) {
-        alert('Debes seleccionar el sentido (IDA o VUELTA).');
-        return;
-    }
+
     const fecha = new Date();
-    const horaFormato = `${fecha.getHours().toString().padStart(2,'0')}:` +
-                        `${fecha.getMinutes().toString().padStart(2,'0')}`;
+    const horaFormato = `${fecha.getHours().toString().padStart(2,'0')}:${fecha.getMinutes().toString().padStart(2,'0')}`;
+
     try {
         await setDoc(doc(db, "ubication", chofer), {
-            chofer: chofer,
-            ubicacion: ubicacion,
-            time: horaFormato,
-            ramal: ramal,
-            sentido: sentido
+            chofer, ubicacion, time: horaFormato, ramal, sentido
         });
-        console.log(`✅ Ubicación "${ubicacion}" guardada para ${chofer}, ramal ${ramal}, sentido ${sentido}`);
+
+        alert("📍 Ubicación enviada");
+        console.log(`Ubicación "${ubicacion}" guardada para ${chofer}`);
+
         const webhookUrl = enlaces();
         const embed = {
             title: "🚌 Nueva Ubicación Registrada",
-            description: `El chofer @${chofer.replace('@', '')} ha guardado una nueva ubicación.\n\n` +
-                         `📍 Ubicación: **${ubicacion}**\n` +
-                         `🛣️ Ramal: **${ramal}**\n` +
-                         `➡️ Sentido: **${sentido}**\n\n` +
-                         `[Visualizar Últimas Ubicaciones de Recorridos Actuales](https://abelcraftok.github.io/GTG/ubication.html)`,
+            description: `El chofer @${chofer.replace('@','')} registró una ubicación.\n\n📍 ${ubicacion}\n🛣️ Ramal: ${ramal}\n➡️ Sentido: ${sentido}`,
             color: 3447003,
-            footer: { text: `📅 Horario: ${new Date().toLocaleString()}` }
+            footer: { text: `📅 ${new Date().toLocaleString()}` }
         };
+
         await fetch(webhookUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ embeds: [embed] })
         });
-        console.log("✅ Mensaje embed enviado a Discord");
     } catch (error) {
-        console.error("❌ Error guardando ubicación o enviando embed:", error);
+        console.error("❌ Error guardando ubicación:", error);
     }
 }
 window.guardarUbicacion = guardarUbicacion;
+const recorridoPorRamal = {
+    "9": 4,
+    "348": 3,
+    "373": 2,
+    "570": 1
+};
+function actualizarRecorrido() {
+    const input = document.getElementById('recorrido-info');
+    if (ramalSeleccionado && recorridoPorRamal[ramalSeleccionado]) {
+        input.value = recorridoPorRamal[ramalSeleccionado];
+    } else {
+        input.value = "";
+    }
+}
+window.actualizarRecorrido = actualizarRecorrido;
