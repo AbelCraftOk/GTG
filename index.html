@@ -1,11 +1,11 @@
 ﻿<!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#2d3e50">
     <link rel="icon" type="image/png" href="./logo.png">
-    <title>General Tomas Guido</title>
+    <title>Sistema de Planilleo - GTG - En Mantenimiento</title>
     <style>
         body {
             margin: 0;
@@ -90,7 +90,6 @@
         .campo input[type="text"],
         .campo input[type="number"],
         .campo input[type="time"],
-        .campo input[type="password"],
         .campo select {
             flex: 1;
             padding: 7px 10px;
@@ -104,7 +103,6 @@
         .campo input[type="text"]:focus,
         .campo input[type="number"]:focus,
         .campo input[type="time"]:focus,
-        .campo input[type="password"]:focus,
         .campo select:focus {
             border-color: #3498db;
             outline: none;
@@ -362,7 +360,6 @@
         body.light-mode .campo input[type="text"],
         body.light-mode .campo input[type="number"],
         body.light-mode .campo input[type="time"],
-        body.light-mode .campo input[type="password"],
         body.light-mode .campo select {
             background: #fff;
             color: #333;
@@ -371,7 +368,6 @@
         body.light-mode .campo input[type="text"]:focus,
         body.light-mode .campo input[type="number"]:focus,
         body.light-mode .campo input[type="time"]:focus,
-        body.light-mode .campo input[type="password"]:focus,
         body.light-mode .campo select:focus {
             border-color: #2980b9;
         }
@@ -464,795 +460,38 @@
                 margin-bottom: 20px;
             }
         }
-        #boton-configuracion {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 999;
-            background-color: #ccc; /* Color gris */
-            width: 40px; /* Ancho más pequeño */
-            height: 40px; /* Alto más pequeño */
-            border-radius: 50%;
-            padding: 10px; /* Reducir el relleno */
-            font-size: 14px; /* Reducir el tamaño del texto */
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        #boton-configuracion img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
     </style>
 </head>
 <body>
-    <audio id="myAudio" src="./login.mp3" preload="auto"></audio>
-    <nav id="cerrarSesion" style="display: none;">
-    <button onclick="document.getElementById('menu-configuracion').style.display = 'flex';" id="boton-configuracion"><img src="./configuracion.png" alt="Icono del botón"/></button>
-        <button type="button" class="theme-toggle-button" onclick="cerrarSesion()">Cerrar Sesion</button>
-    </nav>
-    <nav id="nav-tuto" style="align-items: center; text-align: center; color: red;">
-        <div class="menu-flotante">
-            <div class="menu-contenido">
-                <p>Si necesitas ayuda con el sistema, accede a nuestro video tutorial...</p>
-                <button id="tuto" style="align-items: center; text-align: center;" class="theme-toggle-button" onclick="window.open('https://youtu.be/UG3T8zEGLJI?si=dqzdnD__Z_O_b6cR', '_blank')">Tutorial</button>
-                <button style="align-items: center; text-align: center;" class="theme-toggle-button" onclick="document.getElementById('nav-tuto').style.display = 'none';">Cerrar</button>
-            </div>
-        </div>
-    </nav>
     <nav>
         <img src="./logo.png" alt="Logo.png" class="logo" style="display: block;">
     </nav>
-    <div id="auto-login" class="contenedor" style="display: block;">
-        <h2 style="text-align: center;">Auto-Login</h2>
-        <div class="burbuja" style="text-align: center;">
-            <p id="texto-rotativo">Espere a ser logueado automaticamente</p>
-        </div>
-        <div id="logueandocampo" style="text-align: center; margin-top: 20px; display: none;">
-            <p>Iniciando sesión...</p>
-        </div>
-    </div>
-    <div id="menu-configuracion" class="menu-flotante" style="display: none;">
-        <div class="menu-contenido">
-            <h2>Administracion de Almacenamiento localStorage</h2>
-            <button type="button" class="theme-toggle-button" onclick="localStorage.removeItem('loginConfig'); console.log('✅ Datos eliminados correctamente'); alert('✅ Datos eliminados correctamente'); document.getElementById('menu-configuracion').style.display = 'none';">Eliminar información del login automatico</button>
-            <button type="button" class="theme-toggle-button" onclick="localStorage.removeItem('theme'); console.log('✅ Datos eliminados correctamente'); alert('✅ Datos eliminados correctamente'); document.getElementById('menu-configuracion').style.display = 'none';">Eliminar información del cambiador de tema</button>
-            <div class="separador"></div>
-            <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-configuracion').style.display = 'none';">Cerrar menu</button>
-        </div>
-    </div>
-    <div id="login" class="contenedor" style="display: none;">
-        <h1 style="text-align:center;">Login</h1>
+    <div id="inicio1" class="contenedor">
+        <h1 style="color: red;">Lo Sentimos, estamos en mantenimiento</h1>
+        <p>Devido a problemas tecnicos, hemos tenido que cerrar temporalmente la Pagina.</p>
         <div class="separador"></div>
-        <div class="seccion">
-            <div class="campo">
-                <label>ID de discord:</label>
-                <input type="text" id="login-user" placeholder="ID de discord con @">
-            </div>
-            <div class="campo">
-                <label>Clave:</label>
-                <input type="password" id="login-password" placeholder="Mantenga su clave segura">
-            </div>
-            <div class="campo" id="logueandocampo" style="display: none;">
-                <span id="logueando" style="font-weight: bold;"></span>
-            </div>
-            <div class="acciones">
-                <button onclick="login()">Logear</button>
-            </div>
-        </div>
-        <div class="seccion">
-            <p>¿No tienes una cuenta?</p>
-            <div class="acciones">
-                <button onclick="mostrarPestania('register')">Crear una cuenta</button>
-            </div>
-        </div>
-    </div>
-    <div id="register" class="contenedor" style="display: none;">
-        <h1 style="text-align:center;">Registrar Cuenta</h1>
-        <div class="campo">
-            <input type="text" id="register-user" placeholder="ID de discord con @">
-        </div>
-        <div class="campo">
-            <input type="password" id="register-password" placeholder="Clave">
-        </div>
-        <div class="seccion">
-            <div class="acciones">
-                <button onclick="registrarCuenta()">Registrarme</button>
-            </div>
-                <div class="separador"></div>
-                <p>Si tu eres de algún sector privado como, chofer de la GTG, Inspector o Developer, comunicate con el soporte.</p>
-                <button onclick="document.getElementById('menu-asistencia').style.display = 'flex';">Solicitar Asistencia</button>
-                <p>¿Tu ya tienes una cuenta?</p>
-                <p>Si tu ya tienes una cuenta, ve a loguerate</p>
-                <button type="button" onclick="mostrarPestania('login')">Ir a Loguearme</button>
-        </div>
-    </div>
-    <div id="admin" class="contenedor" style="display: none;">
-        <div class="seccion">
-            <h2>Panel para Jefes/Admin</h2>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('inspectores')">Abrir pestaña de los Inspectores</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('developer')">Abrir pestaña de los Developers</button>
-        </div>
-        <div class="seccion">
-            <h2>Acceso Personal de la Empresa</h2>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuAccionChofer()">Menú del Personal</button>
-            <button type="button" id="activar-boton-pestanias1" class="theme-toggle-button" style="display: block;" onclick="acbotonPestanias()">Activar boton de pestañas</button>
-            <button type="button" id="desactivar-boton-pestanias1" class="theme-toggle-button" style="display: none;" onclick="desacbotonPestanias()">Descativar boton de pestañas</button>
-        </div>
-    </div>
-    <div id="developer" class="contenedor" style="display: none;">
-        <h2>Panel de Developer</h2>
-        <div class="seccion">
-            <h2>Funciones de Developers</h2>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuActualizar()">Agregar actualización</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuEnviarMensaje()">Enviar Mensaje</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuHistorialPlanillas()">Ver Historial de Planillas</button>
-            <button type="button" class="theme-toggle-button" onclick="window.open('https://console.firebase.google.com/project/planillasinspectores-53856/firestore/databases/-default-/data/~2FhistorialPlanillas~2FUCNVcoEuXV4tWK2OxLEB?view=panel-view&query=1%7CLIM%7C3%2F100&scopeType=collection&scopeName=%2FhistorialPlanillas', '_blank')">Abrir base de datos</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuAgregarChofer()">Agregar un nuevo chofer</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuLogs()">Ver Logs de Conexión</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuProximaActualizacion()">Cargar una próxima actualización</button>
-        </div>
-        <div class="seccion">
-            <h2>Acceso Personal de la Empresa</h2>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuAccionChofer()">Menú del Personal</button>
-            <button type="button" id="activar-boton-pestanias2" class="theme-toggle-button" style="display: block;" onclick="acbotonPestanias()">Activar boton de pestañas</button>
-            <button type="button" id="desactivar-boton-pestanias2" class="theme-toggle-button" style="display: none;" onclick="desacbotonPestanias()">Descativar boton de pestañas</button>
-        </div>
-    </div>
-    <div id="inspectores" class="contenedor" style="display: none;">
-        <h2>Panel de Inspectores</h2>
-        <div class="seccion">
-            <h2>Funciones de Inspectores</h2>
-            <button type="button" class="theme-toggle-button" onclick="obtenerPlanillas()">Ver Planillas</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuEnviarMensaje()">Enviar Mensaje</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuHistorialPlanillas()">Ver Historial de Planillas</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuAgregarChofer()">Agregar un nuevo chofer</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuLogs()">Ver Logs de Conexión</button>
-        </div>
-        <div class="seccion">
-            <h2>Acceso Personal de la Empresa</h2>
-            <button type="button" class="theme-toggle-button" onclick="abrirMenuAccionChofer()">Menú del Personal</button>
-            <button type="button" id="activar-boton-pestanias3" class="theme-toggle-button" style="display: block;" onclick="acbotonPestanias()">Activar boton de pestañas</button>
-            <button type="button" id="desactivar-boton-pestanias3" class="theme-toggle-button" style="display: none;" onclick="desacbotonPestanias()">Descativar boton de pestañas</button>
-        </div>
-        <div id="resumen-vueltas"></div>
-    </div>
-    <div id="personal" class="contenedor" style="display: none;">
-        <h2>Panel del Personal</h2>
-        <div class="acciones">
-            <button onclick="mostrarPestania('inicio')">📝 Cargar Planilla [Choferes]</button>
-            <button onclick="mostrarPestania('licencias')">📄 Cargar Licencia [Todo el Personal]</button>
-        </div>
-    </div>
-    <div id="accion-chofer" class="menu-flotante" style="display: none;">
-        <div class="menu-contenido">
-            <h3>Menú del Personal</h3>
-            <div class="acciones">
-                <button onclick="mostrarPestania('inicio'); cerrarMenuAccionChofer();">📝 Cargar Planilla [Para Choferes]</button>
-                <button onclick="mostrarPestania('licencias'); cerrarMenuAccionChofer();">📄 Cargar Licencia [Para todo el Personal]</button>
-                <div class="separador"></div>
-            </div>
-            <div class="acciones">
-                <button onclick="cerrarMenuAccionChofer()">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    <div id="menu-pestanias" class="menu-flotante" style="display: none;">
-        <div class="menu-contenido">
-            <h3>Pestañas:</h3>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('login'); document.getElementById('menu-pestanias').style.display = 'none';">"login"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('register'); document.getElementById('menu-pestanias').style.display = 'none';">"register"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('admin'); document.getElementById('menu-pestanias').style.display = 'none';">"admin"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('developer'); document.getElementById('menu-pestanias').style.display = 'none';">"developer"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('inspectores'); document.getElementById('menu-pestanias').style.display = 'none';">"inspectores"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('inicio'); document.getElementById('menu-pestanias').style.display = 'none';">"inicio"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('personal'); document.getElementById('menu-pestanias').style.display = 'none';">"personal"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('licencias'); document.getElementById('menu-pestanias').style.display = 'none';">"licencias"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('usuario'); document.getElementById('menu-pestanias').style.display = 'none';">"usuario"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('comprar-pasajes'); document.getElementById('menu-pestanias').style.display = 'none';">"comprar-pasajes"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('info-pasajes'); document.getElementById('menu-pestanias').style.display = 'none';">"info-pasajes"</button>
-            <button type="button" class="theme-toggle-button" onclick="mostrarPestania('micro'); refrescarColectivos(); document.getElementById('menu-pestanias').style.display = 'none';">"micro"</button>
+        <li>
+            <strong>Versiones afectadas:</strong> 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0 y 3.1.
             <div class="separador"></div>
-            <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-pestanias').style.display = 'none';">Cerrar Menu</button>
-        </div>
-    </div>
-    <div id="usuario" class="contenedor" style="display: none;">
-      	<h1 style="text-align: center;">Sistema del usuario</h1>
-      	<div class="seccion">
-        	<h2>Comprar pasajes:</h2>
-        	<p>Actualmente hay <span id="contadorPasajes"></span>.</p>
-        	<button onclick="mostrarPestania('comprar-pasajes')">Ir a comprar un pasaje</button>
-      	</div>
-      	<div class="seccion">
-        	<h2>Informacion sobre tus pasajes:</h2>
-        	<button onclick="mostrarPestania('info-pasajes')">Ir a info de pasajes</button>
-      	</div>
-        <div class="seccion">
-            <h2>Ver Colectivos Activos</h2>
-            <button class="theme-toggle-button" onclick="refrescarColectivos(); mostrarPestania('micro');">Ver Colectivos Activos</button>
-        </div>
-    </div>
-	<div id="comprar-pasajes" class="contenedor" style="display: none;">
-      	<h1 style="text-align: center;">Comprar pasajes</h1>
-      	<div class="seccion">
-        	<h2>Pasajes disponibles</h2>
-        	<div id="pasajesDisponibles"></div>
-      	</div>
-	</div>
-    <div id="info-pasajes" class="contenedor" style="display: none;">
-      	<h1 style="text-align: center;">Informacion sobre tus pasajes</h1>
-      	<div class="seccion">
-        	<h2>Pasajes por Viajar:</h2>
-        	<div id="infoPasajes"></div>
-      	</div>
-    </div>
-    <div id="menu-asistencia" class="menu-flotante" style="display:none;">
-        <div class="menu-contenido">
-            <h3>Solicitar Asistencia</h3>
-            <div class="campo">
-                <input type="text" id="asistencia-id" placeholder="Tu ID de Discord sin @">
-            </div>
-            <div class="campo">
-                <p>Tipo de Solicitud:</p>
-                <input type="text" value="Solicitud de Rango en la cuenta" disabled>
-            </div>
-            <div class="acciones">
-                <button onclick="enviarSolicitud()">Enviar Solicitud</button>
-                <button onclick="document.getElementById('menu-asistencia').style.display = 'none';">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    <div id="menu-pre-actualizar" class="menu-flotante ramales" style="display:none;">
-        <div class="menu-contenido">
-            <h3>Agregar Pre-Actualización</h3>
-            <div class="campo">
-                <label for="titulo-pre-actualizacion">Titulo:</label>
-                <input type="text" id="titulo-pre-actualizacion" placeholder="Titulo de la actualización">
-            </div>
-            <div class="campo">
-                <label for="mensaje-pre-actualizacion">Mensaje:</label>
-            </div>
-            <textarea id="mensaje-pre-actualizacion" rows="4" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
-            <div class="campo">
-                <label for="cambios-pre-actualizacion">Cambios:</label>
-            </div>
-            <textarea id="cambios-pre-actualizacion" rows="4" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
-            <div class="campo">
-                <label for="autor-pre-actualizacion">Autor:</label>
-                <input type="text" id="autor-pre-actualizacion" placeholder="Autor de la actualización">
-            </div>
-            <div class="acciones" style="margin-top:10px;">
-                <button onclick="enviarPreActualizacion()">Enviar</button>
-                <button onclick="cerrarMenuProximaActualizacion()">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    <div id="menu-actualizar" class="menu-flotante ramales" style="display:none;">
-        <div class="menu-contenido">
-            <h3>Agregar Actualización</h3>
-            <div class="campo">
-                <label for="titulo-actualizacion">Titulo:</label>
-                <input type="text" id="titulo-actualizacion" placeholder="Titulo de la actualización">
-            </div>
-            <div class="campo">
-                <label for="mensaje-actualizacion">Mensaje:</label>
-            </div>
-            <textarea id="mensaje-actualizacion" rows="4" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
-            <div class="campo">
-                <label for="cambios-actualizacion">Cambios:</label>
-            </div>
-            <textarea id="cambios-actualizacion" rows="4" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
-            <div class="campo">
-                <label for="autor-actualizacion">Autor:</label>
-                <input type="text" id="autor-actualizacion" placeholder="Autor de la actualización">
-            </div>
-            <div class="acciones" style="margin-top:10px;">
-                <button onclick="actualizacion()">Enviar</button>
-                <button onclick="cerrarMenuActualizar()">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    <div id="inicio" class="contenedor" style="display: none;">
-        <div class="seccion">
-            <h2>Datos del Recorrido</h2>
-            <div class="campo">
-                <label for="chofer">Chofer:</label>
-                <input type="text" id="chofer" name="chofer" placeholder="ID de Discord del Chofer" required>
-            </div>
-            <form id="planilla-form" autocomplete="off">
-                <div class="campo">
-                    <button type="button" id="boton-ramal" class="boton-seleccion" onclick="abrirMenuRamales(); iniciarAlarma();">Indicar Ramal</button>
-                </div>
-                <div class="campo">
-                    <button type="button" id="boton-interno" class="boton-seleccion" onclick="abrirMenuInternos()">Indicar Interno</button>
-                </div>
-                <div class="campo">
-                    <label for="recorrido-info">Recorrido:</label>
-                    <input type="text" id="recorrido-info" readonly>
-                </div>
-            </div>
-            <div class="seccion">
-                <div class="campo">
-                    <label for="sentido">Sentido:</label>
-                    <select id="sentido" required>
-                        <option value="" disabled selected>Seleccione su sentido</option>
-                        <option value="IDA">IDA</option>
-                        <option value="VUELTA">VUELTA</option>
-                    </select>
-                </div>
-            </div>
-            <div class="seccion">
-                <h2>IDA</h2>
-                <div class="campo">
-                    <label for="ida1">Salida:</label>
-                    <input type="text" id="ida1" name="ida1" placeholder="HH:MM" required pattern="^([01]\d|2[0-3]):([0-5]\d)$">
-                    <button type="button" class="boton-mini" onclick="horaActual('ida1')">⌚</button>
-                </div>
-                <div class="campo">
-                    <label for="ida2">Llegada:</label>
-                    <input type="text" id="ida2" name="ida2" placeholder="HH:MM" required pattern="^([01]\d|2[0-3]):([0-5]\d)$">
-                    <button type="button" class="boton-mini" onclick="horaActual('ida2')">⌚</button>
-                </div>
-            </div>
-            <div class="seccion">
-                <h2>Descansos</h2>
-                <div class="campo">
-                    <label for="descanso">Descanso 1:</label>
-                    <input type="text" id="descanso" name="descanso" placeholder="HH:MM" required pattern="^([01]\d|2[0-3]):([0-5]\d)$">
-                    <button type="button" class="boton-mini" onclick="horaActual('descanso')">⌚</button>
-                </div>
-                <div class="campo">
-                    <label for="descanso2">Descanso 2 (opcional):</label>
-                    <input type="text" id="descanso2" name="descanso2" placeholder="HH:MM" pattern="^([01]\d|2[0-3]):([0-5]\d)$">
-                    <button type="button" class="boton-mini" onclick="horaActual('descanso2')">⌚</button>
-                </div>
-            </div>
-            <div class="seccion">
-                <h2>VUELTA</h2>
-                <div class="campo">
-                    <label for="vuelta1">Salida:</label>
-                    <input type="text" id="vuelta1" name="vuelta1" placeholder="HH:MM" required pattern="^([01]\d|2[0-3]):([0-5]\d)$">
-                    <button type="button" class="boton-mini" onclick="horaActual('vuelta1')">⌚</button>
-                </div>
-                <div class="campo">
-                    <label for="vuelta2">Llegada:</label>
-                    <input type="text" id="vuelta2" name="vuelta2" placeholder="HH:MM" required pattern="^([01]\d|2[0-3]):([0-5]\d)$">
-                    <button type="button" class="boton-mini" onclick="horaActual('vuelta2')">⌚</button>
-                </div>
-            </div>
-            <div class="seccion">
-                <div class="campo">
-                    <label for="planillas1">Planillas Generales:</label>
-                    <input type="number" id="planillas1" name="planillas1" placeholder="##" min="0" step="1" required>
-                </div>
-                <div class="campo">
-                    <label for="planillas2">Planillas Semanales:</label>
-                    <input type="number" id="planillas2" name="planillas2" placeholder="##" min="0" step="1">
-                </div>
-                <div class="campo">
-                    <label for="planillas3">Planillas Mensuales:</label>
-                    <input type="number" id="planillas3" name="planillas3" placeholder="##" min="0" step="1">
-                </div>
-            </div>
-            <div class="seccion">
-                <h2>Acciones</h2>
-                <div class="acciones">
-                    <button type="button" class="discord" onclick="guardarPlanilla()">Enviar Planilla</button>
-                </div>
-            </div>
-        </form>
-    </div>
-    <!-- Menú de Alarma -->
-    <div id="menu-alarma" class="menu-flotante" style="display:none;">
-        <div class="menu-contenido">
-            <h3>Atención</h3>
-            <div class="acciones">
-                <p>Confirma que estás atento al recorrido.</p>
-                <button type="button" onclick="entendidoAlarma()">Entendido</button>
-            </div>
-        </div>
-    </div>
-    <div id="micro" class="contenedor" style="display: none;">
-        <h2>Colectivos Circulando</h2>
-        <button class="theme-toggle-button" onclick="refrescarColectivos()">🔄</button>
-        <button class="theme-toggle-button" onclick="redirigirSegunRol()">Salir</button>
-        <div class="campo" id="colectivos-lista">
-        </div>
-    </div>
-    <div id="agregar-chofer" class="menu-flotante" style="display: none;">
-        <div class="menu-contenido">
-            <h3>Agregar nuevo chofer</h3>
-            <div class="campo">
-                <label for="nuevo-chofer-id">ID de Discord:</label>
-                <input type="text" id="nuevo-chofer-id" placeholder="Ej: usuario123 (con @)">
-            </div>
-            <div class="acciones">
-                <button onclick="agregarChofer()">Agregar chofer</button>
-                <button onclick="cerrarMenuAgregarChofer()">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    <div id="menu-historial-planillas" class="menu-flotante" style="display:none;">
-        <div class="menu-contenido" style="max-height: 90vh; overflow-y: auto; width: 90vw;">
-            <button class="theme-toggle-button" onclick="abrirMenuFiltroHistorial()">📂 Filtrar</button>
-            <h3>Historial de Planillas</h3>
-            <div id="contenedor-historial-planillas"></div>
-            <div class="acciones">
-                <button type="button" onclick="cerrarMenuHistorialPlanillas()">Cerrar</button>
-            </div>
-        </div>
-    </div>
-    <div id="menu-logs" class="menu-flotante" style="display:none;">
-        <div class="menu-contenido" style="max-height: 90vh; overflow-y: auto; width: 90vw;">
-            <h3>Registros de Conexión (Hoy)</h3>
-            <div id="contenedor-logs"></div>
-            <div class="acciones">
-                <button type="button" onclick="cerrarMenuLogs()">Cerrar</button>
-            </div>
-        </div>
-    </div>    
-    <div id="menu-filtro-historial" class="menu-flotante" style="display: none;">
-        <div class="menu-contenido">
-            <h3>Filtrar Historial</h3>
-            <div class="acciones">
-                <button onclick="filtrarHistorialAZ()">🔤 A-Z</button>
-                <button onclick="filtrarHistorialZA()">🔡 Z-A</button>
-                <button onclick="filtrarHistorialRecientes()">🕒 Más recientes</button>
-                <button onclick="filtrarHistorialAntiguas()">📜 Más antiguas</button>
-            </div>
-            <div class="acciones">
-                <button onclick="cerrarMenuFiltroHistorial()">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    <div id="licencias" class="contenedor" style="display: none;">
-    <h2>Cargar Licencia</h2>
-    <form id="licencia-form" autocomplete="off">
-        <div class="seccion">
-            <div class="campo">
-                <label for="licencia-discord">Usuario de Discord:</label>
-                <input type="text" id="licencia-discord" placeholder="Ej: @abelcraft_ok664">
-            </div>
-            <div class="campo">
-                <label for="licencia-roblox">Usuario de Roblox:</label>
-                <input type="text" id="licencia-roblox" placeholder="Ej: @abelcraft_ok664">
-            </div>
-            <div class="campo">
-                <label for="licencia-apodo">Apodo Roblox:</label>
-                <input type="text" id="licencia-apodo" placeholder="Ej: Pepe_Conductor">
-            </div>
-        </div>
-        <div class="seccion">
-            <div class="campo">
-                <label for="licencia-sector">Sector:</label>
-                <select id="licencia-sector">
-                    <option value="Seleccione su Sector">Seleccione su Sector</option>
-                    <option value="Jefe/Admin">Jefe/Admin</option>
-                    <option value="Moderador">Moderador</option>
-                    <option value="Inspector">Inspector</option>
-                    <option value="Developer">Developer</option>
-                    <option value="Chofer">Chofer</option>
-                    <option value="Auxiliar">Auxiliar</option>
-                </select>
-            </div>
-        </div>
-        <div class="seccion">
-            <div class="campo">
-                <label for="licencia-motivo">Motivo:</label>
-                <select id="licencia-motivo">
-                    <option disabled selected>Seleccione un motivo</option>
-                    <option>Enfermedad o lesión</option>
-                    <option>Emergencia familiar</option>
-                    <option>Vacaciones</option>
-                    <option>Estudios o capacitación</option>
-                    <option>Duelo</option>
-                    <option>Razones personales</option>
-                </select>
-            </div>
-            <div class="campo">
-                <label for="licencia-tiempo">Duración:</label>
-                <select id="licencia-tiempo">
-                    <option disabled selected>Seleccione el tiempo que durará</option>
-                    <option>1 día</option>
-                    <option>2 días</option>
-                    <option>3 días</option>
-                    <option>4 días</option>
-                    <option>5 días</option>
-                    <option>6 días</option>
-                    <option>1 semana</option>
-                    <option>2 semanas</option>
-                    <option>3 semanas</option>
-                </select>
-            </div>
-        </div>
-        <div class="acciones">
-            <button type="button" onclick="cargarLicencia()">📤 Cargar Licencia</button>
-            <button type="button" onclick="redirigirSegunRol()">Cancelar</button>
-        </div>
-    </form>
-</div>
-    <div id="menu-anun-feedback" class="menu-flotante" style="display:none;">
-        <div class="menu-contenido">
-            <h2>Recuerda que:</h2>
-            <p style="color: red;">Si deseas hacer una peticion de rango, este no es el lugar correcto...</p>
-            <p>Haz clic en el boton "Peticion de Rango" para solicitar un rango especial.</p>
-            <p>Haz clic en el boton "Ir al Feedback" para enviar un reporte.</p>
-            <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-asistencia').style.display = 'flex'; document.getElementById('menu-anun-feedback').style.display = 'none';">Peticion de Rango</button>
-            <button type="button" class="theme-toggle-button" onclick="abrirFeedback()">Ir al Feedback</button>
-            <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-anun-feedback').style.display = 'none';">Cerrar este menu</button>
-        </div>
-    </div>
-    <div id="menu-feedback" class="menu-flotante" style="display:none;">
-        <div class="menu-contenido">
-            <h3>Enviar Reporte</h3>
-            <div class="campo">
-                <label for="discord-id">ID Discord:</label>
-                <input type="text" id="discord-id" placeholder="@usuario#0000 o ID numérico">
-            </div>
-            <div class="campo">
-                <label for="tipo-reporte">Tipo:</label>
-                <select id="tipo-reporte">
-                    <option disabled selected>Seleccione su tipo de reporte</option>
-                    <option>Error</option>
-                    <option>Duda</option>
-                    <option>Sugerencia</option>
-                    <option>Comentario/Opinion</option>
-                </select>
-            </div>
-            <div class="campo">
-                <label for="mensaje-reporte">Mensaje:</label>
-            </div>
-             <textarea id="mensaje-reporte" rows="6" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
-            <div class="acciones" style="margin-top:10px;">
-                <button onclick="enviarFeedback()">Enviar Reporte</button>
-                <button onclick="cerrarMenuFeedback()">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    <div id="menu-enviar-mensaje" class="menu-flotante" style="display:none;">
-        <div class="menu-contenido">
-            <h3>Enviar mensaje a un chofer</h3>
-            <div class="campo">
-                <label for="mensaje-inspector">Mensaje:</label>
-            </div>
-                <textarea id="mensaje-inspector" rows="6" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
-            <div class="acciones" style="margin-top:10px;">
-                <button onclick="enviarMensajeInspector()">Enviar</button>
-                <button onclick="cerrarMenuEnviarMensaje()">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    <div id="menu-mensajes-chofer" class="menu-flotante" style="display:none;">
-  <div class="menu-contenido">
-    <h3>Mensajes del Inspector</h3>
-    <div id="contenedor-mensajes-chofer">
-      <div class="burbuja">
-        <p>No hay mensajes aún.</p>
-      </div>
-    </div>
-    <div class="acciones">
-      <button onclick="cerrarMenuMensajesChofer()">Cerrar</button>
-    </div>
-  </div>
-</div>
-    <div id="menu-vueltas-cargadas" class="menu-flotante" style="display:none;">
-        <div class="menu-contenido">
-            <h3>Vueltas Cargadas</h3>
-            <div id="vueltas-lista"></div>
-            <div class="acciones">
-                <button type="button" onclick="cerrarMenuVueltasCargadas()">Cerrar</button>
-            </div>
-        </div>
-    </div>
-    <div id="menu-ramales" class="menu-flotante ramales" style="display:none;">
-        <div class="menu-contenido">
-            <h3>Seleccionar Ramal</h3>
-            <div class="ramal-item">
-                <img src="./ramales/9.png" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 9</strong><br>
-                    Iniciara recorrido en la terminal de Villa, ubicada cerca del deposito, luego se dirigira a la terminal de Retiro. Una vez sale de retiro, se dirigira por TODA la metrobus que pasa cerca de la diagonal y doblara para ir a la metrobus del "Depo Free" (Urbano).<br>
-                    Esta linea continuara su recorrido y terminara en la "Terminal de La Cumbre".<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('9')">Seleccionar Ramal</button>
-                </div>
-            </div>
+            <strong>¿Puedes usar las versiones anteriores?</strong> No, no puedes porque no cumplen el formato que es obligatorio y se solicito mediante un mensaje de Discord. 
             <div class="separador"></div>
-            <div class="ramal-item">
-                <div class="ramal-info">
-                    <strong>RAMAL: 84</strong><br>
-                    Se realizara en un futuro<br>
-                    <button type="button" class="boton-seleccion" onclick="alert('Este ramal no esta disponible por el momento, se realizara en un futuro.')">Seleccionar Ramal</button>
-                </div>
-            </div>
+            <strong>Problemas tecnicos con:</strong> La conexion entre la pagina y el servidor de Discord.
             <div class="separador"></div>
-            <div class="ramal-item">
-                <img src="./ramales/373.png" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 373</strong><br>
-                    La linea 373 iniciara su recorrido en el aeropuerto, de ahi se dirigirá a la terminal de Villa y luego continuara hacia retiro.<br>
-                    Luego de haber pasado retiro, se dirigirá a "Terminal de La Cumbre" y seguirá hasta Los altos, donde finalizara su recorrido.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('373')">Seleccionar Ramal</button>
-                </div>
-            </div>
+            <strong>Tiempo estimado para que vuelva a activarse la pagina web:</strong> Se podra volver a utilizar la pagina correctamente y sin errores, aproximadamente por las 19:45hs (horario Argentino).
             <div class="separador"></div>
-            <div class="ramal-item">
-                <img src="./ramales/384.png" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 384</strong><br>
-                    La linea 384 realizara el recorrido mas largo, conectando TODAS las terminales.<br>
-                    Primero iniciara en la terminal de los altos, donde continuara hasta la rotonda y doblara en sentido Aguas de Oro, luego ira directamente a la terminal, donde frenaria y se deberia mantener ahi por al menos 2 minutos.<br>
-                    Luego, al salir de terminal, se dirigira a aeropuerto por la ruta alternativa, pero antes debera pasar el punto centrico de la ciudad, y luego ir a aeropuerto, donde hara lo mismo que en la terminal de Aguas de Oro y luego continuara hacia la terminal villa, donde solo se detendra por 1 minuto. Al salir de terminal villa, ira hacia "La terminal de La Cumbre" y luego hacia la de retiro, donde terminara su recorrido.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('384')">Seleccionar Ramal</button>
-                </div>
-            </div>
+            <strong>¿Cual fue la causa principal del cierre temporal de la web?</strong> La causa principal es que hemos perdido de un momento a otro, unas funciones muy importantes por las cuales la pagina no puede funcionar correctamente, y por lo tanto, hemos tenido que cerrar la pagina temporalmente.
             <div class="separador"></div>
-            <div class="ramal-item">
-                <img src="./ramales/570.png" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 570</strong><br>
-                    La linea 570 iniciara su recorrido en la Terminal villa, donde continuara para Retiro y de ahi a "La terminal de La Cumbre", luego, continuara su recorrido dirigiendose a Los Altos, donde estara 2 minutos y luego regresara, pasando por Depo Free (Urbanos) y finalizando el recorrido en la metrobus.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('570')">Seleccionar Ramal</button>
-                </div>
-            </div>
-            <div class="separador"></div>
-            <div class="acciones">
-                <button type="button" onclick="cerrarMenuRamales()">Cancelar</button>
-            </div>
-        </div>
-    </div>
-    <div id="menu-internos" class="menu-flotante internos" style="display:none;">
-        <div class="menu-contenido">
-            <h3>Seleccionar Interno</h3>
-            <div class="interno-item">
-                <img src="./internos/1.png" class="interno-img">
-                <div class="interno-info">
-                    <strong>TodoBus Retiro</strong><br>
-                    Empresa: TodoBus<br>
-                    Modelo: -<br>
-                    Interno GTG: 1<br>
-                    Interno: 1234<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('1')">Seleccionar Interno</button>
-                </div>
-            </div>
-            <div class="separador"></div>
-            <div class="interno-item">
-                <img src="./internos/2.png" class="interno-img">
-                <div class="interno-info">
-                    <strong>TodoBus Palermo</strong><br>
-                    Empresa: TodoBus<br>
-                    Modelo: -<br>
-                    Interno GTG: 2<br>
-                    Interno: 5642<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('2')">Seleccionar Interno</button>
-                </div>
-            </div>
-            <div class="separador"></div>
-            <div class="interno-item">
-                <img src="./internos/3.png" class="interno-img">
-                <div class="interno-info">
-                    <strong>Nuovobus Citta</strong><br>
-                    Empresa: Nuovobus<br>
-                    Modelo: Citta<br>
-                    Interno GTG: 3<br>
-                    Interno: 2321<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('3')">Seleccionar Interno</button>
-                </div>
-            </div>
-            <div class="separador"></div>
-            <div class="interno-item">
-                <img src="./internos/4.png" class="interno-img">
-                <div class="interno-info">
-                    <strong>Italbus Tropea</strong><br>
-                    Empresa: Italbus<br>
-                    Modelo: Tropea III (3)<br>
-                    Interno GTG: 4<br>
-                    Interno: 3453<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('4')">Seleccionar Interno</button>
-                </div>
-            </div>
-            <div class="separador"></div>
-            <div class="interno-item">
-                <img src="./internos/5.png" class="interno-img">
-                <div class="interno-info">
-                    <strong>Metalpar Iguazu 3</strong><br>
-                    Empresa: Metalpar<br>
-                    Modelo: Iguazu 3<br>
-                    Interno GTG: 5<br>
-                    Interno: 9410<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('5')">Seleccionar Interno</button>
-                </div>
-            </div>
-            <div class="separador"></div>
-            <div class="interno-item">
-                <img src="./internos/6.png" class="interno-img">
-                <div class="interno-info">
-                    <strong>Italbus Bello</strong><br>
-                    Empresa: Italbus<br>
-                    Modelo: Bello<br>
-                    Interno GTG: 6<br>
-                    Interno: 4321<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('6')">Seleccionar Interno</button>
-                </div>
-            </div>
-            <div class="separador"></div>
-            <div class="interno-item">
-                <img src="./internos/7.png" class="interno-img">
-                <div class="interno-info">
-                    <strong>Marcopolo Torino</strong><br>
-                    Empresa: Marcopolo<br>
-                    Modelo: Torino<br>
-                    Interno GTG: 7<br>
-                    Interno: 1232<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarInterno('7')">Seleccionar Interno</button>
-                </div>
-            </div>
-            <div class="separador"></div>
-            <div class="acciones">
-                <button type="button" onclick="cerrarMenuInternos()">Cancelar</button>
-            </div>
-        </div>
+        </li>
+        <p>Si deseas hacer un tipo de reporte serio al DEVELOPER encoargado de la pagina, puedes hacerlo a traves del siguiente boton: </p>
+        <button class="boton-seleccion discord" onclick="window.open('https://discord.gg/8jtZXd43UA', '_blank')">Hacer reporte mediante Discord</button>
     </div>
     <footer>
-        <div class="footer-bottom">
-            <button id="theme-toggle" class="theme-toggle-button">Cambiar Modo</button>
-            <button id="rejoin-btn" class="theme-toggle-button" onclick="window.reJoin()">Re-Join</button>
-            <button id="tuto" style="align-items: center; text-align: center;" class="theme-toggle-button" onclick="window.open('https://youtu.be/UG3T8zEGLJI?si=dqzdnD__Z_O_b6cR', '_blank')">Tutorial</button>
-        </div>
-        <p>© 2025 General Tomas Guido S.A.C.I.F</p>
+        <button id="theme-toggle" class="theme-toggle-button">Cambiar Modo</button>
     </footer>
-<button onclick="abrirMenuFeedback()" id="feedback" style="
-    display: none;
-    position: fixed;
-    bottom: 5px;
-    right: 20px;
-    z-index: 999;
-    background-color: #7289da;
-    border-radius: 50%;
-    padding: 14px 18px;
-    font-size: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    color: white;
-    border: none;
-    cursor: pointer;
-">💬</button>
-<button onclick="refrescarColectivos(); mostrarPestania('micro');" id="micro-btn" style="
-    display: none;
-    position: fixed;
-    bottom: 5px;
-    left: 20px;  /* cambiado de right a left */
-    z-index: 999;
-    background-color: violet;
-    border-radius: 50%;
-    padding: 14px 18px;
-    font-size: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    color: white;
-    border: none;
-    cursor: pointer;
-">🚍</button>
-<button onclick="botonPestanias()" id="boton-pestanias" style="
-    display: none;
-    position: fixed;
-    bottom: 80px;
-    right: 20px;
-    z-index: 999;
-    background-color: #ffd166;
-    border-radius: 50%;
-    padding: 14px 18px;
-    font-size: 20px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.3);
-    color: white;
-    border: none;
-    cursor: pointer;
-">🚪</button>
-    <script type="module" src="./script2.js"></script>
-    <script src="./script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const body = document.body;
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const body = document.body;
     function actualizarTextoBoton() {
         if (!body.classList.contains('light-mode')) {
             themeToggleBtn.innerHTML = '🌙 – Noche';
@@ -1260,8 +499,6 @@
             themeToggleBtn.innerHTML = '☀️ – Día';
         }
     }
-
-    // Preferencia guardada o sistema
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light-mode') {
         body.classList.add('light-mode');
@@ -1273,7 +510,6 @@
         body.classList.remove('light-mode');
     }
     actualizarTextoBoton();
-
     themeToggleBtn.addEventListener('click', () => {
         body.classList.toggle('light-mode');
         actualizarTextoBoton();
@@ -1284,13 +520,6 @@
         }
     });
 });
-window.onload = function () {
-    mostrarPestania('auto-login');
-    iniciarTextoRotativo(); // activa el texto con puntos
-    setTimeout(() => {
-        window.autoLogin();
-    }, 1500); // Pequeño delay para que se vea el texto rotativo
-};
     </script>
 </body>
 </html>

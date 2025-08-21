@@ -468,34 +468,30 @@
     </nav>
     <div id="inicio1" class="contenedor">
         <h1 style="color: red;">Lo Sentimos, estamos en mantenimiento</h1>
-        <p>Devido a problemas tecnicos con la conexion entre la pagina y el servidor de Discord. Tuvimos que cortar el servicio de las ultimas versiones (1.3 en adelante).</p>
-        <p>Asi que desde la version 1.2 para atras siguen funcionando correctamente. Entonces si necesita usar la pagina, haga clic en el siguiente boton:</p>
-        <button type="button" onclick="abrirVersiones()">Seleccionar una version</button>
+        <p>Devido a problemas tecnicos, hemos tenido que cerrar temporalmente la Pagina.</p>
+        <div class="separador"></div>
+        <li>
+            <strong>Versiones afectadas:</strong> 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3.0 y 3.1.
+            <div class="separador"></div>
+            <strong>¿Puedes usar las versiones anteriores?</strong> No, no puedes porque no cumplen el formato que es obligatorio y se solicito mediante un mensaje de Discord. 
+            <div class="separador"></div>
+            <strong>Problemas tecnicos con:</strong> La conexion entre la pagina y el servidor de Discord.
+            <div class="separador"></div>
+            <strong>Tiempo estimado para que vuelva a activarse la pagina web:</strong> Se podra volver a utilizar la pagina correctamente y sin errores, aproximadamente por las 19:45hs (horario Argentino).
+            <div class="separador"></div>
+            <strong>¿Cual fue la causa principal del cierre temporal de la web?</strong> La causa principal es que hemos perdido de un momento a otro, unas funciones muy importantes por las cuales la pagina no puede funcionar correctamente, y por lo tanto, hemos tenido que cerrar la pagina temporalmente.
+            <div class="separador"></div>
+        </li>
+        <p>Si deseas hacer un tipo de reporte serio al DEVELOPER encoargado de la pagina, puedes hacerlo a traves del siguiente boton: </p>
+        <button class="boton-seleccion discord" onclick="window.open('https://discord.gg/8jtZXd43UA', '_blank')">Hacer reporte mediante Discord</button>
     </div>
-    <div id="inicio2" class="contenedor">
+    <footer>
         <button id="theme-toggle" class="theme-toggle-button">Cambiar Modo</button>
-    </div>
-    <div id="menu-versiones" class="menu-flotante" style="display:none;">
-        <div class="seccion">
-            <h2>Seleccione una Version:</h2>
-            <button type="button" class="theme-toggle-button" onclick="window.location.href='https://abelcraftok.github.io/GTG/Sistema%20de%20Planilleo%20-%20GTG%201.0.html'">V: 1.0</button>
-            <button type="button" class="theme-toggle-button" onclick="window.location.href='https://abelcraftok.github.io/GTG/Sistema%20de%20Planilleo%20-%20GTG%201.1.html'">V: 1.1</button>
-            <button type="button" class="theme-toggle-button" onclick="window.location.href='https://abelcraftok.github.io/GTG/Sistema%20de%20Planilleo%20-%20GTG%201.2.html'">V: 1.2</button>
-        </div>
-    </div>
+    </footer>
     <script>
-        function abrirVersiones() {
-            document.getElementById('menu-versiones').style.display = 'flex';
-        }
-        function cerrarVersiones() {
-            document.getElementById('menu-versiones').style.display = 'none';
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-    // --- Cambio de tema ---
     const themeToggleBtn = document.getElementById('theme-toggle');
     const body = document.body;
-
     function actualizarTextoBoton() {
         if (!body.classList.contains('light-mode')) {
             themeToggleBtn.innerHTML = '🌙 – Noche';
@@ -503,8 +499,6 @@
             themeToggleBtn.innerHTML = '☀️ – Día';
         }
     }
-
-    // Preferencia guardada o sistema
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light-mode') {
         body.classList.add('light-mode');
@@ -516,7 +510,6 @@
         body.classList.remove('light-mode');
     }
     actualizarTextoBoton();
-
     themeToggleBtn.addEventListener('click', () => {
         body.classList.toggle('light-mode');
         actualizarTextoBoton();
@@ -526,9 +519,6 @@
             localStorage.setItem('theme', 'dark-mode');
         }
     });
-
-    // --- Mostrar pestaña login al iniciar ---
-    mostrarPestania('inicio');
 });
     </script>
 </body>
