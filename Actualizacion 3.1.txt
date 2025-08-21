@@ -1,0 +1,7 @@
+Titulo: "Reformacion en el formato de la planilla"
+Mensaje: "Se ajustaron algunas cosas para que la pagina utilice el nuevo formato de planillas."
+Cambios: "
+- 
+- 
+- 
+"
