@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -784,19 +784,58 @@
             </div>
         </div>
         <div class="seccion">
-            <h2>Terminales</h2>
-            <div class="separador"></div>
-            <div class="acciones">
-                <button type="button" onclick="guardarUbicacion('Terminal Aguas de Oro')">Terminal Aguas de Oro</button>
-                <button type="button" onclick="guardarUbicacion('Terminal del Areopuerto')">Terminal del Areopuerto</button>
-                <button type="button" onclick="guardarUbicacion('Terminal de Barrio')">Terminal de Barrio</button>
-                <button type="button" onclick="guardarUbicacion('Terminal de La Cumbre')">Terminal de La Cumbre</button>
-                <button type="button" onclick="guardarUbicacion('Terminal de Los Altos')">Terminal de Los Altos</button>
-                <button type="button" onclick="guardarUbicacion('Terminal de Minibuses')">Terminal de Minibuses</button>
-                <button type="button" onclick="guardarUbicacion('Terminal de Omnibus Villa')">Terminal de Omnibus Villa</button>
-                <button type="button" onclick="guardarUbicacion('Terminal de Retiro')">Terminal de Retiro</button>
+                <h1>Ubicación del Chofer</h1>
+                <div id="panel-ubicaciones">
+                    <div class="seccion">
+                        <h2>Ciudad</h2>
+                        <div class="separador"></div>
+                        <div class="acciones">
+                            <button type="button" onclick="guardarUbicacion('Av. Principal')">Av. Principal</button>
+                            <button type="button" onclick="guardarUbicacion('Centro')">Centro</button>
+                        </div>
+                    </div>
+                    <div class="seccion">
+                        <h2>Depositos</h2>
+                        <div class="separador"></div>
+                        <div class="acciones">
+                            <button type="button" onclick="guardarUbicacion('Deposito FONO BUS')">Deposito FONO BUS</button>
+                            <button type="button" onclick="guardarUbicacion('Deposito General Tomas Guido')">Deposito General Tomas Guido</button>
+                            <button type="button" onclick="guardarUbicacion('Deposito Larga Distancia')">Deposito Larga Distancia</button>
+                            <button type="button" onclick="guardarUbicacion('Deposito Urbano')">Deposito Urbano</button>
+                        </div>
+                    </div>
+                    <div class="seccion">
+                        <h2>Metrobuses</h2>
+                        <div class="separador"></div>
+                        <div class="acciones">
+                            <button type="button" onclick="guardarUbicacion('Metrobus 2 Carriles')">Metrobus 2 Carriles</button>
+                            <button type="button" onclick="guardarUbicacion('Metrobus 6 Carriles')">Metrobus 6 Carriles</button>
+                        </div>
+                    </div>
+                    <div class="seccion">
+                        <h2>Lugares Publicos</h2>
+                        <div class="separador"></div>
+                        <div class="acciones">
+                            <button type="button" onclick="guardarUbicacion('Patio de Eventos')">Patio de Eventos</button>
+                            <button type="button" onclick="guardarUbicacion('Plaza La Cumbre')">Plaza La Cumbre</button>
+                        </div>
+                    </div>
+                    <div class="seccion">
+                        <h2>Terminales</h2>
+                        <div class="separador"></div>
+                        <div class="acciones">
+                            <button type="button" onclick="guardarUbicacion('Terminal Aguas de Oro')">Terminal Aguas de Oro</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal del Areopuerto')">Terminal del Areopuerto</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal de Barrio')">Terminal de Barrio</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal de La Cumbre')">Terminal de La Cumbre</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal de Los Altos')">Terminal de Los Altos</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal de Minibuses')">Terminal de Minibuses</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal de Omnibus Villa')">Terminal de Omnibus Villa</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal de Retiro')">Terminal de Retiro</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
         <div class="seccion">
             <h2>IDA</h2>
             <div class="campo">
@@ -1293,4 +1332,5 @@ window.onload = function () {
 };
     </script>
 </body>
+
 </html>
