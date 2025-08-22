@@ -790,48 +790,57 @@
                         <h2>Ciudad</h2>
                         <div class="separador"></div>
                         <div class="acciones">
-                            <button type="button" onclick="guardarUbicacion('Av. Principal')">Av. Principal</button>
-                            <button type="button" onclick="guardarUbicacion('Centro')">Centro</button>
+                            <button type="button" onclick="guardarUbicacion('Av. Principal'); entendidoAlarma();">Av. Principal</button>
+                            <button type="button" onclick="guardarUbicacion('Centro'); entendidoAlarma();">Centro</button>
                         </div>
                     </div>
                     <div class="seccion">
                         <h2>Depositos</h2>
                         <div class="separador"></div>
                         <div class="acciones">
-                            <button type="button" onclick="guardarUbicacion('Deposito FONO BUS')">Deposito FONO BUS</button>
-                            <button type="button" onclick="guardarUbicacion('Deposito General Tomas Guido')">Deposito General Tomas Guido</button>
-                            <button type="button" onclick="guardarUbicacion('Deposito Larga Distancia')">Deposito Larga Distancia</button>
-                            <button type="button" onclick="guardarUbicacion('Deposito Urbano')">Deposito Urbano</button>
+                            <button type="button" onclick="guardarUbicacion('Deposito FONO BUS'); entendidoAlarma();">Deposito FONO BUS</button>
+                            <button type="button" onclick="guardarUbicacion('Deposito General Tomas Guido'); entendidoAlarma();">Deposito General Tomas Guido</button>
+                            <button type="button" onclick="guardarUbicacion('Deposito Larga Distancia'); entendidoAlarma();">Deposito Larga Distancia</button>
+                            <button type="button" onclick="guardarUbicacion('Deposito Urbano'); entendidoAlarma();">Deposito Urbano</button>
                         </div>
                     </div>
                     <div class="seccion">
                         <h2>Metrobuses</h2>
                         <div class="separador"></div>
                         <div class="acciones">
-                            <button type="button" onclick="guardarUbicacion('Metrobus 2 Carriles')">Metrobus 2 Carriles</button>
-                            <button type="button" onclick="guardarUbicacion('Metrobus 6 Carriles')">Metrobus 6 Carriles</button>
+                            <button type="button" onclick="guardarUbicacion('Metrobus 2 Carriles'); entendidoAlarma();">Metrobus 2 Carriles</button>
+                            <button type="button" onclick="guardarUbicacion('Metrobus 6 Carriles'); entendidoAlarma();">Metrobus 6 Carriles</button>
                         </div>
                     </div>
                     <div class="seccion">
                         <h2>Lugares Publicos</h2>
                         <div class="separador"></div>
                         <div class="acciones">
-                            <button type="button" onclick="guardarUbicacion('Patio de Eventos')">Patio de Eventos</button>
-                            <button type="button" onclick="guardarUbicacion('Plaza La Cumbre')">Plaza La Cumbre</button>
+                            <button type="button" onclick="guardarUbicacion('Patio de Eventos'); entendidoAlarma();">Patio de Eventos</button>
+                            <button type="button" onclick="guardarUbicacion('Plaza La Cumbre'); entendidoAlarma();">Plaza La Cumbre</button>
                         </div>
                     </div>
                     <div class="seccion">
                         <h2>Terminales</h2>
                         <div class="separador"></div>
                         <div class="acciones">
-                            <button type="button" onclick="guardarUbicacion('Terminal Aguas de Oro')">Terminal Aguas de Oro</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal del Areopuerto')">Terminal del Areopuerto</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal de Barrio')">Terminal de Barrio</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal de La Cumbre')">Terminal de La Cumbre</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal de Los Altos')">Terminal de Los Altos</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal de Minibuses')">Terminal de Minibuses</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal de Omnibus Villa')">Terminal de Omnibus Villa</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal de Retiro')">Terminal de Retiro</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal Aguas de Oro'); entendidoAlarma();">Terminal Aguas de Oro</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal del Areopuerto'); entendidoAlarma();">Terminal del Areopuerto</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal de Barrio'); entendidoAlarma();">Terminal de Barrio</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal de La Cumbre'); entendidoAlarma();">Terminal de La Cumbre</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal de Los Altos'); entendidoAlarma();">Terminal de Los Altos</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal de Minibuses'); entendidoAlarma();">Terminal de Minibuses</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal de Omnibus Villa'); entendidoAlarma();">Terminal de Omnibus Villa</button>
+                            <button type="button" onclick="guardarUbicacion('Terminal de Retiro'); entendidoAlarma();">Terminal de Retiro</button>
+                        </div>
+                    </div>
+                    <div class="seccion">
+                        <h2>Opciones Para la Ubicacion</h2>
+                        <div class="separador"></div>
+                        <div class="acciones">
+                            <button class="btn btn-exit" onclick="TerminarReco()">Sacar Ubicacion</button>
+                            <button type="button" onclick="entendidoAlarma()">Silenciar Alarma</button>
+                            <buttno class="btn btn-exit" onclick="desactivarAlarma()">Desactivar Alarma</buttno>
                         </div>
                     </div>
                 </div>
@@ -904,15 +913,6 @@
             <h2>Vueltas Guardadas</h2>
             <div id="lista-vueltas"></div>
             <button onclick="document.getElementById('menu-vueltas').style.display = 'none';">❌ Cerrar</button>
-        </div>
-    </div>
-    <div id="menu-alarma" class="menu-flotante" style="display:none;">
-        <div class="menu-contenido">
-            <h3>Atención</h3>
-            <div class="acciones">
-                <p>Confirma que estás atento al recorrido.</p>
-                <button type="button" onclick="entendidoAlarma()">Entendido</button>
-            </div>
         </div>
     </div>
     <div id="micro" class="contenedor" style="display: none;">
@@ -1330,6 +1330,9 @@ window.onload = function () {
         window.autoLogin();
     }, 1500); // Pequeño delay para que se vea el texto rotativo
 };
+setTimeout(() => {
+                refrescarColectivos();
+            }, 2000);
     </script>
 </body>
 

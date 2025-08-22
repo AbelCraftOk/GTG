@@ -424,21 +424,7 @@ function iniciarTextoRotativo() {
         i++;
     }, 500);
 }
-let alarmaInterval;
-let audio = new Audio('./alarm.mp3');
-audio.loop = true;
-function iniciarAlarma() {
-    alarmaInterval = setInterval(() => {
-        document.getElementById('menu-alarma').style.display = 'flex';
-        audio.play();
-    }, 90 * 1000); // 1 minuto 30 segundos
-}
-function entendidoAlarma() {
-    console.log("✅ Arrancado sistema de Alarma");
-    audio.pause();
-    audio.currentTime = 0;
-    document.getElementById('menu-alarma').style.display = 'none';
-}
+
 function horaActual(inputId) {
     const ahora = new Date();
     const horas = String(ahora.getHours()).padStart(2, '0');
@@ -458,4 +444,35 @@ function enlaces() {
     const parteJ10 = "YH-m-vmfwa1UiEoxBqzDvIm3Mk6gFs";
     const enlacesDecodificados = parteA1 + parteB2 + parteC3 + parteD4 + parteE5 + parteF6 + parteG7 + parteH8 + parteI9 + parteJ10;
     return enlacesDecodificados;
+}
+let alarmaInterval;
+let audio = new Audio('./alarm.mp3');
+audio.loop = true;
+let alarmaDesactivada = false;
+function iniciarAlarma() {
+    alarmaDesactivada = false;
+    alarmaInterval = setInterval(() => {
+        if (!alarmaDesactivada) {
+            audio.play();
+        }
+    }, 90 * 1000); // 1 minuto 30 segundos
+}
+function entendidoAlarma() {
+    console.log("✅ Arrancado sistema de Alarma");
+    audio.pause();
+    audio.currentTime = 0;
+    alarmaDesactivada = true;
+    if (alarmaInterval) {
+        clearInterval(alarmaInterval);
+        alarmaInterval = null;
+    }
+}
+function desactivarAlarma() {
+    alarmaDesactivada = true;
+    audio.pause();
+    audio.currentTime = 0;
+    if (alarmaInterval) {
+        clearInterval(alarmaInterval);
+        alarmaInterval = null;
+    }
 }

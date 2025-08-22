@@ -88,12 +88,10 @@ async function guardarPlanilla() {
     const planillas1 = document.getElementById('planillas1').value.trim();
     const planillas2 = document.getElementById('planillas2').value.trim();
     const planillas3 = document.getElementById('planillas3').value.trim();
-
     if (!chofer || !ramalSeleccionado || !internoSeleccionado || !planillas1 || vueltasGenerales.length === 0) {
         alert("⚠️ Debes completar los campos obligatorios y cargar al menos una vuelta general.");
         return;
     }
-
     try {
         const nuevaPlanilla = {
             chofer,
@@ -108,12 +106,16 @@ async function guardarPlanilla() {
             timestamp: new Date(),
             codigoPlanilla
         };
-
         await addDoc(collection(db, "planillas"), nuevaPlanilla);
         console.log("✅ Planilla registrada");
         enviarMensaje(nuevaPlanilla);
-
-        vueltasGenerales = []; // limpiar arreglo después de enviar
+        try {
+            await deleteDoc(doc(db, "ubication", chofer));
+            console.log(`Ubicación de ${chofer} eliminada tras enviar planilla.`);
+        } catch (err) {
+            console.warn(`No se pudo eliminar la ubicación de ${chofer}:`, err);
+        }
+        vueltasGenerales = [];
         limpiarCampos();
     } catch (error) {
         console.error("Error al guardar planilla:", error);
@@ -1003,3 +1005,9 @@ function mostrarVueltasGenerales() {
     });
 }
 window.mostrarVueltasGenerales = mostrarVueltasGenerales;
+function TerminarReco() {
+    deleteDoc(doc(db, "ubication", chofer));
+    console.log(`Ubicación de ${chofer} eliminada.`);   
+    alert("Ubicación de" + {chofer} + "eliminada.");
+}
+window.TerminarReco = TerminarReco;
