@@ -1005,9 +1005,19 @@ function mostrarVueltasGenerales() {
     });
 }
 window.mostrarVueltasGenerales = mostrarVueltasGenerales;
-function TerminarReco() {
-    deleteDoc(doc(db, "ubication", chofer));
-    console.log(`Ubicación de ${chofer} eliminada.`);   
-    alert("Ubicación de" + {chofer} + "eliminada.");
+async function TerminarReco() {
+    try {
+        const choferId = document.getElementById("chofer").value.trim();
+        if (!choferId) {
+            alert("Debe ingresar un ID de chofer antes de eliminar la ubicación.");
+            return;
+        }
+        await deleteDoc(doc(db, "ubication", choferId));
+        console.log(`Ubicación de ${choferId} eliminada.`);
+        alert(`Ubicación de ${choferId} eliminada.`);
+    } catch (error) {
+        console.error("Error eliminando la ubicación:", error);
+        alert("Error al eliminar la ubicación");
+    }
 }
 window.TerminarReco = TerminarReco;
