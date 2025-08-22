@@ -1,4 +1,4 @@
-Titulo: "Remodelaciones de funciones - V: 2.5"
+   644nTitulo: "Remodelaciones de funciones - V: 2.5"
 Mensaje: "
 Modificamos algunas funciones... Son unas que se ejecutan en segundo plano, así que el usuario no va a encontrar casi ninguna diferencia.
 ¿Por que se modifica la función "limpiarCampos()"?

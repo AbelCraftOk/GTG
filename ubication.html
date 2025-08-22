@@ -553,6 +553,12 @@
             mostrarPestania('micro');
             refrescarColectivos();     
         };  
+        window.onload = function () {
+            mostrarPestania('micro');
+            setTimeout(() => {
+                refrescarColectivos();
+            }, 2000);
+        };
     </script>
 </body>
 </html>

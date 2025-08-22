@@ -1,4 +1,4 @@
-Titulo: "Menu de administracion de Almacenamiento localStorage"
+Titulo: "Menu de administracion de Almacenamiento localStorage - V: 2.7"
 Mensaje: "Cree varios elementos que ayudaran al usuario a poder administrar los datos del Almacenamiento localStorage guardado por la web... Mas adelante veras los cambios."
 Cambios: "
 - Nuevo menu para administrar el Almacenamiento localStorage guardado por la web.

@@ -1,0 +1,223 @@
+Ayudame generando la siguiente peticion en HTML:
+================================================
+//Agregale boton de dia y noche
+Pestañas: {
+    "login" (estar sera la pestaña que se cargara al iniciar el codigo),
+    "usuario",
+    "comprar-pasajes",
+    "info-pasajes"
+}
+Configuracion de la pestaña "login": {
+    Lo que el usuario vera: {
+        Estara esta animacion: {
+            //Rotara cada 1,5 segundos.
+            1. "Iniciando Sesion",
+            2. "Iniciando Sesion.",
+            3. "Iniciando Sesion..",
+            4. "Iniciando Sesion...",
+            //Se volvera a comenzar en la 1.
+        }
+    }
+    Lo que estara pasando en segundo plano: {
+        1. Se extraera de "localStorage" informacion muy importante: {
+            //Es informacion guardada por otro sitio web anteriormente.
+            "localStorage.setItem("usuario", data.usuario);" Lo extraido se procesara como: "$usuario$".
+            "localStorage.setItem("clave", data.clave);" Lo extraido se procesara como: "$clave$".
+            "localStorage.setItem("rolUsuario", rol);" Lo extraido se procesara como: "$rol$".
+        }
+        2. En: "Base de Datos > cuenta >" se buscara en los diocumentos de datos, una linea que sea: usuario: "[lo procesado como: "$usuario$"]".
+        3. Al identeficar un documento de informacion con la linea mencionada, la ID del documento de infoermacion se procesara como: "$idUsuario$".
+        4. Al ya tener todos los datos anteriores procesados, el usuario sera llevado a la pestaña: "usuario".
+    }
+}
+Configuracion de la pestaña "usuario": {
+    //Apenas cargar, aparecera un Alert con el siguiente contenido: "Hola "[lo procesado como: "$usuario"].
+    Titulo (h1)(estara centrado): "Sistema del usuario".
+    Recuadro: {
+        Titulo (h2): "Comprar pasajes:"
+        Texto (p): "Actualmente hay "[lo que diga la funcion: "countpasajesDisponibles"]"."
+        Boton: {"Ir a comprar un pasaje" - Funcion: el usuario sera llevado a la pestaña: "comprar-pasajes"}
+    }
+    Recuadro: {
+        Titulo (h2): "Informacion sobre tus pasajes:"
+        Boton: {"Ir a comprar un pasaje" - Funcion: el usuario sera llevado a la pestaña: "info-pasajes"}
+    }
+}
+Configuracion de la pestaña "comprar-pasajes": {
+    Titulo (h1)(estara centrado): "Comprar pasajes"
+    Recuadro: {
+        Titulo (h2): "Pasajes disponibles"
+        [lo que diga la funcion: "pasajesDisponibles"]
+    }
+}
+Configuracion de la pestaña "info-pasajes": {
+    Titulo (h1)(estara centrado): "Informacion sobre tus pasajes"
+    Recuadro: {
+        Titulo (h2): "Pasajes por Viajar:"
+        [lo que diga la funcion: "pasajesSinViajar"]
+    }
+}
+Configuracion de la funcion "pasajesDisponibles": {
+    1. Se recolectaran todos los documentos de informacion ubicados en: "Base de Datos > viaje >", solo si el odcumento donde se quiere sacar la informacion tiene una linea que diga: "estado: "activo"".
+    2. Al recolectar solo los documentos que contiene la linea anteriormente mencioanada, las ID de los documento recolectaron me porcesaran como: "$IDrecolectadas$".
+    3. Ahora se hara lo siguiente: {
+        1- Se agarrara aleatoriamente una ID de: "$IDrecolectadas$".
+        2- Se buscara un documento que tenga la ID agarrada, al identificar el documento, la informacion que tiene dentro, se colocara en el siguiente formato:
+       "ID de viaje: ["Base de Datos > viaje > (ID agarrada) > viaje:"]
+        Recorrido: ["Base de Datos > viaje > (ID agarrada) > recorrido:"]"
+        (carga el sigueinte boton: {"Comprar este pasaje" - Ejecuta: "comprarPasaje(["Base de Datos > viaje > (ID agarrada) > viaje:"])"})
+        3- Al completar el formato, el resultado, se procesara como la respuesta de la funcion. (De manera para que se cargue el resultado en los lugares solicitados).
+    } 
+}
+Configuracion de la funcion "pasajesSinViajar": {
+    1. Se agarrara el contenido de: "Base de Datos > cuenta > $usuario$ > viaje:", solo si el odcumento donde se quiere sacar la informacion tiene una linea que diga: "estado: "activo"".
+    2. Aqui pueden pasar 2 cosas: {
+        1- Si el contenido de "viaje:" es: "0". La respuesta de la funcion sera: "No tienes pasajes sin viajar.". (De manera para que se cargue el resultado en los lugares solicitados).
+        2- Si el contenido es de "1" para arriba, el contenido 1 o mayor, sera procesado como: "$viajeEncontrado$" y luego se seguira con el punto 3.
+    }
+    3. Ahora se hara lo siguiente: {
+        1- Se entrara a: "Base de Datos > viaje >" y se buscara un documento de datos que tenga ambas de las siguientes lineas: {
+            //Al enumerar no me refiero a en que lugar debe estar esa linea de dato, sino las enumero para que las distingas.
+            Linea 1 que debe de tener: "estado: ""activo",
+            Linea 2 que debe de tener: "viaje: "$viajeEncontrado$".
+        }
+        2- Al encontrar el documento, se recolectara la informacion y luego se completara el siguiente formato:
+       "ID de viaje: ["Base de Datos > viaje > (ID del docuemnto encontrado) > viaje:"]
+        Recorrido: ["Base de Datos > viaje > (ID del docuemnto encontrado) > recorrido:"]
+        Dia de Viaje: ["Base de Datos > viaje > (ID del docuemnto encontrado) > vencimiento:"]"
+        3- Al completar el formato, el resultado, se procesara como la respuesta de la funcion. (De manera para que se cargue el resultado en los lugares solicitados).
+    } 
+}
+Configuracion de la funcion "countpasajesDisponibles": {
+    1. Se buscara el contenido de: "Base de Datos > viaje > count > count:", el contenido encontrado se procesara como: "$countpD$".
+    2. Aqui pueden pasar 2 cosas: {
+        1- Si solo se encontro 1, la respuesta de la funcion sera: "$countpD$ pasaje disponible".,
+        2- Si solo se encontro 1, la respuesta de la funcion sera: "$countpD$ pasajes disponibles.".
+    }
+}
+Configuracion de la funcion "comprarPasaje(viaje)": {
+    1.1. Se buscara el contenido de: "Base de Datos > cuenta > (ID del docuemnto del usuario) > viaje:".
+    1.2. Al encontrar el contenido, pueden pasar 2 cosas: {
+        1- Si el contenido es "1" o mayor, se le informacra al usuario que ya tiene un pasaje y no puede tener mas de 1.
+        2. Si el contenido es "0", se pasara al punto 2.
+    }
+    2. El ID del pasaje, se procesara como: "$pasajeComprar$".
+    3. Se procesara toda la inforamcion de la siguiente manera: {
+        1- Ubicacion que se procesara como: "$infoUser1$": "Base de Datos > cuenta > (ID del docuemnto del usuario) > clave:"
+        2- Ubicacion que se procesara como: "$infoUser2$": "Base de Datos > cuenta > (ID del docuemnto del usuario) > usuario:"
+        3- Ubicacion que se procesara como: "$infoUser2$": "Base de Datos > cuenta > (ID del docuemnto del usuario) > viaje:"
+        4- Ubicacion que se procesara como: "$infoUser2$": "Base de Datos > cuenta > (ID del docuemnto del usuario) > viajes:"
+    }
+    4. Se completara el siguiente formato: {
+       "
+        clave: "$infoUser1$"
+        usuario: "$infoUser2$"
+        viaje: "$infoUser3$"
+        viajes: "$infoUser4$"
+       "
+    }
+    5. Al completar el formato, se procesara como: "$infoUser$".
+    6. Se remplazara el contenido del documento: "Base de Datos > cuenta > (ID del docuemnto del usuario)", por el siguiente contenido: "$infoUser$".
+}
+================================================
+Configuracion para acceder a la base de datos: 
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    deleteDoc,
+    doc,
+    updateDoc,
+    query,
+    where
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+import { setDoc, doc as firestoreDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+const firebaseConfig = {
+    apiKey: "AIzaSyAMIMRcSoBD4pmGJStXNP7HUyQ92LGx25Y",
+    authDomain: "planillasinspectores-53856.firebaseapp.com",
+    projectId: "planillasinspectores-53856",
+    storageBucket: "planillasinspectores-53856.firebasestorage.app",
+    messagingSenderId: "752544495285",
+    appId: "1:752544495285:web:dbf678155d39d1b7d9b0fc"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+Funcion para cambiar Pestañas: 
+function mostrarPestania(id) {
+    const pestañas = [//aqui iran las pestañas];
+    pestañas.forEach(pid => {
+        const el = document.getElementById(pid);
+        if (el) el.style.display = (pid === id) ? 'block' : 'none';
+    });
+}
+Ya tengo un estilo, solo te dejo los nombres, yo luego le agrego el contenido:
+body
+.contenedor
+.logo
+.seccion
+.seccion h2
+.campo
+.campo label
+.campo input[type="text"]
+.campo input[type="number"] 
+.campo input[type="time"]
+.campo input[type="password"]
+.campo select
+.acciones
+.acciones button
+.acciones .discord
+.boton-mini
+.boton-seleccion
+button
+.boton-rojo
+.theme-toggle-button
+.theme-toggle-button:hover
+.theme-toggle-button:active
+.menu-flotante
+.menu-flotante .menu-contenido
+.menu-flotante h3
+.menu-flotante .campo
+.menu-flotante .acciones
+.menu-flotante .acciones button
+.menu-flotante .separador
+.menu-flotante.ramales .menu-contenido
+.menu-flotante.internos .menu-contenido
+.menu-flotante .ramal-item
+.menu-flotante .interno-item
+.menu-flotante .ramal-img
+.menu-flotante .interno-img
+.menu-flotante .ramal-info
+.menu-flotante .interno-info
+.separador
+.texto-rojo
+footer
+.footer-bottom
+.burbuja
+.burbuja strong
+.acciones-aprobacion button
+.acciones-aprobacion button.aceptado
+.acciones-aprobacion button.denegado
+body.light-mode
+body.light-mode .contenedor
+body.light-mode .seccion
+body.light-mode .seccion h2
+body.light-mode .campo label
+body.light-mode .campo input[type="text"]
+body.light-mode .campo input[type="number"]
+body.light-mode .campo input[type="time"]
+body.light-mode .campo input[type="password"]
+body.light-mode .campo select
+body.light-mode footer
+body.light-mode .theme-toggle-button
+body.light-mode button
+body.light-mode .acciones .discord
+body.light-mode .boton-rojo
+body.light-mode .boton-mini
+body.light-mode .burbuja
+body.light-mode .burbuja strong
+body.light-mode .menu-flotante .menu-contenido
+body.light-mode .menu-flotante h3
+body.light-mode .menu-flotante .separador
+@media (max-width: 600px)

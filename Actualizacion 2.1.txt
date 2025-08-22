@@ -1,3 +1,221 @@
 Actualizacion de: "Sistema de Planilleo - GTG"
 ==============================================
-- Nuevo servicio que permite al chofer subir las capturas de las paradas.
+Titulo: "Sistema de Cuentas - V: 2.1"
+Mensaje:"
+Implementamos un sistema de Logueo con cuenta obligaoria, TODOS LOS USUARIOS, incluidos los que no costituyen parte de ningun sector del personal, DEBEN TENER UNA CUENTA.
+Tambien, otra de las implementaciones fue agregar una funcion que le permiten a los Developers, avisar al Discord de que tratara la proxima actualizacion."
+Cambios:
+- Agregamos un sistema de logueo:
+  1. Reformaciones en la pestaña: "login".
+  2. Nueva pestaña: "register".
+  3. Reformaciones en la funcion: "login()".
+  4. Nueva funcion: "register()".
+- Agregamos una nueva funcion para los Developers:
+  1. Nueva funcion: "proximaActualizacion()".
+  2. Nueva funcion: "abrirMenuproximaActualizacion()".
+  3. Cambios en la pestaña: "developer".
+- Agregamos tres nuevas funciones para los administradores:
+  1. Nueva funcion: "eliminarCuenta()".
+  2. Nueva funcion: "agregarCuenta()".
+  3. Nueva funcion: "abrirMenueliminarCuenta()".
+  4. Nueva funcion: "abrirMenuagregarCuenta()".
+  5. Cambios en la pestaña: "developer".
+  6. Cambios en la pestaña: "inspectores".
+==============================================
+Agregamos un sistema de logueo: {
+    //Este nuevo sistema, remplazara al sistema anterior (me refiero a que remplazara a la funcion: "login()").
+    //En este sistema los datos de: "usuario", "clave" y "rol". Estaran almacenados en la Base de Datos. Mas adelante de configurara correctamente, pero primero la configuracion se separa por partes:
+    Partes: {
+        Parte A: Configuracion de los elementos de HTML que usara.
+        Parte B: Configuracion de las funciones JavaScript que usara.
+        Parte C: Configuracion de la ubicacion de los datos.
+    }
+    Parte A: Configuracion de los elementos de HTML que usara: {
+        //El nuevo contenido de la pestaña: "login" sera: 
+        Titulo (h1)(estara centrado): "Login"
+        Texto (h3)(estara centrado): "(es OBLIGATORIO)"
+        [SEPARADOR]
+        Recuadro: {
+            Titulo (h2): "Login"
+            Texto: "ID de discord:"
+            INPUT: {Interior: "ID de discord sin @" - Aqui el usuario colocara su ID de Discord}
+            Texto: "Clave:"
+            INPUT: {Interior: "Mantenga su clave segura"}
+            Boton: {"Logear" - Ejecuta: "login()}
+        }
+        Recuadro: {
+            Texto: "¿No tienes una cuenta?" Boton: {"Crear una cuenta" - Ejecuta: "mostrarPestania('register')}
+            Texto: "¿Olvidaste la contraseña?" Boton: {"Recuperar Cuenta" - Funcion: Le abrira un "alert" a diciendo: "Dirijase al canal: "CUENTA", ubicado en la categoria "WEB" y ahi presente su promebla... Gracias"}
+        }
+
+        //Lo que se agregaria a la pestaña: "developer":
+        Boton: {"Cargar una proxima actualizacion" - Ejecuta: "abrirMenuproximaActualizacion()"}.
+        Boton: {"Elimnar una Cuenta" - Ejecuta: "abrirMenueliminarCuenta()"}.
+        Boton: {"Agregar una Cuenta" - Ejecuta: "abrirMenuagregarCuenta()"}.
+
+        //Lo que se agregaria a la pestaña: "inpectores":
+        Boton: {"Elimnar una Cuenta" - Ejecuta: "abrirMenueliminarCuenta()"}.
+        Boton: {"Agregar una Cuenta" - Ejecuta: "abrirMenuagregarCuenta()"}.
+
+        //Configuracion del menu: "menu-pre-actualizar" (el contenido sera exacto a lo que estara aqui abajo)(recuerdame agregarlo):
+       "<div id="menu-pre-actualizar" class="menu-flotante ramales" style="display:none;">
+        <div class="menu-contenido">
+            <h3>Agregar Actualización</h3>
+            <div class="campo">
+                <label for="titulo-pre-actualizacion">Titulo:</label>
+                <input type="text" id="titulo-pre-actualizacion" placeholder="Titulo de la actualización">
+            </div>
+            <div class="campo">
+                <label for="mensaje-pre-actualizacion">Mensaje:</label>
+            </div>
+            <textarea id="mensaje-pre-actualizacion" rows="4" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
+            <div class="campo">
+                <label for="cambios-pre-actualizacion">Cambios:</label>
+            </div>
+            <textarea id="cambios-pre-actualizacion" rows="4" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;"></textarea>
+            <div class="campo">
+                <label for="autor-pre-actualizacion">Autor:</label>
+                <input type="text" id="autor-pre-actualizacion" placeholder="Autor de la actualización">
+            </div>
+            <div class="acciones" style="margin-top:10px;">
+                <button onclick="actualizacion()">Enviar</button>
+                <button onclick="cerrarMenuActualizar()">Cancelar</button>
+            </div>
+        </div>
+    </div>"
+
+        //Configuracion del menu: "menu-eliminar-cuenta" (el estilo sera: "menu-flotante"):
+        INPUT: {Interior: "Usuario de la cuenta sin @"}
+        INPUT: {Interior: "Motivo"}
+        Boton: {"Eliminar Cuenta" - Ejecuta: "eliminarCuenta()"}
+
+        //Configuracion del menu: "menu-agregar-cuenta" (el estilo sera: "menu-flotante"):
+        INPUT: {Interior: "Usuario de la cuenta sin @"}
+        INPUT: {Interior: "Clave"}
+        INPUT: {Interior: "Rol"}
+        Boton: {"Agregar Cuenta" - Ejecuta: "agregarCuenta()"}
+
+        //Configuracion de la pestaña: "register":
+        Titulo (h1): "Registrar Cuenta"
+        Recuadro: {
+            INPUT: {Interior: "Usuario de la cuenta sin @"}
+            INPUT: {Interior: "Clave"}
+            Boton: {"Registrarme" - Ejecuta: "registrarCuenta()"}
+            [SEPARADOR]
+            Texto: "Si tu eres de algun sector privado como, chofer de la GTG, Inspector o Develloper, comunicate con el soporte". 
+            Boton: {"Solicitar Asistencia" - Funcion: Abrira el menu: "menu-asistencia"}
+        }
+
+        //Configuracion del menu: "menu-asistencia":
+        INPUT: {Interior: "Tu ID de Discord sin @"}
+        Texto: "Tipo de Solicitud:"
+        INPUT: {Contenido del Input: "Solicitud de Rango en la cuenta"(Aqui el usuario no podra escribir)}
+        Boton: {"Enviar Solicitud" - Ejecuta: "enviarSolicitud()"}
+    }
+    
+    Parte B: Configuracion de las funciones JavaScript que usara: {
+        //Configuracion de la nueva funcion: "login()":
+        1. Se recolectaran los valores colocados en la pestaña: "login".
+        2. Se compara el valor colocado en el 1er INPUT con todos los valores colocados en: "Base de Datos > cuentas > [id de documento] > usuario:".
+        3. Aqui pueden pasar 3 cosas: {
+            1- Si no coinciden con ningun valor, marcara el error: "El usuario no coincide con las cuentas creadas.".
+            2- Si coincidio el "usuario" con el valor colocado en el 1er INPUT pero la "clave" no coincidio con lo colocado en el 2do INPUT, marcara el error: "La clave es incorrecta".
+            3- Si coinciden el "usuario" con el valor colocado en el 1er INPUT y la "clave" coincide con lo colocado en el 2do INPUT, se hara lo siguiente: {
+                1. El usuario colocado, se guardara como: "user".
+                2.1. En el mismo documento donde se encontraron las 2 coincidencias, se buscara el valor colocado en: "Base de Datos > cuentas > [id de documento donde se encontro la coincidencia] > rol:".
+                2.2. Aqui puenden pasar 4 cosas: {
+                    1- Si el rol es: "developer", el usuario sera llevado a la pestaña: "developer".
+                    2- Si el rol es: "inspector", el usuario sera llevado a la pestaña: "inspectores".
+                    3- Si el rol es: "chofer", el usuario sera llevado a la pestaña: "chofer".
+                    4- Si el rol es: "usuario", el usuario sera llevado a la pestaña: "usuario".
+                }
+            }
+        }
+
+        //Configuracion de la nueva funcion: "enviarSolicitud()":
+        1. Se recolectaran los valores colocados en el menu: "menu-asistencia".
+        2. Se completara el siguiente formato:
+        Usuario: [lo colocado en el 1er INPUT].
+        Tipo de Solicitud: Solicitud de Rango en la cuenta
+        3. Al completar este formato, se enviara a Discord con la API: "solicitudCifrada".
+
+        //Configuracion de la nueva funcion: "registrarCuenta()":
+        1. Se recolectaran los valores colocados en los inputs de la pestaña: "register".
+        2. Se completara el siguiente formato:
+        clave: "[LO COLOCADO EN EL 2DO INPUT]".
+        rol: "usuario".
+        usuario: "[lo colocado en el 1er INPUT]".
+        3. El formato completado en el punto "2", se subira en un documento de informacion a: "Base de Datos > cuentas >".
+        4. Se completara el siguiente formato: 
+        clave: "[lo colocado en el 2do INPUT]".
+        usuario: "[lo colocado en el 1er INPUT]".
+        viaje: "0" ("0" es el predeterminado y el que indica que no tiene viaje).
+        viajes: "0" ("0" es el predeterminado y el que indica que no tiene viajes).
+        5. El formato completado en el punto "4", se subira en un documneto de informacion a: "Base de Datos > cuenta >".
+        
+        //Configuracion de la nueva funcion: "abrirMenuproximaActualizacion()":
+        Se abrira el menu: "menu-pre-actualizar"
+
+        //Configuracion de la nueva funcion: "abrirMenuagregarCuenta()":
+        Se abrira el menu: "menu-agregar-cuenta"
+
+        //Configuracion de la nueva funcion: "abrirMenueliminarCuenta()":
+        Se abrira el menu: "menu-eliminar-cuenta"
+
+        //Configuracion de la nueva funcion: "eliminarCuenta()":
+        1. Se recolectaran los valores colocados en los inputs del menu: "menu-eliminar-cuenta".
+        2.1. Se buscara en la base de datos, mas especificamente en: "Base de Datos > cuentas", un documento que tenga en una de sus lineas, lo siguiente: 'usuario: "[lo introducido en el primer INPUT]'.
+        2.2. Al encontrar un documento con esa linea se hara lo siguiente: {
+            - Se extraera del documento.
+            - Y luego, se procedera a borrar ese documento.
+        3.1. Se buscara en la base de datos, mas especificamente en: "Base de Datos > cuenta", un documento que tenga en una de sus lineas, lo siguiente: 'usuario: "[lo introducido en el primer INPUT]'.
+        3.2. Se borrara el documento encontrado con linea mencionada.
+        4. Se cerrara el menu: "menu-eliminar-cuenta".
+
+        //Configuracion de la nueva funcion: "agregarCuenta()":
+        1. Se recolectaran los valores colocados en los inputs del menu: "menu-agregar-cuenta".
+        2. Se completara el siguiente formato:
+        clave: "[LO COLOCADO EN EL 2DO INPUT]".
+        rol: "[lo colocado en el 3er INPUT]".
+        usuario: "[lo colocado en el 1er INPUT]".
+        3. El formato completado en el punto "2", se subira en un documneto de informacion a: "Base de Datos > cuentas >".
+        4. Se completara el siguiente formato: 
+        clave: "[lo colocado en el 2do INPUT]".
+        usuario: "[lo colocado en el 1er INPUT]".
+        viaje: "0" ("0" es el predeterminado y el que indica que no tiene viaje).
+        viajes: "0" ("0" es el predeterminado y el que indica que no tiene viajes).
+        5. El formato completado en el punto "4", se subira en un documneto de informacion a: "Base de Datos > cuenta >".
+
+        //Configuracion de la nueva funcion: "proximaActualizacion()" (el contenido sera exacto a lo que estara aqui abajo)(recuerdame agregarlo):
+       "const titulo = document.getElementById('titulo-pre-actualizacion').value.trim();
+    const mensaje = document.getElementById('mensaje-pre-actualizacion').value.trim();
+    const cambios = document.getElementById('cambios-pre-actualizacion').value.trim();
+    const autor = document.getElementById('autor-pre-actualizacion').value.trim();
+    if (!titulo || !mensaje || !cambios || !autor) {
+        alert('Por favor completa todos los campos.');
+        return;
+    }
+    const embed = {
+        title: `# ${titulo}`,
+        description: `${mensaje}\n\n**Cambios:**\n${cambios}\nAutor: ${autor}`,
+        color: 15844367,
+        footer: { text: new Date().toLocaleString() }
+    };
+    try {
+        await fetch(apiactu(), {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+        alert('Actualización enviada correctamente.');
+        cerrarMenuActualizar();
+    } catch (error) {
+        alert('Error al enviar la actualización.');
+        console.error(error);
+    }
+}"}
+    Parte C: Configuracion de la ubicacion de los datos: {
+        En: "Base de Datos > cuentas >", se indicaran unicamente, el "usuario", "clave" y "rol" de la cuenta.
+        En: "Base de Datos > cuenta >", se indicara el "usuario", "clave", "viaje"(indica si tiene un viaje comprado y todavia no ah viajado) y "viajes"(indica cuantos viajes ah comprado el usuario desde esa cuenta).
+    }
+}

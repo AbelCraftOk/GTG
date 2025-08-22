@@ -1,0 +1,8 @@
+Titulo: "Menu de Choferes - 3.0"
+Mensaje: "Agregamos las ubicaciones estrategicas, algunos cambios en la estetica, nuevo asset, etc."
+Cambios: "
+- Agregamos las ubicaciones estrategicas.
+- Cambios en la estetica.
+- Nuevo asset llamado: "ubication.html".
+- Nuevas funciones de JS.
+"

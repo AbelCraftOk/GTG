@@ -1,6 +1,6 @@
 Titulo: "¿Cuando llega mi Micro? - 2.9"
 Mensaje: "El sistema en si, esta muy practico y facil de usar.
-Si desean acceder a la pestaña donde se muestran las ubicaciones de los colectivos, lo pueden hacer desde un boton en la izquierda. Color violeta."
+Si desean acceder a la pestaña donde se muestran las ubicaciones de los colectivos, lo pueden hacer desde un boton en la izquierda. Color rosa."
 Cambios: "
 - Cambios en la forma de planilleo para el chofer.
 - Nuevo sistema para los usuario que les permite ver los colectivos que estan circulando por la ciudad. No les permite verlos en tiempo real, pero les dice, quien es el conductor, que ramal esta circulando, la hora de la ultima ubicacion enviada y la  ultima ubicacion que se envio.
