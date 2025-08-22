@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#2d3e50">
+    <link rel="icon" type="image/png" href="./../logo.png">
+    <title>Sistema de Planilleo - GTG</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: #2d3e50;
+            color: #ecf0f1;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            top: 50%;
+            left: 0;
+            width: 30vw;
+            height: 60vh;
+            background: url('./../fondo.png') left center/contain no-repeat;
+            opacity: 1;
+            z-index: 0;
+            pointer-events: none;
+            transform: translateY(-50%) rotate(-90deg);
+            /* filter: invert(0.8) hue-rotate(180deg); /* Descomenta si tu imagen necesita esto en modo oscuro */
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            top: 50%;
+            right: 0;
+            width: 30vw;
+            height: 60vh;
+            background: url('./../fondo.png') right center/contain no-repeat;
+            opacity: 1;
+            z-index: 0;
+            pointer-events: none;
+            transform: translateY(-50%) rotate(90deg);
+            /* filter: invert(0.8) hue-rotate(180deg); /* Descomenta si tu imagen necesita esto en modo oscuro */
+        }
+        .contenedor {
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin: 40px auto 24px auto;
+            background: rgba(44,62,80,0.95);
+            border-radius: 18px;
+            box-shadow: 0 6px 32px rgba(0,0,0,0.3);
+            padding: 32px 28px 24px 28px;
+        }
+        .logo {
+            width: 150px;
+            height: auto;
+            display: block;
+            margin: 0 auto 30px auto;
+            border-radius: 25%;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            transition: transform 0.2s;
+        }
+        .seccion {
+            margin-bottom: 28px;
+            padding: 18px 16px 14px 16px;
+            border-radius: 12px;
+            background: #3a506b;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+        }
+        .seccion h2 {
+            margin-top: 0;
+            margin-bottom: 18px;
+            font-size: 1.18rem;
+            color: #f0f0f0;
+            letter-spacing: 0.5px;
+        }
+        .campo {
+            display: flex;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+        .campo label {
+            min-width: 110px;
+            font-weight: 500;
+            color: #d0d0d0;
+        }
+        .campo input[type="text"],
+        .campo input[type="number"],
+        .campo input[type="time"],
+        .campo input[type="password"],
+        .campo select {
+            flex: 1;
+            padding: 7px 10px;
+            border: 1px solid #607d8b;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: #4a647d;
+            color: #ecf0f1;
+            transition: border 0.2s;
+        }
+        .campo input[type="text"]:focus,
+        .campo input[type="number"]:focus,
+        .campo input[type="time"]:focus,
+        .campo input[type="password"]:focus,
+        .campo select:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        .acciones {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .acciones button {
+            flex: 1 1 45%;
+            background: #3498db; /* Azul para botones por defecto */
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 0;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 6px;
+            transition: background 0.2s;
+        }
+        .acciones button:hover {
+            background: #217dbb;
+        }
+        .acciones .discord {
+            background: #7289da; /* Ajuste para discord por defecto */
+        }
+        .acciones .discord:hover {
+            background: #5b6eae;
+        }
+        .boton-mini {
+            background: #55728f;
+            border: 1px solid #607d8b;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            padding: 2px 8px;
+            margin-left: 6px;
+            cursor: pointer;
+            transition: background 0.2s, border 0.2s;
+            color: #ecf0f1;
+        }
+        .boton-mini:hover {
+            background: #4a647d;
+            border-color: #3498db;
+        }
+        .boton-seleccion {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 0;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 6px;
+            transition: background 0.2s;
+            width: 100%;
+        }
+        .boton-seleccion:hover {
+            background: #217dbb;
+        }
+        button {
+            background: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 0;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 6px;
+            transition: background 0.2s;
+        }
+        button:hover {
+            background: #217dbb;
+        }
+        .boton-rojo {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            border-radius: 18px;
+            padding: 6px 18px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-left: 12px;
+            margin-bottom: 0;
+            transition: background 0.2s;
+        }
+        .boton-rojo:hover {
+            background: #c0392b;
+        }
+        .theme-toggle-button {
+            background-color: #2c3e50; /* Un azul oscuro como la noche */
+            color: #ffde4c; /* Un naranja/amarillo como la luna */
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+        .theme-toggle-button:hover {
+            background-color: #34495e;
+        }
+        .theme-toggle-button:active {
+            transform: translateY(1px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        }
+        .menu-flotante {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(44,62,80,0.18);
+            backdrop-filter: blur(2px);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .menu-flotante .menu-contenido {
+            background: rgba(44,62,80,0.98); /* Fondo oscuro para menú flotante por defecto */
+            border-radius: 16px;
+            box-shadow: 0 6px 32px rgba(0,0,0,0.4);
+            padding: 28px 22px 18px 22px;
+            min-width: 320px;
+            max-width: 370px;
+            color: #ecf0f1; /* Texto claro para menú flotante por defecto */
+        }
+        .menu-flotante h3 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 1.1rem;
+            color: #ecf0f1; /* Título claro para menú flotante por defecto */
+        }
+        .menu-flotante .campo {
+            margin-bottom: 12px;
+        }
+        .menu-flotante .acciones {
+            gap: 0;
+        }
+        .menu-flotante .acciones button {
+            margin-bottom: 0;
+        }
+        .menu-flotante .separador {
+            border-top: 1px solid #55728f; /* Separador oscuro para menú flotante por defecto */
+            margin: 10px 0;
+        }
+        .menu-flotante.ramales .menu-contenido,
+        .menu-flotante.internos .menu-contenido {
+            width: 90vw;
+            max-width: 1000px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .menu-flotante .ramal-item,
+        .menu-flotante .interno-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+        .menu-flotante .ramal-img,
+        .menu-flotante .interno-img {
+            width: 500px;
+            height: 500px;
+            object-fit: contain;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+        .menu-flotante .ramal-info,
+        .menu-flotante .interno-info {
+            flex: 1;
+        }
+        .separador {
+            border-top: 1px solid #55728f; /* Separador oscuro por defecto */
+            margin: 10px 0;
+        }
+        .texto-rojo {
+            color: #e74c3c; /* Mantener rojo para errores/alertas */
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+        footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            color: #b0c4d6; /* Color de texto del footer claro por defecto */
+            font-size: 0.97rem;
+            margin-top: 40px;
+            margin-bottom: 18px;
+            padding: 20px 0;
+            z-index: 1;
+            position: relative;
+            background-color: #4a5c6e; /* Fondo del footer oscuro por defecto */
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .footer-bottom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+        }
+        .burbuja {
+            border: 1px solid #3498db; /* Borde de burbuja oscuro por defecto */
+            background: #4a647d; /* Fondo de burbuja oscuro por defecto */
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 8px rgba(52,152,219,0.3);
+            color: #ecf0f1; /* Texto de burbuja claro por defecto */
+        }
+        .burbuja strong {
+            color: #b0d3f2; /* Color de texto fuerte claro por defecto */
+        }
+        .acciones-aprobacion button {
+            background: transparent;
+            border: none;
+            font-size: 1.3rem;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .acciones-aprobacion button.aceptado {
+            color: #2ecc71;
+        }
+        .acciones-aprobacion button.denegado {
+            color: #e74c3c;
+        }
+        body.light-mode {
+            background: #f4f7fa;
+            color: #333;
+        }
+        body.light-mode .contenedor {
+            background: rgba(255,255,255,0.97);
+            box-shadow: 0 6px 32px rgba(44,62,80,0.13);
+        }
+        body.light-mode .seccion {
+            background: #eaf1f8;
+            box-shadow: 0 1px 4px rgba(44,62,80,0.07);
+        }
+        body.light-mode .seccion h2 {
+            color: #2d3e50;
+        }
+        body.light-mode .campo label {
+            color: #34495e;
+        }
+        body.light-mode .campo input[type="text"],
+        body.light-mode .campo input[type="number"],
+        body.light-mode .campo input[type="time"],
+        body.light-mode .campo input[type="password"],
+        body.light-mode .campo select {
+            background: #fff;
+            color: #333;
+            border-color: #bfc9d1;
+        }
+        body.light-mode .campo input[type="text"]:focus,
+        body.light-mode .campo input[type="number"]:focus,
+        body.light-mode .campo input[type="time"]:focus,
+        body.light-mode .campo input[type="password"]:focus,
+        body.light-mode .campo select:focus {
+            border-color: #2980b9;
+        }
+        body.light-mode footer {
+            background-color: #e0e0e0;
+            color: #7b8a99;
+        }
+        body.light-mode .theme-toggle-button {
+            background-color: #ffe8a2; /* Un amarillo claro como el sol */
+            color: #333; /* Texto oscuro */
+        }
+        body.light-mode .theme-toggle-button:hover {
+            background-color: #ffd166;
+        }
+        body.light-mode button {
+            background: #2980b9;
+            color: #fff;
+        }
+        body.light-mode button:hover {
+            background: #1c5d8c;
+        }
+        body.light-mode .acciones .discord {
+            background: #5865F2;
+        }
+        body.light-mode .acciones .discord:hover {
+            background: #404eed;
+        }
+        body.light-mode .boton-rojo {
+            background: #e74c3c;
+        }
+        body.light-mode .boton-rojo:hover {
+            background: #c0392b;
+        }
+        body.light-mode .boton-mini {
+            background: #fff;
+            border-color: #bfc9d1;
+            color: initial; /* Vuelve al color de texto normal */
+        }
+        body.light-mode .boton-mini:hover {
+            background: #eaf1f8;
+            border-color: #2980b9;
+        }
+        body.light-mode .burbuja {
+            background: #dbe9fc;
+            border-color: #2980b9;
+            color: initial;
+        }
+        body.light-mode .burbuja strong {
+            color: #1b4965;
+        }
+        body.light-mode .menu-flotante .menu-contenido {
+            background: rgba(255,255,255,0.98);
+            box-shadow: 0 6px 32px rgba(44,62,80,0.18);
+            color: initial;
+        }
+        body.light-mode .menu-flotante h3 {
+            color: #2d3e50;
+        }
+        body.light-mode .menu-flotante .separador {
+            border-color: #dbe5ee;
+        }
+        @media (max-width: 600px) {
+            .contenedor {
+                padding: 16px 4vw 16px 4vw;
+            }
+            .menu-flotante .menu-contenido {
+                min-width: 90vw;
+                max-width: 95vw;
+            }
+            .menu-flotante.ramales .menu-contenido,
+            .menu-flotante.internos .menu-contenido {
+                width: 98vw;
+                max-width: 100vw;
+            }
+            .menu-flotante .ramal-img,
+            .menu-flotante .interno-img {
+                width: 360px;
+                height: 360px;
+            }
+            .footer-bottom {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .boton-rojo, .theme-toggle-button {
+                width: 80%;
+                margin-left: 0;
+            }
+            .logo {
+                width: 120px;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="./../logo.png" alt="Logo.png" class="logo" style="display: block;">
+    </nav>
+    <div id="inspectores" class="contenedor">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div id="cargando-planilla"></div>
+            <button onclick="mostrarLasPlanillas()" style="background-color: #3498db; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-weight: 500; cursor: pointer;">🔄</button>
+            <button id="theme-toggle" class="theme-toggle-button">Cambiar Modo</button>
+        </div>
+        <div id="resumen-vueltas"></div>
+    </div>
+    <script type="module" src="./planilla-config1.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", rotateText);
+        function rotateText() {
+    const textArray = [
+        "Cargando planilla",
+        "Cargando planilla.",
+        "Cargando planilla..",
+        "Cargando planilla...",
+    ];
+    let index = 0;
+    const textElement = document.getElementById("cargando-planilla");
+    setInterval(() => {
+        textElement.textContent = textArray[index];
+        index = (index + 1) % textArray.length;
+    }, 1000);
+}
+rotateText();
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const body = document.body;
+    function actualizarTextoBoton() {
+        if (!body.classList.contains('light-mode')) {
+            themeToggleBtn.innerHTML = '🌙 – Noche';
+        } else {
+            themeToggleBtn.innerHTML = '☀️ – Día';
+        }
+    }
+
+    // Preferencia guardada o sistema
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light-mode') {
+        body.classList.add('light-mode');
+    } else if (savedTheme === 'dark-mode') {
+        body.classList.remove('light-mode');
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        body.classList.add('light-mode');
+    } else {
+        body.classList.remove('light-mode');
+    }
+    actualizarTextoBoton();
+
+    themeToggleBtn.addEventListener('click', () => {
+        body.classList.toggle('light-mode');
+        actualizarTextoBoton();
+        if (body.classList.contains('light-mode')) {
+            localStorage.setItem('theme', 'light-mode');
+        } else {
+            localStorage.setItem('theme', 'dark-mode');
+        }
+    });
+});
+</script>
+</body>
+</html>
