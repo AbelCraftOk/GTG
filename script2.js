@@ -88,28 +88,19 @@ async function guardarPlanilla() {
     const planillas1 = document.getElementById('planillas1').value.trim();
     const planillas2 = document.getElementById('planillas2').value.trim();
     const planillas3 = document.getElementById('planillas3').value.trim();
-    const ida1 = document.getElementById('ida1').value.trim();
-    const ida2 = document.getElementById('ida2').value.trim();
-    const descanso = document.getElementById('descanso').value.trim();
-    const descanso2 = document.getElementById('descanso2').value.trim();
-    const vuelta1 = document.getElementById('vuelta1').value.trim();
-    const vuelta2 = document.getElementById('vuelta2').value.trim();
-    if (!chofer || !ramalSeleccionado || !internoSeleccionado || !planillas1 || !ida1 || !ida2 || !descanso || !vuelta1 || !vuelta2) {
-        alert("⚠️ Faltan campos obligatorios");
+
+    if (!chofer || !ramalSeleccionado || !internoSeleccionado || !planillas1 || vueltasGenerales.length === 0) {
+        alert("⚠️ Debes completar los campos obligatorios y cargar al menos una vuelta general.");
         return;
     }
+
     try {
         const nuevaPlanilla = {
             chofer,
             interno: internoSeleccionado,
             ramal: ramalSeleccionado,
             recorrido: document.getElementById('recorrido-info').value,
-            ida1,
-            ida2,
-            descanso,
-            descanso2: descanso2 || null,
-            vuelta1,
-            vuelta2,
+            vueltas: vueltasGenerales, // se guarda todo el arreglo
             planillas1,
             planillas2: planillas2 || 0,
             planillas3: planillas3 || 0,
@@ -117,9 +108,12 @@ async function guardarPlanilla() {
             timestamp: new Date(),
             codigoPlanilla
         };
+
         await addDoc(collection(db, "planillas"), nuevaPlanilla);
         console.log("✅ Planilla registrada");
         enviarMensaje(nuevaPlanilla);
+
+        vueltasGenerales = []; // limpiar arreglo después de enviar
         limpiarCampos();
     } catch (error) {
         console.error("Error al guardar planilla:", error);
@@ -926,31 +920,25 @@ async function guardarUbicacion(ubicacion) {
     const chofer = document.getElementById('chofer').value.trim();
     const ramal = ramalSeleccionado;
     const sentido = document.getElementById('sentido').value;
-
     if (!chofer || !ramal || !sentido) {
         alert("⚠️ Faltan datos para guardar la ubicación.");
         return;
     }
-
     const fecha = new Date();
     const horaFormato = `${fecha.getHours().toString().padStart(2,'0')}:${fecha.getMinutes().toString().padStart(2,'0')}`;
-
     try {
         await setDoc(doc(db, "ubication", chofer), {
             chofer, ubicacion, time: horaFormato, ramal, sentido
         });
-
         alert("📍 Ubicación enviada");
         console.log(`Ubicación "${ubicacion}" guardada para ${chofer}`);
-
         const webhookUrl = enlaces();
         const embed = {
             title: "🚌 Nueva Ubicación Registrada",
-            description: `El chofer @${chofer.replace('@','')} registró una ubicación.\n\n📍 ${ubicacion}\n🛣️ Ramal: ${ramal}\n➡️ Sentido: ${sentido}`,
+            description: `El chofer @${chofer.replace('@','')} registró una ubicación.\n\n📍 ${ubicacion}\n🛣️ Ramal: ${ramal}\n➡️ Sentido: ${sentido}\n\n[Visualizar Últimas Ubicaciones de Recorridos Actuales](https://abelcraftok.github.io/GTG/ubication.html)`,
             color: 3447003,
             footer: { text: `📅 ${new Date().toLocaleString()}` }
         };
-
         await fetch(webhookUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -976,3 +964,42 @@ function actualizarRecorrido() {
     }
 }
 window.actualizarRecorrido = actualizarRecorrido;
+let vueltasGenerales = [];
+function guardarVueltaGeneral() {
+    const ida1 = document.getElementById('ida1').value.trim();
+    const ida2 = document.getElementById('ida2').value.trim();
+    const descanso = document.getElementById('descanso').value.trim();
+    const descanso2 = document.getElementById('descanso2').value.trim();
+    const vuelta1 = document.getElementById('vuelta1').value.trim();
+    const vuelta2 = document.getElementById('vuelta2').value.trim();
+    if (!ida1 || !ida2 || !descanso || !vuelta1 || !vuelta2) {
+        alert("⚠️ Debes completar al menos: ida1, ida2, descanso, vuelta1 y vuelta2.");
+        return;
+    }
+    const nuevaVuelta = { ida1, ida2, descanso, descanso2: descanso2 || null, vuelta1, vuelta2 };
+    vueltasGenerales.push(nuevaVuelta);
+    document.getElementById('ida1').value = "";
+    document.getElementById('ida2').value = "";
+    document.getElementById('descanso').value = "";
+    document.getElementById('descanso2').value = "";
+    document.getElementById('vuelta1').value = "";
+    document.getElementById('vuelta2').value = "";
+    alert("✅ Vuelta guardada correctamente.");
+}
+window.guardarVueltaGeneral = guardarVueltaGeneral;
+function mostrarVueltasGenerales() {
+    const lista = document.getElementById("lista-vueltas");
+    lista.innerHTML = ""; // limpiar antes de volver a renderizar
+
+    if (vueltasGenerales.length === 0) {
+        lista.innerHTML = "<li>No hay vueltas guardadas aún.</li>";
+        return;
+    }
+
+    vueltasGenerales.forEach((vuelta, index) => {
+        const li = document.createElement("li");
+        li.textContent = `#${index + 1} | Ida1: ${vuelta.ida1}, Ida2: ${vuelta.ida2}, Descanso: ${vuelta.descanso}, Descanso2: ${vuelta.descanso2 ?? "N/A"}, Vuelta1: ${vuelta.vuelta1}, Vuelta2: ${vuelta.vuelta2}`;
+        lista.appendChild(li);
+    });
+}
+window.mostrarVueltasGenerales = mostrarVueltasGenerales;

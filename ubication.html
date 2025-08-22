@@ -519,39 +519,40 @@
     <script src="./script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        const themeToggleBtn = document.getElementById('theme-toggle');
-        const body = document.body;
-    function actualizarTextoBoton() {
-        if (!body.classList.contains('light-mode')) {
-            themeToggleBtn.innerHTML = '🌙 – Noche';
-        } else {
-            themeToggleBtn.innerHTML = '☀️ – Día';
-        }
-    }
-
-    // Preferencia guardada o sistema
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'light-mode') {
-        body.classList.add('light-mode');
-    } else if (savedTheme === 'dark-mode') {
-        body.classList.remove('light-mode');
-    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        body.classList.add('light-mode');
-    } else {
-        body.classList.remove('light-mode');
-    }
-    actualizarTextoBoton();
-
-    themeToggleBtn.addEventListener('click', () => {
-        body.classList.toggle('light-mode');
-        actualizarTextoBoton();
-        if (body.classList.contains('light-mode')) {
-            localStorage.setItem('theme', 'light-mode');
-        } else {
-            localStorage.setItem('theme', 'dark-mode');
-        }
-    });
-});
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const body = document.body;
+            function actualizarTextoBoton() {
+                if (!body.classList.contains('light-mode')) {
+                    themeToggleBtn.innerHTML = '🌙 – Noche';
+                } else {
+                    themeToggleBtn.innerHTML = '☀️ – Día';
+                }
+            }
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light-mode') {
+                body.classList.add('light-mode');
+            } else if (savedTheme === 'dark-mode') {
+                body.classList.remove('light-mode');
+            } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                body.classList.add('light-mode');
+            } else {
+                body.classList.remove('light-mode');
+            }
+            actualizarTextoBoton();
+            themeToggleBtn.addEventListener('click', () => {
+                body.classList.toggle('light-mode');
+                actualizarTextoBoton();
+                if (body.classList.contains('light-mode')) {
+                    localStorage.setItem('theme', 'light-mode');
+                } else {
+                    localStorage.setItem('theme', 'dark-mode');
+                }
+            });
+        });
+        window.onload = function () {
+            mostrarPestania('micro');
+            refrescarColectivos();     
+        };  
     </script>
 </body>
 </html>
