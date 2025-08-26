@@ -952,10 +952,11 @@ async function guardarUbicacion(ubicacion) {
 }
 window.guardarUbicacion = guardarUbicacion;
 const recorridoPorRamal = {
-    "9": 4,
-    "348": 3,
+    "570": 1,
     "373": 2,
-    "570": 1
+    "384": 3,
+    "9": 4,
+    "271": 5
 };
 function actualizarRecorrido() {
     const input = document.getElementById('recorrido-info');

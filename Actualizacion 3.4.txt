@@ -1,0 +1,13 @@
+Titulo: "Nueva Linea de la Empresa General Tomas Guido"
+Mensaje: "Agregamos una nueva linea a la empresa y cambiamos algunos detalles de la web."
+Cambios: "
+- Nueva Linea:
+  - N° de Linea: "271".
+  - Ramal Asignado: "5".
+  - Descripcion del recorrido:
+    - IDA: Comienza en la Terminal de Omnibus de la Villa, va hasta la Terminal de Barrio, luego va por la avenida principal hasta Retiro, luego de retiro, se agarra el diagonal y se entra al metrobus de 2 carriles, agarra ese cachito de avenida para entrar al metrobus de 6 carriles, luego se dirije a la Terminal de La Cumbre y ahi se para a descansar y tambien a poner la VUELTA.
+    - VUELTA: Comienza en la Terminal de La Cumbre, sale de la terminal y se dirije todo derecho hasta el metrobus de 2 carriles, agarra la mano que va para el lado del depo GTG, al cruzarse con la avenida principal, se doblara a la izquierda para dirijirse al frente del deposito de la empresa para luego terminar el recorrido alli.
+  - Tiempo en los descansos: 2 minutos.
+  - Descansos en: Terminal de Barrio - Terminal de Retiro - Terminal de La Cumbre.
+- Nueva opcion de sentido, nombrada: "EN ESPERA"
+"
