@@ -476,3 +476,72 @@ function desactivarAlarma() {
         alarmaInterval = null;
     }
 }
+function pendienteEnterINPUT(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        CodigoZonaUbi();
+    }
+}
+function CodigoZonaUbi() {
+    const codigo = document.getElementById("codigo-zona").value;
+    switch (codigo) {
+        case "1":
+            guardarUbicacion("Av. Principal"); entendidoAlarma();
+            break;
+        case "2":
+            guardarUbicacion("Centro"); entendidoAlarma();
+            break;
+        case "3":
+            guardarUbicacion("Deposito FONO BUS"); entendidoAlarma();
+            break;
+        case "4":
+            guardarUbicacion("Deposito General Tomas Guido"); entendidoAlarma();
+            break;
+        case "5":
+            guardarUbicacion("Deposito Larga Distancia"); entendidoAlarma();
+            break;
+        case "6":
+            guardarUbicacion("Deposito Urbano"); entendidoAlarma();
+            break;
+        case "7":
+            guardarUbicacion("Metrobus 2 Carriles"); entendidoAlarma();
+            break;
+        case "8":
+            guardarUbicacion("Metrobus 6 Carriles"); entendidoAlarma();
+            break;
+        case "9":
+            guardarUbicacion("Patio de Eventos"); entendidoAlarma();
+            break;
+        case "10":
+            guardarUbicacion("Plaza La Cumbre"); entendidoAlarma();
+            break;
+        case "11":
+            guardarUbicacion("Terminal Aguas de Oro"); entendidoAlarma();
+            break;
+        case "12":
+            guardarUbicacion("Terminal del Areopuerto"); entendidoAlarma();
+            break;
+        case "13":
+            guardarUbicacion("Terminal de Barrio"); entendidoAlarma();
+            break;
+        case "14":
+            guardarUbicacion("Terminal de La Cumbre"); entendidoAlarma();
+            break;
+        case "15":
+            guardarUbicacion("Terminal de Los Altos"); entendidoAlarma();
+            break;
+        case "16":
+            guardarUbicacion("Terminal de Minibuses"); entendidoAlarma();
+            break;
+        case "17":
+            guardarUbicacion("Terminal de Omnibus Villa"); entendidoAlarma();
+            break;
+        case "18":
+            guardarUbicacion("Terminal de Retiro"); entendidoAlarma();
+            break;
+        default:
+            alert("⚠️ Código de zona no válido.");
+            break;
+    }
+    document.getElementById("codigo-zona").value = "";
+}
