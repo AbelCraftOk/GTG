@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Panel Usuario — Tomas Guido</title>
+  <link rel="icon" href="./logo.png" />
+  <style>
+    :root{
+      --blanco:#ffffff;
+      --azul:#0b69ff;
+      --azul-oscuro:#07316a;
+      --celeste:#2ec4ff;
+      --azul-claro:#aee1ff;
+      --gris:#f4f7fb;
+      --card-shadow: 0 8px 28px rgba(7,49,106,0.12);
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:linear-gradient(180deg,var(--gris) 0%, #eef7ff 100%);
+      color:var(--azul-oscuro);
+      padding:28px;
+    }
+    header{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      margin-bottom:18px;
+    }
+    .logo{
+      width:64px;height:64px;border-radius:12px;background:linear-gradient(135deg,var(--azul),var(--celeste));
+      display:flex;align-items:center;justify-content:center;color:var(--blanco);font-weight:700;
+      box-shadow:var(--card-shadow);
+    }
+    h1{margin:0;font-size:20px}
+    .layout{display:grid;grid-template-columns:320px 1fr;gap:18px}
+    nav .card, .main .card{background:var(--blanco);padding:16px;border-radius:12px;box-shadow:var(--card-shadow)}
+    nav .card{position:sticky;top:28px}
+    button.btn{
+      background:linear-gradient(90deg,var(--azul) 0%, var(--azul-oscuro) 100%);
+      color:var(--blanco);border:0;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:600;
+    }
+    .seccion{margin-bottom:14px}
+    .separador{height:1px;background:#e6f1ff;margin:12px 0;border-radius:2px}
+    .listado{max-height:420px;overflow:auto;padding:8px;display:block}
+    .viaje-item, .pasaje-item{border:1px solid #e6f5ff;padding:12px;border-radius:10px;margin-bottom:10px;background:linear-gradient(180deg, #fff, #f7fdff)}
+    .meta{font-size:13px;color:#24486a;margin:6px 0}
+    .texto-aviso{color:#0b3a66;font-weight:600}
+    @media (max-width:880px){
+      .layout{grid-template-columns:1fr; padding-bottom:40px}
+      nav .card{position:relative}
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">TG</div>
+    <div>
+      <h1>Sistema de Usuarios — Tomas Guido</h1>
+      <div style="font-size:13px;color:#0b3a66;margin-top:6px">Panel para reservar pasajes</div>
+    </div>
+  </header>
+<!-- Modal de Login -->
+<div id="loginModal" style="
+  position:fixed;
+  top:0; left:0; right:0; bottom:0;
+  background:rgba(0,0,0,0.5);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+">
+  <div style="
+    background:#fff;
+    padding:24px;
+    border-radius:12px;
+    text-align:center;
+    min-width:300px;
+  ">
+    <h2>Ingrese su nombre de usuario</h2>
+    <input type="text" id="inputUsuario" placeholder="Nombre de usuario" style="
+      padding:8px 10px;
+      width:80%;
+      margin:12px 0;
+      border-radius:6px;
+      border:1px solid #ccc;
+      font-size:14px;
+    "/>
+    <br/>
+    <button id="btnLogin" style="
+      padding:10px 16px;
+      border:none;
+      background:#0b69ff;
+      color:#fff;
+      font-weight:600;
+      border-radius:8px;
+      cursor:pointer;
+    ">Entrar</button>
+  </div>
+</div>
+
+<script>
+// Función para mostrar modal si no hay usuario
+function checkUsuario() {
+  const usuarioGuardado = localStorage.getItem("usuario");
+  if (usuarioGuardado) {
+    window.usuario = usuarioGuardado;
+    document.getElementById("loginModal").style.display = "none";
+  } else {
+    document.getElementById("loginModal").style.display = "flex";
+  }
+}
+
+// Al cargar la página
+window.onload = function() {
+  checkUsuario();
+};
+
+// Botón de login
+document.getElementById("btnLogin").addEventListener("click", () => {
+  const nombre = document.getElementById("inputUsuario").value.trim();
+  if (nombre === "") {
+    alert("Debes ingresar un nombre de usuario.");
+    return;
+  }
+  window.usuario = nombre;
+  localStorage.setItem("usuario", nombre);
+  document.getElementById("loginModal").style.display = "none";
+
+  // Opcional: actualizar funciones que dependen del usuario
+  mostrarSaldoActual?.();
+  mostrarPasajesComprados?.();
+  mostrarPasajesActivos?.();
+});
+</script>
+
+
+  <div class="layout">
+    <nav>
+      <div class="card">
+        <div class="seccion">
+          <h3>Usuario</h3>
+          <button class="btn" onclick="mostrarViajes()">Ver pasajes disponibles</button>
+        </div>
+        <div class="seccion">
+          <h4>Mis pasajes</h4>
+          <button class="btn" onclick="mostrarMisPasajes()">Ver mis pasajes</button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="main">
+      <div id="usuario" class="card" style="display:block;">
+        <h2 style="text-align:center;margin-top:6px">Sistema del usuario</h2>
+
+        <div class="separador"></div>
+        <h4>Pasajes disponibles</h4>
+        <div id="lista-viajes" class="listado"></div>
+
+        <div class="separador"></div>
+        <h4>Mis pasajes</h4>
+        <div id="mis-pasajes" class="listado"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Firebase + script -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import {
+  getFirestore, collection, getDocs, getDoc, setDoc, updateDoc, doc
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAMIMRcSoBD4pmGJStXNP7HUyQ92LGx25Y",
+  authDomain: "planillasinspectores-53856.firebaseapp.com",
+  projectId: "planillasinspectores-53856",
+  storageBucket: "planillasinspectores-53856.firebasestorage.app",
+  messagingSenderId: "752544495285",
+  appId: "1:752544495285:web:dbf678155d39d1b7d9b0fc"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// Obtener viajes disponibles (no vencidos)
+async function obtenerViajesDisponibles() {
+  const viajesRef = collection(db, "viaje");
+  const snapshot = await getDocs(viajesRef);
+  const hoy = new Date();
+  let viajes = [];
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+    const venc = new Date(data.vencimiento);
+    if (venc >= hoy) {
+      viajes.push({ id: docSnap.id, ...data });
+    }
+  });
+  return viajes;
+}
+
+// Mostrar viajes disponibles
+async function mostrarViajes() {
+  const lista = document.getElementById("lista-viajes");
+  lista.innerHTML = "";
+  const viajes = await obtenerViajesDisponibles();
+  if (viajes.length === 0) {
+    lista.innerHTML = "<p>No hay viajes disponibles.</p>";
+    return;
+  }
+  viajes.forEach((v) => {
+    const item = document.createElement("div");
+    item.classList.add("viaje-item");
+    item.innerHTML = `
+      <b>Viaje:</b> ${v.viaje} <br>
+      <b>Hora:</b> ${v.hora} <br>
+      <b>Partida:</b> ${v.partida} <br>
+      <b>Recorrido:</b> ${v.recorrido} <br>
+      <b>Chofer:</b> ${v.chofer || "Por asignar"} <br>
+      <b>Costo:</b> $${v.costo} (actualmente GRATIS) <br>
+      <button onclick="asignarPasaje('${v.id}')">Reservar Pasaje</button>
+    `;
+    lista.appendChild(item);
+  });
+}
+
+// Asignar pasaje al usuario
+async function asignarPasaje(viajeID) {
+  if (!window.usuario) {
+    alert("Debes iniciar sesión para reservar un pasaje.");
+    return;
+  }
+
+  const usuarioRef = doc(db, "usuarios", window.usuario);
+  const usuarioSnap = await getDoc(usuarioRef);
+
+  if (!usuarioSnap.exists()) {
+    await setDoc(usuarioRef, { pasajes: [viajeID] });
+  } else {
+    let datos = usuarioSnap.data();
+    let pasajes = datos.pasajes || [];
+    if (!pasajes.includes(viajeID)) {
+      pasajes.push(viajeID);
+      await updateDoc(usuarioRef, { pasajes });
+    } else {
+      alert("Ya tienes este pasaje reservado.");
+      return;
+    }
+  }
+
+  alert("Pasaje reservado con éxito ✅");
+  mostrarMisPasajes();
+}
+
+// Mostrar mis pasajes
+async function mostrarMisPasajes() {
+  const contenedor = document.getElementById("mis-pasajes");
+  contenedor.innerHTML = "";
+
+  if (!window.usuario) {
+    contenedor.innerHTML = "<p>Debes iniciar sesión para ver tus pasajes.</p>";
+    return;
+  }
+
+  const usuarioRef = doc(db, "usuarios", window.usuario);
+  const usuarioSnap = await getDoc(usuarioRef);
+
+  if (!usuarioSnap.exists() || !usuarioSnap.data().pasajes) {
+    contenedor.innerHTML = "<p>No tienes pasajes reservados.</p>";
+    return;
+  }
+
+  let pasajes = usuarioSnap.data().pasajes;
+  for (const id of pasajes) {
+    const viajeRef = doc(db, "viaje", id);
+    const viajeSnap = await getDoc(viajeRef);
+    if (viajeSnap.exists()) {
+      const v = viajeSnap.data();
+      const item = document.createElement("div");
+      item.classList.add("pasaje-item");
+      item.innerHTML = `
+        <b>Viaje:</b> ${v.viaje} <br>
+        <b>Hora:</b> ${v.hora} <br>
+        <b>Partida:</b> ${v.partida} <br>
+        <b>Recorrido:</b> ${v.recorrido} <br>
+      `;
+      contenedor.appendChild(item);
+    }
+  }
+}
+
+// Exponer funciones al HTML
+window.mostrarViajes = mostrarViajes;
+window.mostrarMisPasajes = mostrarMisPasajes;
+window.asignarPasaje = asignarPasaje;
+
+  </script>
+</body>
+</html>

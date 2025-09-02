@@ -1,0 +1,694 @@
+Titulo: "Sistema para Usuarios - V: 3.6"
+Mensaje: "Agregamos un nuevo sistema para el usuario, donde ahora definitivamente va a poder comprar pasajes y ver los viajes pendientes que tiene"
+Cmabios: "
+- Nuevo sistema para los Usuario
+"
+==============================
+//Recuerda que el lenguaje de mi pagina es HTML + JS + CSS.
+Yo tengo un proyecto anterior donde se hacia algo parecido y andaba correctamnete. Asi que te voy a dar lo que quiero que tenga las intrucciones de lo que debes armar en un HTML 100% nuevo, para luego pasarte el HTML de otro proyecto asi lo modificas y luego lo cargas al nuevo HTML.
+Intrucciones: {
+    //Recuerda que el nuevo HTML tenga lindos estilos y que los colores principales sean: blanco, azul, azul oscuro, celeste y azul claro.
+Pestaña: "usuario" {
+    <div id="usuario" class="contenedor" style="display: none;">
+      	<h1 style="text-align: center;">Sistema del usuario</h1>
+        <div class="seccion">
+            <h2>Comprar Pasajes En General Tomas Guido:</h2>
+            <p>Si quieres viajar con nosotros, accede con el siguiente boton para ver los viajes disponibles</p>
+            <button type="button" onclick="mostrarPasajesActivos(); mostrarPestania('PasajesDisponibles');">Ver pasajes disponibles</button>
+        </div>
+      	<div class="seccion">
+        	<h2>Informacion sobre tus pasajes:</h2>
+        	<button onclick="mostrarPasajesComprados(); mostrarPestania('info-pasajes')">Ir a info de pasajes</button>
+      	</div>
+        <div class="seccion">
+            <h2>Ver Colectivos Activos</h2>
+            <button class="theme-toggle-button" onclick="refrescarColectivos(); mostrarPestania('micro');">Ver Colectivos Activos</button>
+        </div>
+    </div>
+}
+//la funcion "mostrarPestania()" ya la tengo creada.
+Crea la funcion: "mostrarPasajesActivos()" {
+    //Ya tengo la base de datos configurada previamente en el script.
+    1- Recolecta TODOS los datos de: "Base de Datos > viaje > ".
+    2- Se le agregara un sistema de filtrado. Este sera asi: {
+        Se comprara el campo: "vencimiento" del documento de la base de datos con la fecha actual (el sistema de fechass sera asi: DD/MM/YYYY, ej: 01/01/2010)
+        Los que tengan una fecha anterior al dia de hoy, se descartaran (pero no se borraran de la base de datos).
+        Los que tengan una fecha proxima al dia de hoy, seguira al punto tiguiente.
+    }
+    3- Se cargaran todos los datos que pasaron el filtrado, donde se cargaran los datos, sera en este formato: "
+    Chofer a Cargo: [chofer]
+    Descripcion del recorrido: [recorrido]
+    Fecha del viaje: [vencimiento]
+    Hora del viaje: [hora]
+    Punto de partida: [partida]
+    ID del viaje: [viaje]
+    Costo de 1 Pasaje: $[costo]
+    Boton (al utilizarlo se ejecutara lo siguiente: "CargarNuevaCompra('[viaje]'); )
+    <div class="separador"></div>
+    //se seguiran cargando mas formatos si se han encontraron mas de un viaje.
+    "
+}
+Crea la funcion: "CargarNuevaCompra(viaje)": {
+    1- Recolectara datos para saber el usuario de quien quiere realizar la compra: {
+        - Para esto, recolectara el dato del campo: "usaurio" que esta ubicado en el LocalStorage que guarda el siguiente script: "localStorage.setItem("usuario", data.usuario);"
+    }
+    2- Recolecta datos para saber cuando vale el pasaje: {
+        1- Para esto, se agarrara la ID del viaje (la que se proporciona al ejecutar la funcion).
+        2- Se ira a: "Base de Datos > viaje > " y buscara un documento que en el campo: "viaje" tenga el numero de ID agarrado en el punto anterior. 
+    }
+    3- Se descontara el costo del viaje con el saldo del usaurio: {
+        - Para eso, se agarrara lo que se recolecto en el punto 2 (el costo del pasaje) y tambien se agarrara el saldo del usuario, ubicado en: "Base de Datos > saldos > " y ahi se buscara un documento que en el campo: "usuario" tenga el mismo usaurio del que en el punto 1 se recolecto. Al encontrar el documento correcto, ahora se agarrara el contenido del campo: "saldo" para el proximo punto.
+        - Luego se hara la siguiente cuenta: "[saldo del usuario] - [costo del pasaje] =" el resultado de esta cuenta se agarrara un cachito para hacer el punto 4.
+    }
+    4- Ahora definiremos el nuevo saldo del usuario y luego tambien se le avisara: {
+        - Se cambiara la cifra del campo "saldo" por el nuevo saldo.
+        - Se ejecutara el siguiente alert: "Su nuevo saldo es de: $[nuevo saldo]".
+        - Por ultimo se actualizara el DIV que le muestra al usaurio su saldo, para esto, se ejecutara: "MostrarSaldoActual()".
+    }
+    5- Se le asignara el viaje al usaurio: {
+        Para esto, se ira a: "Base de Datos > cuentas > " y ahi se buscara un documento que en el campo: "usuario" tenga el mismo usaurio del que en el punto 1 se recolecto. Al encontrar el documento correcto, se cambiara el contenido por la ID del viaje que acaba de pagar.
+    }
+    //A esta funcion agregale errores que chequeen que el usaurio tenga la plata necesario o la justa y tambien otro que chequee que no tenga otro viaje pendiente. (para eso, ira al campo: "viaje" en "cuentas" para luego fijarse el viaje que tiene la misma ID y fijarse si ah vencido o todavia no.)
+}
+Crea la funcion: "MostrarSaldoActual": {
+    //Aqui tu defines el ID del div y luego me lo das. Tambien haz que el contenido del sea color verde claro y este pegado a la derecha. (no crees un fragmento CSS para definir el estilo, sino definelo ahi mismo, con el "style=""")
+    1- Recolectara el dato que dice el nombre de usuario: {
+        - Para esto, recolectara el dato del campo: "usaurio" que esta ubicado en el LocalStorage que guarda el siguiente script: "localStorage.setItem("usuario", data.usuario);"
+    }
+    2- Ahora para saber el saldo del usuario, se buscara en: "Base de Datos > saldos > " y ahi se buscara un documento que en el campo: "usuario" tenga el mismo usaurio del que en el punto 1 se recolecto. Al encontrar el documento correcto, ahora se agarrara el contenido del campo: "saldo" para el proximo punto.
+    3- Se recolectara el saldo encontrado en el punto anterior y ahora vamos a hacer que lo que se muestre en el div sea lo siguiente: "$[saldo]", para luego colocarlo en el div para que el usaurio vea su saldo actual.
+}
+Crea la funcion: "mostrarPasajesComprados": {
+    1- Recolectara el dato que dice el nombre de usuario: {
+        - Para esto, recolectara el dato del campo: "usaurio" que esta ubicado en el LocalStorage que guarda el siguiente script: "localStorage.setItem("usuario", data.usuario);"
+    }
+    2- Ahora se fijara si el usaurio tiene un viaje pendiente: {
+        Si lo encontrado en: "Base de Datos > cuentas > viaje"(se hara todo lo anterior para encontrar su documento correspondiente), es: "0" significa que no tiene ningun viaje. Pero si se encuentra cualquier otro numero significa que tiene un viaje pendiente.
+        Luego se fijara si el viaje al que es correspondiente la ID encontrada en "cuentas" esta vencido. Para hacerlo, se usara el criterio usado anteriormente. Si el viaje ah pasado ambos filtros, se pasara al punto 3.
+    }
+    3- Ahora se completara el formato con los datos del viaje correspondiente: "
+    Chofer: [chofer]
+    Descripcion del recorrido: [recorrido]
+    Fecha del viaje: [vencimiento]
+    Hora del viaje: [hora]
+    Punto de Partida: [partida]
+    ID del viaje: [viaje]
+    "
+}
+Crea los DIVS correspondientes a todos los formatos que dan las funciones: "mostrarPasajesComprados" y "mostrarPasajesActivos".
+}
+Proyecto anterior: {
+HTML:
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  	<meta charset="UTF-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" href="./logo.png" type="image/png">
+  	<title>Mia Nails 💅🏻</title>
+	<style>
+		:root {
+			--violeta: #8b5cf6;
+			--lila: #c4b5fd;
+			--rosa: #f9a8d4;
+			--rosa-claro: #fbcfe8;
+			--rosa-fuerte: #f472b6;
+			--blanco: #fff;
+			--gris-oscuro: #2d3e50;
+			--gris-claro: #f3f4f6;
+		}
+		body {
+			margin: 0;
+			min-height: 100vh;
+			font-family: 'Segoe UI', Arial, sans-serif;
+			background: linear-gradient(135deg, var(--violeta) 0%, var(--lila) 60%, var(--rosa-claro) 100%);
+			color: var(--blanco);
+			transition: background 0.3s, color 0.3s;
+			position: relative;
+		}
+		nav {
+			background: rgba(139, 92, 246, 0.15);
+			padding: 18px 0;
+			display: flex;
+			justify-content: center;
+			box-shadow: 0 2px 12px rgba(139,92,246,0.08);
+		}
+		separador {
+			height: 6px;
+			width: 100%;
+			border-radius: 6px;
+			background: linear-gradient(90deg, var(--violeta), var(--lila), var(--rosa), var(--rosa-claro), var(--rosa-fuerte));
+			margin: 18px 0;
+			box-shadow: 0 2px 8px rgba(139,92,246,0.10);
+		}
+		br {
+			font-size: bold;
+		}
+		.logo {
+			width: 110px;
+			height: 110px;
+			border-radius: 24px;
+			border: 4px solid var(--blanco);
+			background: linear-gradient(135deg, var(--rosa-claro), var(--lila), var(--rosa));
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 28px;
+			font-weight: bold;
+			color: var(--blanco);
+			box-shadow: 0 6px 24px rgba(139,92,246,0.18);
+			animation: pop 0.7s ease;
+		}
+		.container {
+			padding: 32px 24px;
+			background: linear-gradient(135deg, var(--lila) 60%, var(--rosa-claro) 100%);
+			backdrop-filter: blur(14px);
+			border-radius: 18px;
+			box-shadow: 0 6px 36px rgba(139,92,246,0.22), 0 4px 24px rgba(249,168,212,0.12);
+			margin: 32px auto;
+			max-width: 600px;
+			border: 2px solid var(--violeta);
+			animation: fadeIn 0.6s ease-in-out, slideDown 0.5s ease;
+			position: relative;
+			z-index: 999;
+		}
+		.menu-flotante {
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background: linear-gradient(135deg, var(--lila) 60%, var(--rosa-claro) 100%);
+			border-radius: 18px;
+			box-shadow: 0 8px 40px rgba(139,92,246,0.25), 0 4px 24px rgba(249,168,212,0.18);
+			padding: 32px 28px;
+			z-index: 2000;
+			display: none;
+			min-width: 280px;
+			max-width: 90vw;
+			animation: pop 0.5s;
+		}
+		.menu-flotante.activo {
+			display: block;
+		}
+		.fondo-distorsionado {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background: rgba(139,92,246,0.18);
+			backdrop-filter: blur(8px) brightness(0.92) saturate(1.2);
+			z-index: 1999;
+			transition: backdrop-filter 0.3s, background 0.3s;
+		}
+		.recuadro {
+			background: linear-gradient(90deg, var(--rosa-claro) 60%, var(--lila) 100%);
+			border-radius: 14px;
+			border: 2px solid var(--rosa-fuerte);
+			box-shadow: 0 2px 12px rgba(249,168,212,0.14);
+			padding: 20px 18px;
+			margin: 18px 0;
+			display: flex;
+			flex-direction: column;
+			align-items: flex-start;
+			color: var(--gris-oscuro);
+			font-size: 1rem;
+			font-weight: 500;
+		}
+		.btn {
+			background: linear-gradient(90deg, var(--violeta) 60%, var(--rosa) 100%);
+			border: none;
+			padding: 12px 22px;
+			border-radius: 10px;
+			cursor: pointer;
+			transition: background 0.3s, box-shadow 0.3s;
+			color: var(--blanco);
+			font-weight: 500;
+			box-shadow: 0 2px 8px rgba(139,92,246,0.12);
+			margin: 0 8px 8px 0;
+		}
+		.btn:hover {
+			background: linear-gradient(90deg, var(--rosa-fuerte) 60%, var(--violeta) 100%);
+			box-shadow: 0 4px 16px rgba(249,168,212,0.18);
+		}
+		.btn-exit {
+			background: linear-gradient(90deg, #f87171 60%, #f472b6 100%);
+			color: var(--blanco);
+			border: none;
+		}
+		.btn-exit:hover {
+			background: linear-gradient(90deg, #ef4444 60%, var(--rosa-fuerte) 100%);
+		}
+		.btn-alt {
+			background: linear-gradient(90deg, var(--rosa) 60%, var(--lila) 100%);
+			color: var(--blanco);
+		}
+		.btn-alt:hover {
+			background: linear-gradient(90deg, var(--rosa-fuerte) 60%, var(--violeta) 100%);
+		}
+		::-webkit-scrollbar {
+			width: 8px;
+			background: var(--lila);
+		}
+		::-webkit-scrollbar-thumb {
+			background: var(--violeta);
+			border-radius: 8px;
+		}
+		input[type="text"], input[type="email"], input[type="date"], input[type="time"], select, textarea {
+			width: 100%;
+			padding: 10px 14px;
+			margin: 8px 0;
+			border: 2px solid var(--rosa-fuerte);
+			border-radius: 8px;
+			box-sizing: border-box;
+			font-size: 1rem;
+			color: var(--gris-oscuro);
+			background: var(--blanco);
+			transition: border-color 0.3s;
+		}
+		footer {
+			background: linear-gradient(90deg, var(--violeta), var(--rosa-claro));
+			color: var(--gris-oscuro);
+			padding: 18px 0 12px 0;
+			text-align: center;
+			font-size: 1rem;
+			border-top: 2px solid var(--rosa-fuerte);
+			box-shadow: 0 -2px 12px rgba(139,92,246,0.10);
+			margin-top: 32px;
+			border-radius: 0 0 18px 18px;
+		}
+		footer a {
+			color: var(--violeta);
+			text-decoration: underline;
+			transition: color 0.2s;
+		}
+		footer a:hover {
+			color: var(--rosa-fuerte);
+		}
+		.pagar {
+			width: 100%;
+			max-width: 300px;
+			border-radius: 12px;
+			margin-bottom: 16px;
+		}
+		@keyframes fadeIn {
+			from { opacity: 0; transform: translateY(10px); }
+			to { opacity: 1; transform: translateY(0); }
+		}
+		@keyframes slideDown {
+			from { opacity: 0; transform: translate(-50%, -60%); }
+			to { opacity: 1; transform: translate(-50%, -50%); }
+		}
+		@keyframes pop {
+			0% { transform: scale(0.7); opacity: 0; }
+			100% { transform: scale(1); opacity: 1; }
+		}
+	</style>
+</head>
+<body>
+	<nav><img src="./logo.png" alt="Logo" class="logo"></nav>
+	<div id="login" class="container" style="display: block;">
+		<h1>Iniciar Sesión</h1>
+		<div class="recuadro">
+			<p>Por favor, ingrese su nombre completo y apellido para continuar</p>
+			<input type="text" id="userId" placeholder="Nombre y Apellido">
+			<button class="btn" onclick="login()">Ingresar</button>
+		</div>
+		<p>¿No tienes una cuenta? <button class="btn" onclick="mostrarPestaña('register')">Ir a crearme una cuenta</button>
+	</div>
+	<div id="register" class="container" style="display: none;">
+		<h1>Registrar Cuenta</h1>
+		<div class="recuadro">
+			<p>Por favor, para registrar su Cuenta, debe ingresar su nombre y apellido</p>
+			<input type="text" id="nombreUsuario" placeholder="Tu nombre y Apellido">
+			<button class="btn" onclick="register()">Ingresar</button>
+		</div>
+	</div>
+	<div id="inicio" class="container" style="display: none;">
+		<div id="bienvenida"></div>
+		<div class="recuadro">
+			<h3>Bienvenido a Mia Nails. Aquí puedes hacer y gestionar seciones...</h3>
+			<separador></separador>
+			<p>¿Quieres ver tus citas pendientes?</p>
+			<button class="btn" onclick="mostrarPestaña('citas'); mostrarCitasFiltradas();">Ver Citas</button>
+			<separador></separador>
+			<p>¿Quieres agendar una nueva cita?</p>
+			<button class="btn" onclick="mostrarPestaña('agendar')">Agendar Cita</button>
+			<separador></separador>
+			<p>¿Tienes que pagar alguna cita?</p>
+			<button class="btn" onclick="mostrarPestaña('pagarCita')">Pagar cita</button>
+		</div>
+	</div>
+	<div id="pagarCita" class="container" style="display: none;">
+		<h1>Pagar Cita</h1>
+		<div class="recuadro">
+			<br>Por favor seleccione el monto a pagar...</br>
+			<button class="btn" onclick="mostrarMenu('750')">Pagar $750</button>
+			<button class="btn" onclick="mostrarMenu('1250')">Pagar $1250</button>
+			<button class="btn" onclick="mostrarMenu('1500')">Pagar $1500</button>
+			<button class="btn" onclick="mostrarMenu('2000')">Pagar $2000</button>
+			<button class="btn" onclick="mostrarMenu('2500-1')">Pagar $2500</button>
+		</div>
+	</div>
+	<div id="citas" class="container" style="display: none;">
+		<h1>Tus Citas</h1>
+		<div id="listaCitas" class="recuadro">
+			<p>Aquí se mostrarán tus citas pendientes...</p>
+		</div>
+	</div>
+	<div id="agendar" class="container" style="display: none;">
+		<h1>Agendar Nueva Cita</h1>
+		<div class="recuadro">
+			<p>Por favor complete todo correctamente para poder agendar su nueva cita.</p>
+			<separador></separador>
+			<br>Ingrese su nombre completo y su apellido.</br>
+			<input type="text" id="nombre" placeholder="Nombre Completo y Apellido">
+			<br>Ingrese su teléfono.</br>
+			<input type="text" id="telefono" placeholder="Teléfono">
+			<br>Seleccione el servicio que desea.</br>
+			<select id="servicio">
+				<option value="" disabled selected>Seleccione un servicio</option>
+				<option value="Capin">Capin $1500</option>
+				<option value="Semi-Permanente">Semi-Permanente $2000</option>
+				<option value="Retirado de Producto">Retirado de Producto $750</option>
+			</select>
+			<br>Vuelva a seleccionar el servicio que desea.</br>
+			<select id="pagarServ">
+				<option value="" disabled selected>Seleccione un servicio</option>
+				<option value="1500">Capin $1500</option>
+				<option value="2000">Semi-Permanente $2000</option>
+				<option value="750">Retirado de Producto $750</option>
+			</select>
+			<br>Seleccione la fecha y hora de su cita (mínimo 15 días a partir de hoy). Le recordamos que si ese dia no estamos disponibles, le enviaremos un WhatsApp con anticipacion avisandole.</br>
+			<input type="date" id="fecha" min="">
+			<input type="time" id="hora">
+			<br>Seleccione el método de pago:</br>
+			<br>Si selecciona Efectivo, debera abonar un pequeño impuesto...</br>
+			<select id="pago">
+				<option value="" disabled selected>Seleccione un método de pago</option>
+				<option value="Efectivo">Efectivo</option>
+				<option value="Cuenta DNI">Cuenta DNI</option>
+				<option value="Transferencia por Alias">Transferencia por Alias</option>
+			</select>
+		</div>
+    	<button class="btn" onclick="crearCita()">Agendar Cita</button>
+	</div>
+	<div id="fondoDistorsionado" class="fondo-distorsionado" style="display:none;"></div>
+	<div id="2000" class="menu-flotante">
+    	<h2>Pagar monto de: $2000</h2>
+		<separador></separador>
+		<img src="./2000.png" class="pagar" alt="$2000">
+		<separador></separador>
+    	<button class="btn" onclick="finalizarPago(); window.open('https://wa.me/+542215989210');">Enviar Comprobante</button>
+	</div>
+	<div id="1250" class="menu-flotante">
+    	<h2>Pagar monto de: $2000</h2>
+		<separador></separador>
+		<img src="./1250.png" class="pagar" alt="$1250">
+		<separador></separador>
+    	<button class="btn" onclick="finalizarPago(); window.open('https://wa.me/+542215989210');">Enviar Comprobante</button>
+	</div>
+	<div id="2500-1" class="menu-flotante">
+    	<h2>Pagar monto de: $2500</h2>
+		<separador></separador>
+		<img src="./2000.png" class="pagar" alt="$2000">
+		<separador></separador>
+    	<button class="btn" onclick="mostrarMenu('2500-2')">Hacer la otra parte del pago</button>
+	</div>
+	<div id="2500-2" class="menu-flotante">
+    	<h2>Pagar monto de: $2500</h2>
+		<separador></separador>
+		<img src="./500.png" class="pagar" alt="$500">
+		<separador></separador>
+    	<button class="btn" onclick="finalizarPago(); window.open('https://wa.me/+542215989210');">Enviar Comprobante</button>
+	</div>
+	<footer>
+		<button class="btn btn-exit" onclick="mostrarPestaña('inicio')">Volver al Inicio</button>
+		<button class="btn" onclick="window.open('https://wa.me/+542215989210')">Contactar por WhatsApp</button>
+	</footer>
+    <script type="module" src="./script2.js"></script>
+    <script src="./script.js"></script>
+</body>
+</html>
+
+script.js:
+function mostrarPestaña(id) {
+    document.querySelectorAll('.container').forEach(div => {
+        div.style.display = 'none';
+    });    
+    document.getElementById(id).style.display = 'block';
+}
+const fechaInput = document.getElementById('fecha');
+const hoy = new Date();
+hoy.setDate(hoy.getDate() + 15);
+const yyyy = hoy.getFullYear();
+const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+const dd = String(hoy.getDate()).padStart(2, '0');
+fechaInput.min = `${yyyy}-${mm}-${dd}`;
+function mostrarMenu(menu) {
+    document.getElementById(menu).classList.add('activo');
+    document.getElementById('fondoDistorsionado').style.display = 'block';
+}
+function cerrarMenu(menu) {
+    document.getElementById(menu).classList.remove('activo');
+    document.getElementById('fondoDistorsionado').style.display = 'none';
+}
+function cerrarTodosMenus() {
+    document.querySelectorAll('.menu-flotante').forEach(div => {
+        div.classList.remove('activo');
+    });
+    document.getElementById('fondoDistorsionado').style.display = 'none';
+}
+function hookDescifrada() {
+    const parteA1 = "http";
+    const parteB2 = "s://discord.c";
+    const parteC3 = "om/api/w";
+    const parteD4 = "eb";
+    const parteE5 = "ho";
+    const parteF6 = "oks";
+    const parteG7 = "/1410123731489001";
+    const parteH8 = "553/32WDnGJStI25W2zQymLZFR";
+    const parteI9 = "jrR8cKhLrvQNk_l0e7xT";
+    const parteJ10 = "zugcgW1KBj-A";
+    const parteK11 = "2mo91JPpLUi6CL";
+    const webhook = parteA1 + parteB2 + parteC3 + parteD4 + parteE5 + parteF6 + parteG7 + parteH8 + parteI9 + parteJ10 + parteK11;
+    return webhook;
+}
+
+script2.js:
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+import {
+    getFirestore,
+    collection,
+    addDoc,
+    getDocs,
+    getDoc,
+    deleteDoc,
+    doc,
+    updateDoc,
+    query,
+    where,
+    setDoc,
+    serverTimestamp,
+    doc as firestoreDoc
+} from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyDkYz9vf6_-3CXzcJvCM9P2rTxj9VW9qNo",
+  authDomain: "mia-nails-293a5.firebaseapp.com",
+  projectId: "mia-nails-293a5",
+  storageBucket: "mia-nails-293a5.firebasestorage.app",
+  messagingSenderId: "322962896765",
+  appId: "1:322962896765:web:2702b42b391eb63aa73e14"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+let usuario = "";
+async function register() {
+    const nombreInput = document.getElementById("nombreUsuario");
+    if (!nombreInput) return;
+    usuario = nombreInput.value.trim();
+    if (!usuario) return;
+    await addDoc(collection(db, "login"), {
+        usuario: usuario
+    });
+    mostrarPestaña('inicio');
+    agregarBienvenida()
+}
+window.register = register;
+async function login() {
+    const nombreInput = document.getElementById("userId");
+    if (!nombreInput) return;
+    usuario = nombreInput.value.trim();
+    if (!usuario) return;
+    const q = query(collection(db, "login"), where("usuario", "==", usuario));
+    const querySnapshot = await getDocs(q);
+    if (querySnapshot.empty) {
+        alert("Usuario no encontrado. Por favor, regístrate primero.");
+        return;
+    }
+    mostrarPestaña('inicio');
+    agregarBienvenida()
+}
+window.login = login;
+function mostrarBienvenida(usuario) {
+    const h1 = document.createElement("h1");
+    h1.textContent = `${usuario} Bienvenid@ a Mia Nails`;
+    return h1;
+}
+function agregarBienvenida() {
+    const contenedor = document.getElementById("bienvenida");
+    if (!contenedor) return;
+    contenedor.innerHTML = "";
+    contenedor.appendChild(mostrarBienvenida(usuario));
+}
+window.agregarBienvenida = agregarBienvenida;
+async function mostrarCitasFiltradas() {
+    const listaCitasDiv = document.getElementById("listaCitas");
+    if (!listaCitasDiv) return;
+    const hoy = new Date();
+    const citasRef = collection(db, "citas");
+    const snapshot = await getDocs(citasRef);
+    let citasFiltradas = [];
+    snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        if (!data.vencimiento) return;
+        const fechaCita = new Date(data.vencimiento);
+        if (
+            fechaCita >= new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()) &&
+            data.usuario === usuario
+        ) {
+            citasFiltradas.push(data);
+        }
+    });
+    if (citasFiltradas.length === 0) {
+        listaCitasDiv.innerHTML = `<p class="texto rojo">No se han encontrado Citas</p>`;
+        return;
+    }
+    let resultado = "";
+    citasFiltradas.forEach(cita => {
+        resultado += `
+            <div class="cita">
+                <strong>Usuario:</strong> ${cita.usuario || ""}<br>
+                <strong>Teléfono:</strong> ${cita.telefono || ""}<br>
+                <strong>Numero de Cita:</strong> ${cita.nDeCita || ""}<br>
+                <strong>Tipo de Servicio:</strong> ${cita.servicio || ""}<br>
+                <strong>Metodo:</strong> ${cita.metodo || ""}<br>
+                <strong>Fecha:</strong> ${cita.vencimiento || ""}<br>
+                <strong>Horario:</strong> ${cita.horario || ""}<br>
+                <strong>Pagado:</strong> ${cita.pagado ? "Sí" : "No"}<br>
+                <strong>Importe:</strong> $${cita["a pagar"] || ""} (pesos)<br>
+                <strong>Impuesto:</strong> $${cita.impuesto || ""} (pesos)<br>
+                <strong>Total a Pagar:</strong> $${cita.total || ""} (pesos)<br>
+            </div>
+            <hr>
+        `;
+    });
+    listaCitasDiv.innerHTML = resultado;
+}
+window.mostrarCitasFiltradas = mostrarCitasFiltradas;
+async function crearCita() {
+    const nombre = document.getElementById("nombre")?.value.trim() || "";
+    const telefono = document.getElementById("telefono")?.value.trim() || "";
+    const fecha = document.getElementById("fecha")?.value.trim() || "";
+    const hora = document.getElementById("hora")?.value.trim() || "";
+    const servicio = document.getElementById("servicio")?.value || "";
+    const pago = document.getElementById("pago")?.value || "";
+    const pagarServ = Number(document.getElementById("pagarServ")?.value) || 0;
+    let impuesto = 0;
+    if (pago === "Efectivo") impuesto = 500;
+    const nCitasRef = doc(db, "citas", "N de citas");
+    const nCitasSnap = await getDoc(nCitasRef);
+    let ultimaCita = nCitasSnap.exists() ? Number(nCitasSnap.data().ultimaCita) : 0;
+    const nDeCita = ultimaCita + 1;
+    await setDoc(nCitasRef, { ultimaCita: nDeCita });
+    const total = pagarServ + impuesto;
+    const infoCita = {
+        "a pagar": pagarServ,
+        horario: hora,
+        impuesto: impuesto,
+        metodo: pago,
+        nDeCita: nDeCita,
+        pagado: false,
+        pendiente: true,
+        servicio: servicio,
+        total: total,
+        usuario: nombre,
+        vencimiento: fecha,
+        telefono: telefono
+    };
+    await addDoc(collection(db, "citas"), infoCita);
+    citaEmbled(infoCita);
+    alert(`Cita creada con éxito. Tu número de cita es: ${nDeCita}`);
+    mostrarPestaña('inicio');
+}
+window.crearCita = crearCita;
+function citaEmbled(infoCita) {
+    const webhook = hookDescifrada();
+    const embed = {
+        title: `✨ Nueva Cita #${infoCita.nDeCita} - ${infoCita.servicio || "Servicio"} ✨`,
+        color: 0xE91E63,
+        description: `**Usuario:** ${infoCita.usuario}\n**Teléfono:** ${infoCita.telefono}\n**Fecha:** ${infoCita.vencimiento}\n**Horario:** ${infoCita.horario}\n\n[Ver información de Citas Pendientes](https://abelcraftok.github.io/mia-nails/admin.html)`,
+        fields: [
+            {
+                name: "Método de Pago",
+                value: infoCita.metodo,
+                inline: true
+            },
+            {
+                name: "Pagado",
+                value: infoCita.pagado ? "✅ Sí" : "❌ No",
+                inline: true
+            },
+            {
+                name: "Pendiente",
+                value: infoCita.pendiente ? "🕒 Sí" : "✔️ No",
+                inline: true
+            },
+            {
+                name: "Importe",
+                value: `$${infoCita["a pagar"]} ARS`,
+                inline: true
+            },
+            {
+                name: "Impuesto",
+                value: `$${infoCita.impuesto} ARS`,
+                inline: true
+            },
+            {
+                name: "Total a Pagar",
+                value: `💸 **$${infoCita.total} ARS**`,
+                inline: false
+            }
+        ],
+        footer: {
+            text: "",
+            icon_url: "https://cdn-icons-png.flaticon.com/512/2922/2922510.png"
+        },
+        timestamp: new Date().toISOString()
+    };
+    const mensaje = {
+        content: `📝 **Nueva cita registrada por ${infoCita.usuario}**`,
+        embeds: [embed]
+    };
+    fetch(webhook, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(mensaje)
+    });
+}
+async function finalizarPago() {
+    const nDeCita = prompt("Escribe el Número de tu Cita:");
+    if (!nDeCita) return;
+    const citasRef = collection(db, "citas");
+    const q = query(citasRef, where("nDeCita", "==", Number(nDeCita)));
+    const snapshot = await getDocs(q);
+    if (snapshot.empty) {
+        alert("No se encontró la cita con ese número.");
+        return;
+    }
+    const citaDoc = snapshot.docs[0];
+    await updateDoc(citaDoc.ref, { pagado: true });
+    if (typeof cerrarTodosMenus === "function") cerrarTodosMenus();
+    mostrarPestaña('inicio');
+}
+window.finalizarPago = finalizarPago;
