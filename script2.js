@@ -616,11 +616,11 @@ window.login = async function () {
             }
             else if (rol === "usuario") {
                 alert('Logueo exitoso');
+                mostrarPestania('usuario');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
                 document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
-                window.location.herf='https://abelcraftok.github.io/GTG/usuario.html';
             }
         } else {
             alert("La clave es incorrecta.");
