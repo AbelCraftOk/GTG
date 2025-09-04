@@ -1,0 +1,183 @@
+Titulo: ""
+Mensaje: "No se que poner..."
+Cambios: "
+- Se enviara un mensaje a discord cuando: 
+    - Se agregue un nuevo viaje.
+    - Un usuario compre un viaje/pasaje.
+    - También notificaciones si algún viaje se suspende, etc.
+    - Y a los choferes se les avisara que viajes se les asignaron.
+- Algunos ajustes en el logueo para los roles: "developer", "jefe" y "admin"
+- Se agrego el Interno 8 - Informacion del Nuevo Interno:
+    **Nouvobus Menghi Agrale**
+    - **Empresa: Nuovobus**
+    - **Modelo: Menghi Agrale MT17**
+    - **Interno GTG: 8**
+    - **Interno: 5076**
+    - **Dueño Actual del Interno: @abelcraft_ok664**
+"
+
+==================================================
+usuario.html
+//Para la actualizacion de este archivo, pasame el codigo que tengo qeu copiar y pegar.
+==================================================
+Re-configura mi funcion para que ahora cuando el usaurio compre un pasaje, tambien se envie un embled a discord: {
+El embled que enviara sera el siguiente formato cunado este completado: "
+Titulo: "Nuevo Pasaje Comprado"
+Mensaje: "El usuario: {user} acaba de comprar un pasaje en el viaje {IDViaje}.
+<@&1390152252143964266>"
+Pie del mensaje: "[fecha] - [hora]"
+"
+Datos para que tengas en cuenta: {
+    La API que usara la funcion sera el const: "pasajes".
+    Yo busco que configures la funcion que envia el embled de una manera parecida a la siguiente:
+        const embed = {
+        title: "📣 Nuevo Feedback",
+        description: `**Reporte de:** ${id}\n**Tipo de Reporte:** ${tipo}\n**Mensaje:**\n${mensaje}`,
+        color: 3447003,
+        footer: { text: new Date().toLocaleString() }
+    };
+    try {
+        await fetch(apifeedback, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+        alert("Reporte enviado correctamente.");
+        cerrarMenuFeedback();
+    } catch (error) {
+        console.error("Error al enviar feedback:", error);
+        alert("Error al enviar el reporte.");
+    }
+    Los datos que estan entre "{}" en el formato que te deje arriba (el formato del contenido de los mensajes), eso se completara con los datos que consiguio la funcion (cuando te pase mi funcion vas a entender mejor).
+    La funcion que tienes que modificar es:
+    async function asignarPasaje(viajeID) {
+  if (!window.usuario) {
+    alert("Debes iniciar sesión para reservar un pasaje.");
+    return;
+  }
+
+  const usuarioRef = doc(db, "usuarios", window.usuario);
+  const usuarioSnap = await getDoc(usuarioRef);
+
+  if (!usuarioSnap.exists()) {
+    await setDoc(usuarioRef, { pasajes: [viajeID] });
+  } else {
+    let datos = usuarioSnap.data();
+    let pasajes = datos.pasajes || [];
+    if (!pasajes.includes(viajeID)) {
+      pasajes.push(viajeID);
+      await updateDoc(usuarioRef, { pasajes });
+    } else {
+      alert("Ya tienes este pasaje reservado.");
+      return;
+    }
+  }
+
+  alert("Pasaje reservado con éxito ✅");
+  mostrarMisPasajes();
+}   
+}
+}
+==================================================
+index.html
+//Para la actualizacion de este archivo, pasame el codigo que tengo qeu copiar y pegar.
+==================================================
+Crea una funcion que al ser ejecutada, cargue datos en mi base de datos firestore V9.3 y luego envie un embled a Discord, esta funcion se llamara: "nuevoViajeAgregado":
+- Aqui tengo un menu configurado para que el admin complete la informacion y luego ejecute esta funcion (la que estamos creando ahora):
+    <div id="menu-nuevoViaje" class="menu-flotante" style="display:none;">
+        <div class="menu-contenido">
+            <h3>Agregar Nuevo Viaje Larga Distancia</h3>
+            <div class="campo">
+                <label for="chofer-viaje">Chofer a quien le asignaran el Viaje:</label>
+                <input type="text" id="chofer-viaje" placeholder="Chofer encargado del Viaje">
+            </div>
+            <div class="campo">
+                <label for="costo-viaje">Costo:</label>
+                <input type="text" id="costo-viaje" value="0 Robux" readonly>
+            </div>
+            <div class="campo">
+                <label for="horario-viaje">Horario:</label>
+                <input type="text" id="horario-viaje" placeholder="Horario de la Salida del Viaje">
+            </div>
+            <div class="campo">
+                <label for="partida-viaje">Punto de Partida:</label>
+                <input type="number" id="partida-viaje" placeholder="Punto de Partida del Viaje">
+            </div>
+            <div class="campo">
+                <label for="recorrido-viaje">Recorrido</label>
+                <textarea id="recorrido-viaje" rows="4" style="width:100%;resize:none;border-radius:8px;padding:10px;background:#4a647d;color:white;" placeholder="Recorrido del Viaje"></textarea>
+            </div>
+            <div class="campo">
+                <label for="vencimiento-viaje">Dia del Viaje:</label>
+                <input type="time" id="vencimiento-viaje" placeholder="Dia del Viaje">
+            </div>
+            <div class="campo">
+                <label for="IDviaje-viaje">ID del Viaje:</label>
+                <input type="number" id="IDviaje-viaje" placeholder="ID del Viaje">
+            </div>
+            <div class="acciones" style="margin-top:10px;">
+                <button onclick="nuevoViajeAgregado()">Agregar Viaje</button>
+                <button onclick="document.getElementById('menu-nuevoViaje').style.display = 'none';">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+- El formato que se convertira en el mensaje es: "
+Titulo: "Nuevo Viaje Agregado"
+Mensaje: "
+Chofer encargado del Viaje: {chofer-viaje}
+Costo de 1 pasaje: {costo-viaje}
+Horario de Salida: {horario-viaje}
+Punto de Partida: {partida-viaje}
+Descripción del Recorrido: {recorrido-viaje}
+Dia del Viaje: {vencimiento-viaje}
+ID del Viaje: {IDviaje-viaje}
+[Clic aqui para ir a obtener un pasaje](https://abelcraftok.github.io/GTG/usuario.html)
+"
+(sin footer)
+"
+Yo busco que configures la funcion que envia el embled de una manera parecida a la siguiente:
+        const embed = {
+        title: "📣 Nuevo Feedback",
+        description: `**Reporte de:** ${id}\n**Tipo de Reporte:** ${tipo}\n**Mensaje:**\n${mensaje}`,
+        color: 3447003,
+        footer: { text: new Date().toLocaleString() }
+    };
+    try {
+        await fetch(apifeedback, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] })
+        });
+        alert("Reporte enviado correctamente.");
+        cerrarMenuFeedback();
+    } catch (error) {
+        console.error("Error al enviar feedback:", error);
+        alert("Error al enviar el reporte.");
+    }
+
+- El formato que va a usarse para el documento que se guardara en la base de datos: "
+chofer: {chofer-viaje}
+costo: {costo-viaje}
+hora: {horario-viaje}
+partida: {partida-viaje}
+recorrido: {recorrido-viaje}
+vencimiento: {vencimiento-viaje}
+viaje: {IDviaje-viaje}
+"
+
+Ubicacion en donde se guardara este documento en la base de datos: "Base de Datos > viaje > " (ya tengo anteriormente configurado los ajustes para la  base de datos).
+
+Crea una funcion que haga lo siguiente: 
+//ya tengo la base de datos firestore configurado.
+1. Consultar a: "Base de Datos > ints > int8" //Significado de como cargue la ubicacion en la Base de Datos: Base de Datos > [colection] > [ID-Documento]
+2. Si en el campo: "utilizable: " aparece: "falce" al chofer se le avisara con el siguente alert: "El  todavia no puede ser utilizable"
+3. Si en el campo: "utilizable: " aparece: "true" se pasara al punto 4.
+4. Dependiendo que alla escrito en el input con la ID: "chofer" pasara una de las siguientes cosas:
+|============================================|=========================================================================================|
+|         CONTENIDO EN EL INPUT              |                                  LO QUE SE EJECUTARA                                    |
+|============================================|=========================================================================================|
+|"" (no hay escrito nada)                    |alert('Primero indique su usuario en Discord'); cerrarMenuInternos();                    |
+|"@abelcraft_ok664"                          |seleccionarInterno('8');                                                                 |
+|(otra cosa que no sea "@abelcraft_ok664")   |alert('No tienes permisos para acceder al Interno №8 - Por favor seleccione OTRO!!!');   |
+|============================================|=========================================================================================|

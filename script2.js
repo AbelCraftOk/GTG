@@ -581,6 +581,7 @@ window.login = async function () {
                 document.getElementById('feedback').style.display = 'flex';
                 document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
+                document.getElementById('boton-pestanias').style.display = 'flex';
             }
             else if (rol === "inspector") {
                 alert('Logueo exitoso, tu rol es: Inspector');
@@ -605,6 +606,7 @@ window.login = async function () {
                 document.getElementById('feedback').style.display = 'flex';
                 document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
+                document.getElementById('boton-pestanias').style.display = 'flex';
             }
             else if (rol === "jefe") {
                 alert('Logueo exitoso, tu rol es: Jefe');
@@ -613,6 +615,7 @@ window.login = async function () {
                 document.getElementById('feedback').style.display = 'flex';
                 document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
+                document.getElementById('boton-pestanias').style.display = 'flex';
             }
             else if (rol === "usuario") {
                 alert('Logueo exitoso');
@@ -938,3 +941,96 @@ async function TerminarReco() {
     }
 }
 window.TerminarReco = TerminarReco;
+async function nuevoViajeAgregado() {
+  const chofer = document.getElementById("chofer-viaje").value;
+  const costo = document.getElementById("costo-viaje").value;
+  const hora = document.getElementById("horario-viaje").value;
+  const partida = document.getElementById("partida-viaje").value;
+  const recorrido = document.getElementById("recorrido-viaje").value;
+  const vencimiento = document.getElementById("vencimiento-viaje").value;
+  const viaje = document.getElementById("IDviaje-viaje").value;
+  try {
+    await setDoc(doc(db, "viaje", viaje.toString()), {
+      chofer: chofer,
+      costo: costo,
+      hora: hora,
+      partida: partida,
+      recorrido: recorrido,
+      vencimiento: vencimiento,
+      viaje: viaje
+    });
+    const embed = {
+      title: "🚌 Nuevo Viaje Agregado",
+      description: `
+**Chofer encargado del Viaje:** ${chofer}
+**Costo de 1 pasaje:** ${costo}
+**Horario de Salida:** ${hora}
+**Punto de Partida:** ${partida}
+**Descripción del Recorrido:** ${recorrido}
+**Día del Viaje:** ${vencimiento}
+**ID del Viaje:** ${viaje}
+
+[📌 Clic aquí para ir a obtener un pasaje](https://abelcraftok.github.io/GTG/usuario.html)
+      `,
+      color: 3447003
+    };
+    await fetch(pasajes, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ embeds: [embed] })
+    });
+    alert("Viaje agregado y notificado en Discord ✅");
+    document.getElementById('menu-nuevoViaje').style.display = 'none';
+  } catch (error) {
+    console.error("Error al agregar viaje:", error);
+    alert("Error al agregar el viaje.");
+  }
+}
+async function verificarInterno8() {
+  console.log(">>> Ejecutando verificarInterno8()...");
+  try {
+    const ref = doc(db, "ints", "int8");
+    const snap = await getDoc(ref);
+    if (!snap.exists()) {
+      alert("El interno 8 no existe en la base de datos.");
+      return;
+    }
+    const data = snap.data();
+    console.log("Datos obtenidos:", data);
+    if (data.utilizable === false) {
+      alert("El todavia no puede ser utilizable");
+      return;
+    }
+    if (data.utilizable === true) {
+      const choferInputEl = document.getElementById("chofer");
+      if (!choferInputEl) {
+        alert("El input con ID 'chofer' no existe en el HTML.");
+        return;
+      }
+      const choferInput = choferInputEl.value.trim();
+      console.log("Valor del input chofer:", choferInput);
+      if (choferInput === "") {
+        alert("Primero indique su usuario en Discord");
+        if (typeof cerrarMenuInternos === "function") cerrarMenuInternos();
+        return;
+      }
+      if (choferInput === "@abelcraft_ok664") {
+        if (typeof seleccionarInterno === "function") {
+          seleccionarInterno("8");
+        } else {
+          alert("Función seleccionarInterno no encontrada.");
+        }
+        return;
+      }
+      alert("No tienes permisos para acceder al Interno №8 - Por favor seleccione OTRO!!!");
+      return;
+    }
+    alert("El campo 'utilizable' tiene un valor inesperado: " + data.utilizable);
+
+  } catch (error) {
+    console.error("Error en verificarInterno8:", error);
+    alert("Ocurrió un error al verificar el interno.");
+  }
+}
+window.verificarInterno8 = verificarInterno8;
+window.nuevoViajeAgregado = nuevoViajeAgregado;
