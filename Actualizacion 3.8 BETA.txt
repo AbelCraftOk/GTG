@@ -1,5 +1,5 @@
-Titulo: ""
-Mensaje: "No se que poner..."
+Titulo: "Mensajes a Discord y un Nuevo Interno - V: 3.8 BETA"
+Mensaje: "Lo que trae esta nueva actualización es que agregue un sistema para envié mensajes al Discord cada vez que se agregue un nuevo viaje y también cuando un usuario compre un pasaje. Además hice unos cambios en el login y luego agregue el nuevo interno a la sección de Internos."
 Cambios: "
 - Se enviara un mensaje a discord cuando: 
     - Se agregue un nuevo viaje.

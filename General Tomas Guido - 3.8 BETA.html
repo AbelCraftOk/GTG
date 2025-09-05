@@ -91,6 +91,7 @@
         .campo input[type="number"],
         .campo input[type="time"],
         .campo input[type="password"],
+        .campo input[type="date"],
         .campo select {
             flex: 1;
             padding: 7px 10px;
@@ -105,6 +106,7 @@
         .campo input[type="number"]:focus,
         .campo input[type="time"]:focus,
         .campo input[type="password"]:focus,
+        .campo input[type="date"]:focus,
         .campo select:focus {
             border-color: #3498db;
             outline: none;
@@ -698,11 +700,11 @@
             </div>
             <div class="campo">
                 <label for="horario-viaje">Horario:</label>
-                <input type="text" id="horario-viaje" placeholder="Horario de la Salida del Viaje">
+                <input type="date" id="horario-viaje" placeholder="Horario de la Salida del Viaje">
             </div>
             <div class="campo">
                 <label for="partida-viaje">Punto de Partida:</label>
-                <input type="number" id="partida-viaje" placeholder="Punto de Partida del Viaje">
+                <input type="text" id="partida-viaje" placeholder="Punto de Partida del Viaje">
             </div>
             <div class="campo">
                 <label for="recorrido-viaje">Recorrido</label>
@@ -716,9 +718,11 @@
                 <label for="IDviaje-viaje">ID del Viaje:</label>
                 <input type="number" id="IDviaje-viaje" placeholder="ID del Viaje">
             </div>
-            <div class="acciones" style="margin-top:10px;">
-                <button onclick="nuevoViajeAgregado()">Agregar Viaje</button>
-                <button onclick="document.getElementById('menu-nuevoViaje').style.display = 'none';">Cancelar</button>
+            <div class="acciones">
+                <div class="campo">
+                    <button type="button" onclick="nuevoViajeAgregado()">Agregar Viaje</button>
+                    <button type="button" onclick="document.getElementById('menu-nuevoViaje').style.display = 'none';">Cancelar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -1367,7 +1371,7 @@
     border: none;
     cursor: pointer;
 ">🚍</button>
-<button onclick="botonPestanias()" id="boton-pestanias" style="
+<button onclick="document.getElementById('menu-pestanias').style.display = 'flex';" id="boton-pestanias" style="
     display: none;
     position: fixed;
     bottom: 80px;

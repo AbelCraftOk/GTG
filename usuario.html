@@ -63,7 +63,6 @@
       <div style="font-size:13px;color:#0b3a66;margin-top:6px">Panel para reservar pasajes</div>
     </div>
   </header>
-<!-- Modal de Login -->
 <div id="loginModal" style="
   position:fixed;
   top:0; left:0; right:0; bottom:0;
@@ -101,9 +100,7 @@
     ">Entrar</button>
   </div>
 </div>
-
 <script>
-// Función para mostrar modal si no hay usuario
 function checkUsuario() {
   const usuarioGuardado = localStorage.getItem("usuario");
   if (usuarioGuardado) {
@@ -113,13 +110,9 @@ function checkUsuario() {
     document.getElementById("loginModal").style.display = "flex";
   }
 }
-
-// Al cargar la página
 window.onload = function() {
   checkUsuario();
 };
-
-// Botón de login
 document.getElementById("btnLogin").addEventListener("click", () => {
   const nombre = document.getElementById("inputUsuario").value.trim();
   if (nombre === "") {
@@ -129,15 +122,10 @@ document.getElementById("btnLogin").addEventListener("click", () => {
   window.usuario = nombre;
   localStorage.setItem("usuario", nombre);
   document.getElementById("loginModal").style.display = "none";
-
-  // Opcional: actualizar funciones que dependen del usuario
-  mostrarSaldoActual?.();
   mostrarPasajesComprados?.();
   mostrarPasajesActivos?.();
 });
 </script>
-
-
   <div class="layout">
     <nav>
       <div class="card">
@@ -149,13 +137,22 @@ document.getElementById("btnLogin").addEventListener("click", () => {
           <h4>Mis pasajes</h4>
           <button class="btn" onclick="mostrarMisPasajes()">Ver mis pasajes</button>
         </div>
+        <div class="seccion">
+          <h4>Eliminar Los Datos Locales de La Cuenta</h4>
+          <button id="cerrar-sesion">Cerrar Sesión</button>
+<script>
+document.getElementById("cerrar-sesion").addEventListener("click", () => {
+  localStorage.removeItem("usuario"); // Elimina la clave "usuario"
+  alert("Sesión cerrada correctamente");
+  window.location.reload(); // Recarga la ventana
+});
+</script>
+        </div>
       </div>
     </nav>
-
     <main class="main">
       <div id="usuario" class="card" style="display:block;">
         <h2 style="text-align:center;margin-top:6px">Sistema del usuario</h2>
-
         <div class="separador"></div>
         <h4>Pasajes disponibles</h4>
         <div id="lista-viajes" class="listado"></div>
@@ -166,8 +163,7 @@ document.getElementById("btnLogin").addEventListener("click", () => {
       </div>
     </main>
   </div>
-
-  <!-- Firebase + script -->
+  <script src="Embleds.js"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
 import {
@@ -185,14 +181,16 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// Obtener viajes disponibles (no vencidos)
 async function obtenerViajesDisponibles() {
   const viajesRef = collection(db, "viaje");
   const snapshot = await getDocs(viajesRef);
   const hoy = new Date();
   let viajes = [];
+
   snapshot.forEach((docSnap) => {
     const data = docSnap.data();
+    if (docSnap.id === "plantilla") return;
+    if (!/^\d+$/.test(docSnap.id)) return;
     const venc = new Date(data.vencimiento);
     if (venc >= hoy) {
       viajes.push({ id: docSnap.id, ...data });
@@ -200,21 +198,42 @@ async function obtenerViajesDisponibles() {
   });
   return viajes;
 }
-
-// Mostrar viajes disponibles
 async function mostrarViajes() {
   const lista = document.getElementById("lista-viajes");
   lista.innerHTML = "";
-  const viajes = await obtenerViajesDisponibles();
+
+  // Obtener todos los viajes disponibles
+  const snapshot = await getDocs(collection(db, "viaje"));
+  const hoy = new Date();
+  const viajes = [];
+
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data();
+
+    // Ignorar plantillas y doc con ID no numérico
+    if (docSnap.id === "plantilla") return;
+    if (!/^\d+$/.test(docSnap.id)) return;
+
+    // Revisar vencimiento
+    const venc = new Date(data.vencimiento);
+    if (venc < hoy) return;
+
+    viajes.push({ id: docSnap.id, ...data });
+  });
+
+  console.log("Viajes filtrados:", viajes);
+
   if (viajes.length === 0) {
     lista.innerHTML = "<p>No hay viajes disponibles.</p>";
     return;
   }
+
+  // Mostrar viajes
   viajes.forEach((v) => {
     const item = document.createElement("div");
     item.classList.add("viaje-item");
     item.innerHTML = `
-      <b>Viaje:</b> ${v.viaje} <br>
+      <b>Viaje:</b> ${v.viaje || v.id} <br>
       <b>Hora:</b> ${v.hora} <br>
       <b>Partida:</b> ${v.partida} <br>
       <b>Recorrido:</b> ${v.recorrido} <br>
@@ -225,17 +244,13 @@ async function mostrarViajes() {
     lista.appendChild(item);
   });
 }
-
-// Asignar pasaje al usuario
 async function asignarPasaje(viajeID) {
   if (!window.usuario) {
     alert("Debes iniciar sesión para reservar un pasaje.");
     return;
   }
-
   const usuarioRef = doc(db, "usuarios", window.usuario);
   const usuarioSnap = await getDoc(usuarioRef);
-
   if (!usuarioSnap.exists()) {
     await setDoc(usuarioRef, { pasajes: [viajeID] });
   } else {
@@ -249,29 +264,37 @@ async function asignarPasaje(viajeID) {
       return;
     }
   }
-
+  const embed = {
+    title: "🎟️ Nuevo Pasaje Comprado",
+    description: `El usuario: **${window.usuario}** acaba de comprar un pasaje en el viaje **${viajeID}**.\n<@&1390152252143964266>`,
+    color: 3447003,
+    footer: { text: new Date().toLocaleString() }
+  };
+  try {
+    await fetch(pasajes, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ embeds: [embed] })
+    });
+  } catch (error) {
+    console.error("Error al enviar pasaje a Discord:", error);
+  }
   alert("Pasaje reservado con éxito ✅");
   mostrarMisPasajes();
 }
-
-// Mostrar mis pasajes
 async function mostrarMisPasajes() {
   const contenedor = document.getElementById("mis-pasajes");
   contenedor.innerHTML = "";
-
   if (!window.usuario) {
     contenedor.innerHTML = "<p>Debes iniciar sesión para ver tus pasajes.</p>";
     return;
   }
-
   const usuarioRef = doc(db, "usuarios", window.usuario);
   const usuarioSnap = await getDoc(usuarioRef);
-
   if (!usuarioSnap.exists() || !usuarioSnap.data().pasajes) {
     contenedor.innerHTML = "<p>No tienes pasajes reservados.</p>";
     return;
   }
-
   let pasajes = usuarioSnap.data().pasajes;
   for (const id of pasajes) {
     const viajeRef = doc(db, "viaje", id);
@@ -290,12 +313,9 @@ async function mostrarMisPasajes() {
     }
   }
 }
-
-// Exponer funciones al HTML
 window.mostrarViajes = mostrarViajes;
 window.mostrarMisPasajes = mostrarMisPasajes;
 window.asignarPasaje = asignarPasaje;
-
   </script>
 </body>
 </html>
