@@ -14,7 +14,6 @@ import {
     serverTimestamp,
     doc as firestoreDoc
 } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
-
 const firebaseConfig = {
     apiKey: "AIzaSyAMIMRcSoBD4pmGJStXNP7HUyQ92LGx25Y",
     authDomain: "planillasinspectores-53856.firebaseapp.com",
@@ -25,7 +24,6 @@ const firebaseConfig = {
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 function enviarMensaje(planillaData) {
     const inspectores = inspectoresActiven();
     let descansosTexto = `• Descanso 1: ${planillaData.descanso || 'sin dato'}\n`;
@@ -98,7 +96,7 @@ async function guardarPlanilla() {
             interno: internoSeleccionado,
             ramal: ramalSeleccionado,
             recorrido: document.getElementById('recorrido-info').value,
-            vueltas: vueltasGenerales, // se guarda todo el arreglo
+            vueltas: vueltasGenerales,
             planillas1,
             planillas2: planillas2 || 0,
             planillas3: planillas3 || 0,
@@ -122,23 +120,19 @@ async function guardarPlanilla() {
         alert("❌ Error al guardar planilla.");
     }
 }
-window.guardarPlanilla = guardarPlanilla;
 window.obtenerPlanillas = async function obtenerPlanillas() {
     alert("Obteniendo planillas, por favor espere...");
     const contenedor = document.getElementById('resumen-vueltas');
     if (!contenedor) return;
-
     contenedor.innerHTML = '';
     try {
         const querySnapshot = await getDocs(collection(db, "planillas"));
         let planillas = [];
         querySnapshot.forEach(docu => planillas.push({ id: docu.id, ...docu.data() }));
-
         if (planillas.length === 0) {
             contenedor.innerHTML = '<div class="texto-rojo">No se han encontrado planillas recientes.</div>';
             return;
         }
-
         planillas.forEach(planilla => {
             const planillaHTML = `
                 <div class="burbuja">
@@ -176,15 +170,10 @@ window.aceptarPlanilla = async function aceptarPlanilla(id) {
             alert("No se encontró la planilla.");
             return;
         }
-
         const planillaData = { id: planillaSnap.id, ...planillaSnap.data() };
         planillaData.estado = "aprobado";
-
-        // Mover a historialPlanillas
         await addDoc(collection(db, "historialPlanillas"), planillaData);
         await deleteDoc(planillaRef);
-
-        // Construir texto de vueltas
         const vueltasTexto = `
 IDA:
   Salida: ${planillaData.ida1 || '-'}
@@ -193,7 +182,6 @@ VUELTA:
   Salida: ${planillaData.vuelta1 || '-'}
   Llegada: ${planillaData.vuelta2 || '-'}
 `;
-
         const embed = {
             title: "Planilla Aprobada",
             description: `**Chofer:** ${planillaData.chofer}
@@ -209,13 +197,11 @@ ${vueltasTexto}
             color: 3066993,
             footer: { text: new Date().toLocaleString() }
         };
-
         await fetch(WEBHOOK_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ embeds: [embed] })
         });
-
         alert("Planilla aprobada y movida a historial.");
         obtenerPlanillas();
     } catch (error) {
@@ -223,7 +209,6 @@ ${vueltasTexto}
         console.error(error);
     }
 }
-
 window.denegarPlanilla = async function denegarPlanilla(id) {
     alert("Rechazando planilla, por favor espere...");
     try {
@@ -233,13 +218,10 @@ window.denegarPlanilla = async function denegarPlanilla(id) {
             alert("No se encontró la planilla.");
             return;
         }
-
         const planillaData = { id: planillaSnap.id, ...planillaSnap.data() };
         planillaData.estado = "rechazado";
-
         await addDoc(collection(db, "historialPlanillas"), planillaData);
         await deleteDoc(planillaRef);
-
         const vueltasTexto = `
 IDA:
   Salida: ${planillaData.ida1 || '-'}
@@ -248,7 +230,6 @@ VUELTA:
   Salida: ${planillaData.vuelta1 || '-'}
   Llegada: ${planillaData.vuelta2 || '-'}
 `;
-
         const embed = {
             title: "Planilla Rechazada",
             description: `**Chofer:** ${planillaData.chofer}
@@ -264,13 +245,11 @@ ${vueltasTexto}
             color: 15158332,
             footer: { text: new Date().toLocaleString() }
         };
-
         await fetch(WEBHOOK_URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ embeds: [embed] })
         });
-
         alert("Planilla rechazada y movida a historial.");
         obtenerPlanillas();
     } catch (error) {
@@ -278,7 +257,6 @@ ${vueltasTexto}
         console.error(error);
     }
 }
-
 window.abrirMenuHistorialPlanillas = async function abrirMenuHistorialPlanillas() {
     const menu = document.getElementById('menu-historial-planillas');
     const contenedor = document.getElementById('contenedor-historial-planillas');
@@ -292,7 +270,6 @@ window.abrirMenuHistorialPlanillas = async function abrirMenuHistorialPlanillas(
         contenedor.innerHTML = '<div class="texto-rojo">No hay historial de planillas.</div>';
     } else {
         planillas.sort((a, b) => {
-            // Ordenar por fecha ascendente (más antiguo primero)
             const ta = a.timestamp instanceof Date ? a.timestamp : (a.timestamp?.toDate ? a.timestamp.toDate() : new Date(a.timestamp));
             const tb = b.timestamp instanceof Date ? b.timestamp : (b.timestamp?.toDate ? b.timestamp.toDate() : new Date(b.timestamp));
             return ta - tb;
@@ -340,12 +317,6 @@ window.actualizacion = async function actualizacion() {
         console.error(error);
     }
 }
-function reJoin() {
-    location.reload()
-    window.location.href='https://abelcraftok.github.io/GTG/'
-}
-window.reJoin = reJoin;
-
 window.abrirMenuAgregarChofer = function abrirMenuAgregarChofer() {
     document.getElementById('agregar-chofer').style.display = 'flex';
 }
@@ -355,14 +326,11 @@ window.cerrarMenuAgregarChofer = function cerrarMenuAgregarChofer() {
 window.agregarChofer = async function agregarChofer() {
     const input = document.getElementById('nuevo-chofer-id');
     const id = input.value.trim();
-
     if (!id) {
         alert("Por favor ingrese el ID de Discord.");
         return;
     }
-
     const data = { chofer: `${id}` };
-
     try {
         await addDoc(collection(db, "choferes"), data);
         alert(`✅ Chofer ${id} agregado correctamente.`);
@@ -373,24 +341,20 @@ window.agregarChofer = async function agregarChofer() {
         alert("Error al guardar el nuevo chofer.");
     }
 }
-let historialCache = []; // Copia del historial cargado
-
+let historialCache = [];
 window.abrirMenuFiltroHistorial = function () {
     document.getElementById('menu-filtro-historial').style.display = 'flex';
 }
 window.cerrarMenuFiltroHistorial = function () {
     document.getElementById('menu-filtro-historial').style.display = 'none';
 }
-
 function renderizarHistorial(planillas) {
     const contenedor = document.getElementById('contenedor-historial-planillas');
     contenedor.innerHTML = '';
-
     if (planillas.length === 0) {
         contenedor.innerHTML = '<div class="texto-rojo">No hay historial de planillas.</div>';
         return;
     }
-
     planillas.forEach(planilla => {
         let vueltasHtml = '';
         if (Array.isArray(planilla.vueltas)) {
@@ -398,7 +362,6 @@ function renderizarHistorial(planillas) {
                 vueltasHtml += `<div>Vuelta ${idx + 1}: Ida: ${v.ida} | Vuelta: ${v.vuelta} ${v.invalidada ? '<em>(Invalidada)</em>' : ''}</div>`;
             });
         }
-
         contenedor.innerHTML += `
             <div class="burbuja">
                 <strong>Chofer:</strong> ${planilla.chofer}<br>
@@ -414,20 +377,16 @@ function renderizarHistorial(planillas) {
         `;
     });
 }
-
-// Ordenamientos
 window.filtrarHistorialAZ = function () {
     const ordenado = [...historialCache].sort((a, b) => a.chofer.localeCompare(b.chofer));
     renderizarHistorial(ordenado);
     cerrarMenuFiltroHistorial();
 }
-
 window.filtrarHistorialZA = function () {
     const ordenado = [...historialCache].sort((a, b) => b.chofer.localeCompare(a.chofer));
     renderizarHistorial(ordenado);
     cerrarMenuFiltroHistorial();
 }
-
 window.filtrarHistorialRecientes = function () {
     const ordenado = [...historialCache].sort((a, b) => {
         const ta = a.timestamp?.toDate ? a.timestamp.toDate() : new Date(a.timestamp);
@@ -437,7 +396,6 @@ window.filtrarHistorialRecientes = function () {
     renderizarHistorial(ordenado);
     cerrarMenuFiltroHistorial();
 }
-
 window.filtrarHistorialAntiguas = function () {
     const ordenado = [...historialCache].sort((a, b) => {
         const ta = a.timestamp?.toDate ? a.timestamp.toDate() : new Date(a.timestamp);
@@ -449,17 +407,14 @@ window.filtrarHistorialAntiguas = function () {
 }
 async function registrarLogInicio(usuario) {
     const ahora = new Date();
-
     const dia = ahora.toLocaleDateString('es-AR');  // "dd/mm/yyyy"
     const hora = ahora.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit', hour12: false }); // "HH:mm"
-
     const logData = {
         dia: dia,
         hora: hora,
         timestamp: serverTimestamp(),
         usuario: usuario
     };
-
     try {
         await addDoc(collection(db, "logs"), logData);
         console.log("✅ Log registrado:", logData);
@@ -467,15 +422,12 @@ async function registrarLogInicio(usuario) {
         console.error("❌ Error al registrar log:", err);
     }
 }
-
 window.abrirMenuLogs = async function abrirMenuLogs() {
     const contenedor = document.getElementById('contenedor-logs');
     contenedor.innerHTML = '';
     document.getElementById('menu-logs').style.display = 'flex';
-
     const logsSnapshot = await getDocs(collection(db, "logs"));
     const hoy = new Date().toLocaleDateString('es-AR'); // "dd/mm/yyyy"
-
     const logsDeHoy = [];
     logsSnapshot.forEach((docu) => {
         const data = docu.data();
@@ -483,15 +435,11 @@ window.abrirMenuLogs = async function abrirMenuLogs() {
             logsDeHoy.push(data);
         }
     });
-
     if (logsDeHoy.length === 0) {
         contenedor.innerHTML = `<div class="texto-rojo">Hoy no se ha conectado nadie (según la base de datos).</div>`;
         return;
     }
-
-    // Ordenar por hora (más reciente arriba)
     logsDeHoy.sort((a, b) => b.hora.localeCompare(a.hora));
-
     logsDeHoy.forEach(log => {
         contenedor.innerHTML += `
             <div class="burbuja">
@@ -561,7 +509,6 @@ window.login = async function () {
         if (data.clave === claveInput) {
             acceso = true;
             const rol = data.rol;
-
             localStorage.setItem("usuario", data.usuario);
             localStorage.setItem("clave", data.clave);
             localStorage.setItem("rolUsuario", rol);
@@ -569,10 +516,8 @@ window.login = async function () {
                 usuario: data.usuario,
                 clave: data.clave
             }));
-            
             window.user = data.usuario;
             registrarLogInicio(data.usuario);
-            
             document.getElementById('myAudio').play()
             if (rol === "developer") {
                 alert('Logueo exitoso, tu rol es: Developer');
@@ -634,8 +579,6 @@ window.login = async function () {
 };
 window.autoLogin = async function () {
     const config = localStorage.getItem("loginConfig");
-
-    // Si no hay datos guardados, redirige al login
     if (!config) {
         setTimeout(() => {
             mostrarPestania('login');
@@ -643,16 +586,13 @@ window.autoLogin = async function () {
         }, 1500);
         return;
     }
-
     const { usuario, clave } = JSON.parse(config);
     document.getElementById('logueandocampo').style.display = 'block';
     rotateText();
     document.getElementById('myAudio').play()
-
     try {
         const q = query(collection(db, "cuentas"), where("usuario", "==", usuario));
         const snapshot = await getDocs(q);
-
         if (snapshot.empty) {
             alert("El usuario no coincide con las cuentas guardadas.");
             localStorage.removeItem("loginConfig");
@@ -660,28 +600,23 @@ window.autoLogin = async function () {
             mostrarPestania('login');
             return;
         }
-
         let acceso = false;
         snapshot.forEach((docu) => {
             const data = docu.data();
             if (data.clave === clave) {
                 acceso = true;
                 const rol = data.rol;
-
-                // Guardar datos de sesión
                 localStorage.setItem("usuario", data.usuario);
                 localStorage.setItem("clave", data.clave);
                 localStorage.setItem("rolUsuario", rol);
                 window.user = data.usuario;
                 registrarLogInicio(data.usuario);
-
                 let pestania = '';
                 if (rol === "developer") pestania = 'developer';
                 else if (rol === "inspector") pestania = 'inspectores';
                 else if (rol === "personal") pestania = 'personal';
                 else if (rol === "admin" || rol === "jefe") pestania = 'admin';
                 else pestania = 'usuario';
-
                 alert(`Logueo exitoso, tu rol es: ${rol}`);
                 mostrarPestania(pestania);
                 document.getElementById('cerrarSesion').style.display = 'block';
@@ -691,8 +626,6 @@ window.autoLogin = async function () {
                 document.getElementById('auto-login').style.display = 'none';
             }
         });
-
-        // Si no se logró acceso, ir al login
         if (!acceso) {
             alert("La clave es incorrecta o el usuario no tiene acceso.");
             localStorage.removeItem("loginConfig");
@@ -711,7 +644,6 @@ window.autoLogin = async function () {
 };
 window.redirigirSegunRol = function () {
     const rol = localStorage.getItem("rolUsuario");
-
     if (!rol) {
         alert("No se encontró información de rol. Por favor, inicie sesión.");
         return;
@@ -727,14 +659,12 @@ window.redirigirSegunRol = function () {
 window.enviarSolicitud = async function () {
     const id = document.getElementById('asistencia-id').value.trim();
     if (!id) return alert("Completa tu ID de Discord.");
-
     const embed = {
         title: "Nueva Solicitud de Asistencia",
         description: `Usuario: ${id}\nTipo de Solicitud: Solicitud de Rango en la cuenta`,
         color: 15844367,
         footer: { text: new Date().toLocaleString() }
     };
-
     try {
         await fetch(solicitudCifrada(), {
             method: 'POST',
@@ -875,7 +805,10 @@ const recorridoPorRamal = {
     "373": 2,
     "384": 3,
     "9": 4,
-    "271": 5
+    "271": 5,
+    "271B": 6,
+    "164A": 7,
+    "164B": 8
 };
 function actualizarRecorrido() {
     const input = document.getElementById('recorrido-info');
@@ -911,13 +844,11 @@ function guardarVueltaGeneral() {
 window.guardarVueltaGeneral = guardarVueltaGeneral;
 function mostrarVueltasGenerales() {
     const lista = document.getElementById("lista-vueltas");
-    lista.innerHTML = ""; // limpiar antes de volver a renderizar
-
+    lista.innerHTML = "";
     if (vueltasGenerales.length === 0) {
         lista.innerHTML = "<li>No hay vueltas guardadas aún.</li>";
         return;
     }
-
     vueltasGenerales.forEach((vuelta, index) => {
         const li = document.createElement("li");
         li.textContent = `#${index + 1} | Ida1: ${vuelta.ida1}, Ida2: ${vuelta.ida2}, Descanso: ${vuelta.descanso}, Descanso2: ${vuelta.descanso2 ?? "N/A"}, Vuelta1: ${vuelta.vuelta1}, Vuelta2: ${vuelta.vuelta2}`;
@@ -940,7 +871,6 @@ async function TerminarReco() {
         alert("Error al eliminar la ubicación");
     }
 }
-window.TerminarReco = TerminarReco;
 async function nuevoViajeAgregado() {
   const chofer = document.getElementById("chofer-viaje").value;
   const costo = document.getElementById("costo-viaje").value;
@@ -986,51 +916,48 @@ async function nuevoViajeAgregado() {
     alert("Error al agregar el viaje.");
   }
 }
-async function verificarInterno8() {
-  console.log(">>> Ejecutando verificarInterno8()...");
-  try {
-    const ref = doc(db, "ints", "int8");
-    const snap = await getDoc(ref);
-    if (!snap.exists()) {
-      alert("El interno 8 no existe en la base de datos.");
-      return;
-    }
-    const data = snap.data();
-    console.log("Datos obtenidos:", data);
-    if (data.utilizable === false) {
-      alert("El todavia no puede ser utilizable");
-      return;
-    }
-    if (data.utilizable === true) {
-      const choferInputEl = document.getElementById("chofer");
-      if (!choferInputEl) {
-        alert("El input con ID 'chofer' no existe en el HTML.");
-        return;
-      }
-      const choferInput = choferInputEl.value.trim();
-      console.log("Valor del input chofer:", choferInput);
-      if (choferInput === "") {
-        alert("Primero indique su usuario en Discord");
-        if (typeof cerrarMenuInternos === "function") cerrarMenuInternos();
-        return;
-      }
-      if (choferInput === "@abelcraft_ok664") {
-        if (typeof seleccionarInterno === "function") {
-          seleccionarInterno("8");
-        } else {
-          alert("Función seleccionarInterno no encontrada.");
-        }
-        return;
-      }
-      alert("No tienes permisos para acceder al Interno №8 - Por favor seleccione OTRO!!!");
-      return;
-    }
-    alert("El campo 'utilizable' tiene un valor inesperado: " + data.utilizable);
-
-  } catch (error) {
-    console.error("Error en verificarInterno8:", error);
-    alert("Ocurrió un error al verificar el interno.");
-  }
-}
-window.verificarInterno8 = verificarInterno8;
 window.nuevoViajeAgregado = nuevoViajeAgregado;
+async function enviarMensajePerzonalizado() {
+    const mensaje = document.getElementById("msg-perz-texto").value.trim();
+    const apiUrl = document.getElementById("msg-perz-api").value.trim();
+    const contenedor = document.getElementById("menu-msg-perz").querySelector(".menu-contenido");
+    const oldAviso = contenedor.querySelector(".texto-rojo, .texto-verde");
+    if (oldAviso) oldAviso.remove();
+    if (!mensaje || !apiUrl) {
+        const aviso = document.createElement("p");
+        aviso.textContent = "Debes completar todos los campos.";
+        aviso.className = "texto-rojo";
+        contenedor.appendChild(aviso);
+        return;
+    }
+    try {
+        const res = await fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: mensaje })
+        });
+        if (res.ok) {
+            const aviso = document.createElement("p");
+            aviso.textContent = "✅ Mensaje enviado correctamente.";
+            aviso.className = "texto-verde";
+            aviso.style.fontWeight = "bold";
+            contenedor.appendChild(aviso);
+            document.getElementById("msg-perz-texto").value = "";
+            document.getElementById("msg-perz-api").value = "";
+        } else {
+            const aviso = document.createElement("p");
+            aviso.textContent = "❌ Error al enviar el mensaje. Revisa la API.";
+            aviso.className = "texto-rojo";
+            contenedor.appendChild(aviso);
+        }
+    } catch (err) {
+        console.error("Error:", err);
+        const aviso = document.createElement("p");
+        aviso.textContent = "❌ Error de conexión al intentar enviar.";
+        aviso.className = "texto-rojo";
+        contenedor.appendChild(aviso);
+    }
+}
+window.enviarMensajePerzonalizado = enviarMensajePerzonalizado;
+window.guardarPlanilla = guardarPlanilla;
+window.TerminarReco = TerminarReco;

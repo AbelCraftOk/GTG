@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/png" href="./logo.png">
+    <title>Herramienta Markdown - General Tomas Guido</title>
+    <style>
+        body {
+            background: #18191a;
+            color: #f1f1f1;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .tabs {
+            display: flex;
+            background: #23272b;
+            border-bottom: 2px solid #333;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 18px 0;
+            background: none;
+            border: none;
+            color: #bbb;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.2s, color 0.2s;
+        }
+        .tab-btn.active {
+            background: #18191a;
+            color: #fff;
+            border-bottom: 3px solid #4caf50;
+        }
+        .tab-content {
+            display: none;
+            padding: 32px 24px;
+            min-height: 80vh;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .recuadro {
+            background: #23272b;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 24px 0;
+            box-shadow: 0 2px 8px #0003;
+        }
+        .recuadro h2 {
+            margin-top: 0;
+        }
+        .button {
+            background: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 22px;
+            font-size: 1em;
+            margin-top: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .button:hover {
+            background: #388e3c;
+        }
+        /* Creador Layout */
+        .creador-main {
+            display: flex;
+            gap: 24px;
+            height: 85vh;
+        }
+        .creador-A {
+            flex: 1.3;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        /* Botonera horizontal debajo de tabs */
+        .creador-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 28px 0 18px 0;
+            justify-content: flex-start;
+        }
+        .creador-A-A {
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 0;
+        }
+        .creador-A-A .button {
+            background: #222c3a;
+            color: #4caf50;
+            border: 1px solid #4caf50;
+            font-weight: bold;
+            padding: 10px 22px;
+            border-radius: 6px;
+            margin: 0 8px 0 0;
+            font-size: 1.1em;
+        }
+        .creador-A-A .button:hover {
+            background: #4caf50;
+            color: #fff;
+        }
+        .creador-A-B {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .creador-input {
+            flex: 1;
+            width: 100%;
+            min-width: 900px;
+            min-height: 500px;
+            max-width: 100%;
+            max-height: 900px;
+            background: #18191a;
+            color: #fff;
+            border: 1.5px solid #4caf50;
+            border-radius: 12px;
+            padding: 18px;
+            font-size: 1.25em;
+            font-family: 'Consolas', monospace;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+        .creador-B {
+            flex: 1;
+            background: #23272b;
+            border-radius: 12px;
+            padding: 24px;
+            overflow-y: auto;
+            min-width: 600px;
+            min-height: 500px;
+            max-width: 100%;
+            max-height: 900px;
+            box-sizing: border-box;
+            margin-left: 24px;
+            display: flex;
+            flex-direction: column;
+        }
+        #creador-preview {
+            flex: 1;
+            min-height: 400px;
+            min-width: 100%;
+            font-size: 1.18em;
+            overflow-y: auto;
+        }
+        /* Markdown Preview */
+        .md-preview h1, .md-preview h2, .md-preview h3 {
+            color: #4caf50;
+        }
+        .md-preview p.negrita { font-weight: bold; }
+        .md-preview p.cursiva { font-style: italic; }
+        .md-preview p.tachado { text-decoration: line-through; }
+        .md-preview code {
+            background: #222c3a;
+            color: #ffeb3b;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        .md-preview pre {
+            background: #18191a;
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .md-preview hr {
+            border: 0;
+            border-top: 2px solid #4caf50;
+            margin: 18px 0;
+        }
+        .md-preview img {
+            max-width: 100%;
+            border-radius: 6px;
+            margin: 8px 0;
+        }
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            background: #23272b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4caf50;
+            border-radius: 8px;
+        }
+        /* Responsive */
+        @media (max-width: 900px) {
+            .creador-main { flex-direction: column; }
+        }
+        #terminal-md-preview {
+    background-color: #111;
+    border: 2px solid #4caf50;
+    border-radius: 10px;
+    padding: 20px;
+    font-family: 'Consolas', monospace;
+    color: #f1f1f1;
+    box-shadow: 0 0 15px #4caf5060;
+    max-height: 600px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+}
+    </style>
+</head>
+<body>
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="inicio">Inicio</button>
+        <button class="tab-btn" data-tab="creador">Creador</button>
+        <button class="tab-btn" data-tab="terminal-md">Terminal MD</button>
+    </div>
+    <div class="tab-content active" id="inicio">
+        <h1>MARKDOWN</h1>
+        <h1>archivos.md</h1>
+        <div class="recuadro">
+            <h2>Creador de Archivos Markdown</h2>
+            <p>Si deseas crear un archivo formato Markdown, debes elegir esta opcion, por que permite crear el codigo muy facilmente...</p>
+            <button class="button" onclick="showTab('creador')">Ir al Creador</button>
+        </div>
+        <div class="recuadro">
+            <h2>Terminal de Archivos Markdown</h2>
+            <p>Aqui podras cargar el archivo completo o solo un fragmento del codigo para ver el resultado.</p>
+            <button class="button" onclick="showTab('terminal-md')">Ir a la Terminal</button>
+        </div>
+    </div>
+    <div class="tab-content" id="creador">
+        <button class="button" onclick="showTab('inicio')">Volver al Inicio</button>
+        <div class="creador-main">
+            <div class="creador-A">
+                <!-- Herramientas Markdown -->
+                <div class="creador-A-A" id="recuadro-creador-A-A">
+                    <button class="button" onclick="insertAtCursor('creador-input', '# ', 'start')">T</button>
+                    <button class="button" onclick="insertAtCursor('creador-input', '## ', 'start')">ST</button>
+                    <button class="button" onclick="insertAtCursor('creador-input', '### ', 'start')">S-ST</button>
+                    <button class="button" onclick="wrapSelection('creador-input', '**')">N</button>
+                    <button class="button" onclick="wrapSelection('creador-input', '~~')">B</button>
+                    <button class="button" onclick="wrapSelection('creador-input', '*')">M</button>
+                    <button class="button" onclick="wrapSelection('creador-input', '`')">CC</button>
+                    <button class="button" onclick="wrapSelectionBlock('creador-input', '```')">BC</button>
+                    <button class="button" onclick="insertAtCursor('creador-input', '- ', 'start')">-</button>
+                    <button class="button" onclick="insertOrderedList('creador-input')">#.</button>
+                    <button class="button" onclick="insertSeparator('creador-input')">S</button>
+                    <button class="button" onclick="insertAtCursor('creador-input', '[texto](url)', 'start')">URL</button>
+                    <button class="button" onclick="insertAtCursor('creador-input', '![alt](imagen.png)', 'start')">IMG</button>
+                </div>
+                <!-- Input -->
+                <div class="creador-A-B">
+                    <textarea id="creador-input" class="creador-input" placeholder="Escribe tu Markdown aquí..." oninput="updatePreviewCreador()"></textarea>
+                </div>
+            </div>
+            <div class="creador-B">
+                <div id="creador-preview" class="md-preview"></div>
+                <button class="button" onclick="guardarAvances()">Guardar Avances</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TERMINAL MD -->
+    <div class="tab-content" id="terminal-md">
+        <button class="button" onclick="showTab('inicio')">Volver al Inicio</button>
+        <h2>Terminal de Archivos Markdown</h2>
+        <input type="file" id="md-file-input" accept=".md" style="display:none" onchange="cargarArchivoMD(event)">
+        <button class="button" onclick="document.getElementById('md-file-input').click()">Seleccionar archivo</button>
+        <div id="terminal-md-preview" class="md-preview" style="margin-top:24px"></div>
+    </div>
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.tab-btn[data-tab="' + tabId + '"]').classList.add('active');
+        }
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.onclick = () => showTab(btn.getAttribute('data-tab'));
+        });
+        function insertAtCursor(id, text, mode = 'start') {
+            const textarea = document.getElementById(id);
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            let value = textarea.value;
+            if (mode === 'start') {
+                const before = value.lastIndexOf('\n', start - 1) + 1;
+                textarea.value = value.slice(0, before) + text + value.slice(before);
+                textarea.selectionStart = textarea.selectionEnd = start + text.length;
+            }
+            textarea.focus();
+            updatePreviewCreador();
+        }
+        function wrapSelection(id, wrapper) {
+            const textarea = document.getElementById(id);
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const value = textarea.value;
+            textarea.value = value.slice(0, start) + wrapper + value.slice(start, end) + wrapper + value.slice(end);
+            textarea.selectionStart = start + wrapper.length;
+            textarea.selectionEnd = end + wrapper.length;
+            textarea.focus();
+            updatePreviewCreador();
+        }
+        function wrapSelectionBlock(id, wrapper) {
+            const textarea = document.getElementById(id);
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const value = textarea.value;
+            textarea.value = value.slice(0, start) + wrapper + '\n' + value.slice(start, end) + '\n' + wrapper + value.slice(end);
+            textarea.selectionStart = start + wrapper.length + 1;
+            textarea.selectionEnd = end + wrapper.length + 1;
+            textarea.focus();
+            updatePreviewCreador();
+        }
+        function insertSeparator(id) {
+            insertAtCursor(id, '---\n', 'start');
+        }
+        function insertOrderedList(id) {
+            const textarea = document.getElementById(id);
+            const start = textarea.selectionStart;
+            const value = textarea.value;
+            const lines = value.substring(0, start).split('\n');
+            let lastNum = 0;
+            for (let i = lines.length - 1; i >= 0; i--) {
+                const match = lines[i].match(/^(\d+)\. /);
+                if (match) {
+                    lastNum = parseInt(match[1]);
+                    break;
+                }
+            }
+            const nextNum = lastNum + 1;
+            insertAtCursor(id, nextNum + '. ', 'start');
+        }
+        function mdToHtml(md) {
+            const lines = md.split('\n');
+            let html = '';
+            let inCodeBlock = false;
+            lines.forEach((line, idx) => {
+                if (line.startsWith('```')) {
+                    if (!inCodeBlock) {
+                        inCodeBlock = true;
+                        html += '<pre><code>';
+                    } else {
+                        inCodeBlock = false;
+                        html += '</code></pre>';
+                    }
+                    return;
+                }
+                if (inCodeBlock) {
+                    html += line.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '\n';
+                    return;
+                }
+                if (line.trim() === '---') {
+                    html += '<hr>';
+                    return;
+                }
+                let imgMatch = line.match(/^!\[(.*?)\]\((.*?)\)/);
+                if (imgMatch) {
+                    html += `<img src="${imgMatch[2]}" alt="${imgMatch[1]}">`;
+                    return;
+                }
+                let urlMatch = line.match(/\[([^\]]+)\]\(([^)]+)\)/);
+                if (urlMatch) {
+                    line = line.replace(/\[([^\]]+)\]\(([^)]+)\)/g, `<a href="$2" target="_blank">$1</a>`);
+                }
+                if (line.startsWith('### ')) {
+                    html += `<h3>${line.slice(4)}</h3>`;
+                    return;
+                }
+                if (line.startsWith('## ')) {
+                    html += `<h2>${line.slice(3)}</h2>`;
+                    return;
+                }
+                if (line.startsWith('# ')) {
+                    html += `<h1>${line.slice(2)}</h1>`;
+                    return;
+                }
+                let olMatch = line.match(/^(\d+)\. (.*)/);
+                if (olMatch) {
+                    html += `<p>${olMatch[1]}. ${olMatch[2]}</p>`;
+                    return;
+                }
+                if (line.startsWith('- ')) {
+                    html += `<p>- ${line.slice(2)}</p>`;
+                    return;
+                }
+                if (/^\*\*(.+)\*\*$/.test(line.trim())) {
+                    html += `<p class="negrita">${line.trim().slice(2, -2)}</p>`;
+                    return;
+                }
+                if (/^\*(.+)\*$/.test(line.trim())) {
+                    html += `<p class="cursiva">${line.trim().slice(1, -1)}</p>`;
+                    return;
+                }
+                if (/^~~(.+)~~$/.test(line.trim())) {
+                    html += `<p class="tachado">${line.trim().slice(2, -2)}</p>`;
+                    return;
+                }
+                if (/`([^`]+)`/.test(line)) {
+                    line = line.replace(/`([^`]+)`/g, '<code>$1</code>');
+                }
+                if (line.trim() !== '') {
+                    html += `<p>${line}</p>`;
+                }
+            });
+            if (inCodeBlock) html += '</code></pre>';
+            return html;
+        }
+        function updatePreviewCreador() {
+            const md = document.getElementById('creador-input').value;
+            document.getElementById('creador-preview').innerHTML = mdToHtml(md);
+        }
+        function guardarAvances() {
+            const contenido = document.getElementById('creador-input').value;
+            const blob = new Blob([contenido], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'avances.md';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        function cargarArchivoMD(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const md = e.target.result;
+                document.getElementById('terminal-md-preview').innerHTML = mdToHtml(md);
+            };
+            reader.readAsText(file);
+        }
+    </script>
+</body>
+</html>
