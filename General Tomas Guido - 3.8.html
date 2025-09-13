@@ -601,6 +601,7 @@
             <button type="button" class="theme-toggle-button" onclick="abrirMenuAgregarChofer()">Agregar un nuevo chofer</button>
             <button type="button" class="theme-toggle-button" onclick="abrirMenuLogs()">Ver Logs de Conexión</button>
             <button type="button" class="theme-toggle-button" onclick="abrirMenuProximaActualizacion()">Cargar una próxima actualización</button>
+            <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-msg-perz').style.display = 'flex';">Enviar un mensaje perzonalizado a Discord</button>
         </div>
         <div class="seccion">
             <h2>Acceso Personal de la Empresa</h2>
@@ -732,10 +733,10 @@
             <h3>Enviar Mensaje Perzonalizado a Discord</h3>
             <p style="color: red;">⚠️ Asegurate de que la API que introduzcas sea valida, si no es asi, no se podra enviar el mensaje correctamnete ⚠️</p>
             <p>Si no sabes cual es la API especifica para mandar el mensaje a ese canal, haz click en el siguiente boton:</p>
-            <button type="button" onclick="window.location.href='https://abelcarftok.github.io/GTG/webhooks.html'">Ver Webhooks Activos</button>  
+            <button type="button" onclick="window.open('https://abelcarftok.github.io/GTG/webhooks.html')">Ver Webhooks Activos</button>  
             <p style="color: red;">⚠️ Si no sabes como usar objetos especiales en los mensajes, te recomiendo que un creador de mensajes para discord ⚠️</p>
             <p>Te recomiendo usar mi creador de arcchivos MD, bueno tu escribiras y arribas podras colocar los elementos especiales, para acceder a mi creador haz clic en el siguiente boton:</p>
-            <button type="button" onclick="window.location.href='https://abelcarftok.github.io/GTG/md.html'">Ir al creador de mensajes para Discord</button>
+            <button type="button" onclick="window.open('https://abelcarftok.github.io/GTG/md.html')">Ir al creador de mensajes para Discord</button>
             <div class="campo">
                 <label for="msg-perz-texto">Mensaje:</label>
                 <textarea id="msg-perz-texto" rows="4" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #607d8b; background: #4a647d; color: #ecf0f1;" placeholder="Escribe el mensaje que quieres enviar..."></textarea>
