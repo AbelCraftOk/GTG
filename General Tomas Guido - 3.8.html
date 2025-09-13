@@ -1190,88 +1190,155 @@
     <div id="menu-ramales" class="menu-flotante ramales" style="display:none;">
         <div class="menu-contenido">
             <h3>Seleccionar Ramal</h3>
-            <div class="ramal-item">
-                <img src="./ramales/9.png" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 9</strong><br>
-                    Iniciara recorrido en la terminal de Villa, ubicada cerca del deposito, luego se dirigira a la terminal de Retiro. Una vez sale de retiro, se dirigira por TODA la metrobus que pasa cerca de la diagonal y doblara para ir a la metrobus del "Depo Free" (Urbano).<br>
-                    Esta linea continuara su recorrido y terminara en la "Terminal de La Cumbre".<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('9')">Seleccionar Ramal</button>
+            <div class="campo">
+                <h3>Investigar sobre las Linea: 9</h3>
+                <button type="button" onclick="document.getElementById('ramales-9').style.display = 'block'">Ver los recorridos de la Linea 9</button>
+            </div>
+            <div id="ramales-9" style="display:none;">
+                <h2>Linea 9:</h2>
+                <div class="ramal-item">
+                    <img src="./ramales/9.png" class="ramal-img">
+                    <div class="ramal-info">
+                        <strong>RAMAL: A</strong><br>
+                        Iniciara recorrido en la terminal de Villa, ubicada cerca del deposito, luego se dirigira a la terminal de Retiro. Una vez sale de retiro, se dirigira por TODA la metrobus que pasa cerca de la diagonal y doblara para ir a la metrobus del "Depo Free" (Urbano).<br>
+                        Esta linea continuara su recorrido y terminara en la "Terminal de La Cumbre".<br>
+                        <button type="button" class="boton-seleccion" onclick="seleccionarRamal('9A')">Seleccionar Ramal</button>
+                    </div>
+                    <div class="ramal-info">
+                        <strong>RAMAL: B</strong><br>
+                        Iniciara recorrido en la terminal de Villa, ubicada cerca del deposito, luego se dirigira a la terminal de Retiro. Una vez sale de retiro, entrara al Digonal para dirigirse al metrobus y doblara para ir a la metrobus del "Depo Free" (Urbano).<br>
+                        Esta linea continuara su recorrido y terminara en la "Terminal de La Cumbre".<br>
+                        <button type="button" class="boton-seleccion" onclick="seleccionarRamal('9B')">Seleccionar Ramal</button>
+                    </div>
                 </div>
             </div>
             <div class="separador"></div>
-            <div class="ramal-item">
-                <img src="./ramales/271.png" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 271</strong><br>
-                    Comienza en la Terminal de Omnibus de la Villa, va hasta el depo GTG para dirijirse por ahi a la avenida principal hasta Retiro, luego de retiro, se agarra el diagonal y se entra al metrobus de 2 carriles, agarra ese cachito de avenida para entrar al metrobus de 6 carriles, luego se dirije a la Terminal de La Cumbre y ahi se para a descansar y tambien a poner la VUELTA. En la VUELTA se sale a la izquierda para ir creca de la ruta hacia Los Altos, luego en la rotonda desvia a la derecha hacia aguas de oro, para luego al cruzar una nueva rotonda se dirija derecho a aguas de oro.Al llegar auas de oro, se esperan 2 minutos para salir hacia el depo GTG, para ir al depo, al salir de la terminal de va a la derecha para agarrar el diagonal, luego agarra la calle y luego agarra la primer salida a la derecha. luego sigue todo derecho hasta cruzzarse con el depo y terminar reocrrido al frente del depo.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('271')">Seleccionar Ramal</button>
+            <div class="campo">
+                <h3>Investigar sobre las Linea: 271</h3>
+                <button type="button" onclick="document.getElementById('ramales-271').style.display = 'block'">Ver los recorridos de la Linea 271</button>
+            </div>
+            <div id="ramales-271" style="display:none;">
+                <h2>Linea 271:</h2>
+                <div class="ramal-item">
+                    <img src="./ramales/271.png" class="ramal-img">
+                    <div class="ramal-info">
+                        <strong>RAMAL: A</strong><br>
+                        Comienza en la Terminal de Omnibus de la Villa, va hasta el depo GTG para dirijirse por ahi a la avenida principal hasta Retiro, luego de retiro, se agarra el diagonal y se entra al metrobus de 2 carriles, agarra ese cachito de avenida para entrar al metrobus de 6 carriles, luego se dirije a la Terminal de La Cumbre y ahi se para a descansar y tambien a poner la VUELTA. En la VUELTA se sale a la izquierda para ir creca de la ruta hacia Los Altos, luego en la rotonda desvia a la derecha hacia aguas de oro, para luego al cruzar una nueva rotonda se dirija derecho a aguas de oro.Al llegar auas de oro, se esperan 2 minutos para salir hacia el depo GTG, para ir al depo, al salir de la terminal de va a la derecha para agarrar el diagonal, luego agarra la calle y luego agarra la primer salida a la derecha. luego sigue todo derecho hasta cruzzarse con el depo y terminar reocrrido al frente del depo.<br>
+                        <button type="button" class="boton-seleccion" onclick="seleccionarRamal('271A')">Seleccionar Ramal</button>
+                    </div>
+                </div>
+                <div class="ramal-item">
+                    <img src="./ramales/271B.webp" class="ramal-img">
+                    <div class="ramal-info">
+                        <strong>RAMAL: 271B</strong><br>
+                        Comienza en la Terminal de Omnibus de la Villa, va hasta el depo GTG para dirijirse por ahi a la avenida principal hasta Retiro, luego de retiro, se agarra el diagonal y se entra al metrobus de 2 carriles, agarra ese cachito de avenida para entrar al metrobus de 6 carriles, luego se dirije a la Terminal de La Cumbre y ahi se para a descansar y tambien a poner la VUELTA. En la VUELTA se sale a la izquierda para ir creca de la ruta hacia Los Altos, luego en la rotonda desvia a la derecha hacia aguas de oro, pero, antes de entrar a la terminal de aguas de oro, desvia hacia la derecha para dirijirse al Areopuerto. Al llegar al Areopuerto, se esperan 2 minutos para salir hacia el depo GTG.<br>
+                        <button type="button" class="boton-seleccion" onclick="seleccionarRamal('271B')">Seleccionar Ramal</button>
+                    </div>
                 </div>
             </div>
             <div class="separador"></div>
-            <div class="ramal-item">
-                <img src="./ramales/271B.webp" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 271B</strong><br>
-                    Comienza en la Terminal de Omnibus de la Villa, va hasta el depo GTG para dirijirse por ahi a la avenida principal hasta Retiro, luego de retiro, se agarra el diagonal y se entra al metrobus de 2 carriles, agarra ese cachito de avenida para entrar al metrobus de 6 carriles, luego se dirije a la Terminal de La Cumbre y ahi se para a descansar y tambien a poner la VUELTA. En la VUELTA se sale a la izquierda para ir creca de la ruta hacia Los Altos, luego en la rotonda desvia a la derecha hacia aguas de oro, pero, antes de entrar a la terminal de aguas de oro, desvia hacia la derecha para dirijirse al Areopuerto. Al llegar al Areopuerto, se esperan 2 minutos para salir hacia el depo GTG.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('271B')">Seleccionar Ramal</button>
+            <div class="campo">
+                <h3>Investigar sobre las Linea: 164</h3>
+                <button type="button" onclick="document.getElementById('ramales-164').style.display = 'block'">Ver los recorridos de la Linea 164</button>
+            </div>
+            <div id="ramales-164" style="display: none;">
+                <h2>Linea 164:</h2>
+                <div class="ramal-item">
+                    <img src="./ramales/164A.webp" class="ramal-img">
+                    <div class="ramal-info">
+                        <strong>RAMAL: A</strong><br>
+                        El rondin arranca fuera del Deposito Fonobus. Luego de aqui, se dobla a la derecha para dirijirse a la calle que lleva al metrobus pero antes de entrar al metrobus, se da vuelta en U para entrar al Diagonal. Al entrar al Diagonal, se desviara a la izquierda para agarrar la Avenida Principal para hacer una casi vuelt entera en la rotonda y desviar hacia donde comienza el rondin. (Lo anterior se repetira 3 veces), al ya realizar las 3 vueltas, se pondra el cartel: A-Vuelta para luego: seguir derecho y doblar a la derecha para cruzar hacia la Avenida Principal y luego entrar a la Terminal de Retiro. Al parar alli, se termina el recorrido.<br>
+                        <button type="button" class="boton-seleccion" onclick="seleccionarRamal('164A')">Seleccionar Ramal</button>
+                    </div>
+                </div>
+                <div class="ramal-item">
+                    <img src="./ramales/164B.webp" class="ramal-img">
+                    <div class="ramal-info">
+                        <strong>RAMAL: B</strong><br>
+                        El rondin arranca fuera del Deposito Publico, se desvia para pasar por la Terminal de Minibuses y llegar al Deposito Fonobus. Luego de aqui, se dobla a la derecha para dirijirse a la Terminal de Retiro y alli aguardar 2 minutos para salir nueva mente. Al salir, se desviara a la derecha para entrar en la Villa y luega pasar por el frente del Deposito Larga Distancia y mas luego pasar por el frente del Deposito de Gral. Tomas Guido y luego seguir mucho mas adelante para desviar hacia donde inicia el rondin. (Lo anterior se repetira 2 veces), al ya realizar las 2 vueltas, se pondra el cartel: B-Vuelta para luego: seguir derecho y doblar a la izquierda al cruzar con el metrobus, despues de estar en el metrobus, se sigue derecho y se estaciona en la Terminal de Omnibus ubicada en la Villa. Al parar alli, se termina el recorrido.<br>
+                        <button type="button" class="boton-seleccion" onclick="seleccionarRamal('164B')">Seleccionar Ramal</button>
+                    </div>
                 </div>
             </div>
             <div class="separador"></div>
-            <div class="ramal-item">
-                <img src="./ramales/164A.webp" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 164A</strong><br>
-                    El rondin arranca fuera del Deposito Fonobus. Luego de aqui, se dobla a la derecha para dirijirse a la calle que lleva al metrobus pero antes de entrar al metrobus, se da vuelta en U para entrar al Diagonal. Al entrar al Diagonal, se desviara a la izquierda para agarrar la Avenida Principal para hacer una casi vuelt entera en la rotonda y desviar hacia donde comienza el rondin. (Lo anterior se repetira 3 veces), al ya realizar las 3 vueltas, se pondra el cartel: A-Vuelta para luego: seguir derecho y doblar a la derecha para cruzar hacia la Avenida Principal y luego entrar a la Terminal de Retiro. Al parar alli, se termina el recorrido.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('164A')">Seleccionar Ramal</button>
+            <div class="campo">
+                <h3>Investigar sobre las Linea: 84</h3>
+                <button type="button" onclick="document.getElementById('ramales-84').style.display = 'block'">Ver los recorridos de la Linea 84</button>
+            </div>
+            <div id="ramales-84" style="display: none;">
+                <h2>Linea 84:</h2>
+                <div class="ramal-item">
+                    <img src="./ramales/84.webp" class="ramal-img">
+                    <div class="ramal-info">
+                        <strong>RAMAL: A</strong><br>
+                        Se realizara en un futuro<br>
+                        <button type="button" class="boton-rojo" onclick="alert('Este ramal no esta disponible por el momento, se realizara en un futuro.')">Seleccionar Ramal</button>
+                    </div>
                 </div>
             </div>
             <div class="separador"></div>
-            <div class="ramal-item">
-                <img src="./ramales/164B.webp" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 164B</strong><br>
-                    El rondin arranca fuera del Deposito Publico, se desvia para pasar por la Terminal de Minibuses y llegar al Deposito Fonobus. Luego de aqui, se dobla a la derecha para dirijirse a la Terminal de Retiro y alli aguardar 2 minutos para salir nueva mente. Al salir, se desviara a la derecha para entrar en la Villa y luega pasar por el frente del Deposito Larga Distancia y mas luego pasar por el frente del Deposito de Gral. Tomas Guido y luego seguir mucho mas adelante para desviar hacia donde inicia el rondin. (Lo anterior se repetira 2 veces), al ya realizar las 2 vueltas, se pondra el cartel: B-Vuelta para luego: seguir derecho y doblar a la izquierda al cruzar con el metrobus, despues de estar en el metrobus, se sigue derecho y se estaciona en la Terminal de Omnibus ubicada en la Villa. Al parar alli, se termina el recorrido.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('164B')">Seleccionar Ramal</button>
+            <div class="campo">
+                <h3>Investigar sobre las Linea: 373</h3>
+                <button type="button" onclick="document.getElementById('ramales-373').style.display = 'block'">Ver los recorridos de la Linea 373</button>
+            </div>
+            <div id="ramales-373" style="display: none;">
+                <h2>Linea 373:</h2>
+                <div class="ramal-item">
+                    <img src="./ramales/373.png" class="ramal-img">
+                    <div class="ramal-info">
+                        <strong>RAMAL: A</strong><br>
+                        La linea 373 iniciara su recorrido en el aeropuerto, de ahi se dirigirá a la terminal de Villa y luego continuara hacia retiro.<br>
+                        Luego de haber pasado retiro, se dirigirá a "Terminal de La Cumbre" y seguirá hasta Los altos, donde finalizara su recorrido.<br>
+                        <button type="button" class="boton-seleccion" onclick="seleccionarRamal('373A')">Seleccionar Ramal</button>
+                    </div>
+                </div>
+                <div class="ramal-item">
+                    <div class="ramal-info">
+                        <strong>RAMAL: B</strong><br>
+                        La linea 373 iniciara su recorrido en el aeropuerto, de ahi se dirigirá a la terminal de Villa y luego continuara hacia retiro.<br>
+                        Luego de haber pasado retiro, se dirigirá a "Terminal de La Cumbre" y alli finalizara su recorrido.<br>
+                        <button type="button" class="boton-seleccion" onclick="seleccionarRamal('373B')">Seleccionar Ramal</button>
+                    </div>
                 </div>
             </div>
             <div class="separador"></div>
-            <div class="ramal-item">
-                <img src="./ramales/84.webp" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 84</strong><br>
-                    Se realizara en un futuro<br>
-                    <button type="button" class="boton-rojo" onclick="alert('Este ramal no esta disponible por el momento, se realizara en un futuro.')">Seleccionar Ramal</button>
+            <div class="campo">
+                <h3>Investigar sobre las Linea: 384</h3>
+                <button type="button" onclick="document.getElementById('ramales-384').style.display = 'block'">Ver los recorridos de la Linea 384</button>
+            </div>
+            <div id="ramales-384" style="display: none;">
+                <h2>Linea 384:</h2>
+                <div class="ramal-item">
+                    <img src="./ramales/384.png" class="ramal-img">
+                    <div class="ramal-info">
+                        <strong>RAMAL: 384</strong><br>
+                        La linea 384 realizara el recorrido mas largo, conectando TODAS las terminales.<br>
+                        Primero iniciara en la terminal de los altos, donde continuara hasta la rotonda y doblara en sentido Aguas de Oro, luego ira directamente a la terminal, donde frenaria y se deberia mantener ahi por al menos 2 minutos.<br>
+                        Luego, al salir de terminal, se dirigira a aeropuerto por la ruta alternativa, pero antes debera pasar el punto centrico de la ciudad, y luego ir a aeropuerto, donde hara lo mismo que en la terminal de Aguas de Oro y luego continuara hacia la terminal villa, donde solo se detendra por 1 minuto. Al salir de terminal villa, ira hacia "La terminal de La Cumbre" y luego hacia la de retiro, donde terminara su recorrido.<br>
+                        <button type="button" class="boton-seleccion" onclick="seleccionarRamal('384A')">Seleccionar Ramal</button>
+                    </div>
+                    <div class="ramal-info">
+                        La linea 384 realizara el recorrido mas largo, conectando TODAS las terminales.<br>
+                        Primero iniciara en la terminal de los altos, donde continuara hasta la rotonda y doblara en sentido Aguas de Oro, luego ira directamente a la terminal, donde frenaria y se deberia mantener ahi por al menos 2 minutos.<br>
+                        Luego, al salir de terminal, se dirigira a aeropuerto por la ruta alternativa, pero antes debera pasar el punto centrico de la ciudad, y luego ir a aeropuerto, donde hara lo mismo que en la terminal de Aguas de Oro y luego continuara hacia la terminal villa, donde solo se detendra por 1 minuto. Al salir de terminal villa, ira hacia "La terminal de La Cumbre" y luego hacia la de retiro para luego entrar en el diagonal y doblara para llegar al Depo Free, en ese mismo lugar finalizara el recorrido.
+                        <button type="button" class="boton-seleccion" onclick="seleccionarRamal('384B')">Seleccionar Ramal</button>
+                    </div>
                 </div>
             </div>
             <div class="separador"></div>
-            <div class="ramal-item">
-                <img src="./ramales/373.png" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 373</strong><br>
-                    La linea 373 iniciara su recorrido en el aeropuerto, de ahi se dirigirá a la terminal de Villa y luego continuara hacia retiro.<br>
-                    Luego de haber pasado retiro, se dirigirá a "Terminal de La Cumbre" y seguirá hasta Los altos, donde finalizara su recorrido.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('373')">Seleccionar Ramal</button>
-                </div>
+            <div class="campo">
+                <h3>Investigar sobre las Linea: 570</h3>
+                <button type="button" onclick="document.getElementById('ramales-570').style.display = 'block'">Ver los recorridos de la Linea 570</button>
             </div>
-            <div class="separador"></div>
-            <div class="ramal-item">
-                <img src="./ramales/384.png" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 384</strong><br>
-                    La linea 384 realizara el recorrido mas largo, conectando TODAS las terminales.<br>
-                    Primero iniciara en la terminal de los altos, donde continuara hasta la rotonda y doblara en sentido Aguas de Oro, luego ira directamente a la terminal, donde frenaria y se deberia mantener ahi por al menos 2 minutos.<br>
-                    Luego, al salir de terminal, se dirigira a aeropuerto por la ruta alternativa, pero antes debera pasar el punto centrico de la ciudad, y luego ir a aeropuerto, donde hara lo mismo que en la terminal de Aguas de Oro y luego continuara hacia la terminal villa, donde solo se detendra por 1 minuto. Al salir de terminal villa, ira hacia "La terminal de La Cumbre" y luego hacia la de retiro, donde terminara su recorrido.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('384')">Seleccionar Ramal</button>
-                </div>
-            </div>
-            <div class="separador"></div>
-            <div class="ramal-item">
-                <img src="./ramales/570.png" class="ramal-img">
-                <div class="ramal-info">
-                    <strong>RAMAL: 570</strong><br>
-                    La linea 570 iniciara su recorrido en la Terminal villa, donde continuara para Retiro y de ahi a "La terminal de La Cumbre", luego, continuara su recorrido dirigiendose a Los Altos, donde estara 2 minutos y luego regresara, pasando por Depo Free (Urbanos) y finalizando el recorrido en la metrobus.<br>
-                    <button type="button" class="boton-seleccion" onclick="seleccionarRamal('570')">Seleccionar Ramal</button>
+            <div id="ramales-570" style="display: none;">
+                <h2>Linea 570:</h2>
+                <div class="ramal-item">
+                    <img src="./ramales/570.png" class="ramal-img">
+                    <div class="ramal-info">
+                        <strong>RAMAL: A</strong><br>
+                        La linea 570 iniciara su recorrido en la Terminal villa, donde continuara para Retiro y de ahi a "La terminal de La Cumbre", luego, continuara su recorrido dirigiendose a Los Altos, donde estara 2 minutos y luego regresara, pasando por Depo Free (Urbanos) y finalizando el recorrido en la metrobus.<br>
+                        <button type="button" class="boton-seleccion" onclick="seleccionarRamal('570')">Seleccionar Ramal</button>
+                    </div>
                 </div>
             </div>
             <div class="separador"></div>

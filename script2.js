@@ -802,13 +802,17 @@ async function guardarUbicacion(ubicacion) {
 window.guardarUbicacion = guardarUbicacion;
 const recorridoPorRamal = {
     "570": 1,
-    "373": 2,
-    "384": 3,
-    "9": 4,
-    "271": 5,
-    "271B": 6,
-    "164A": 7,
-    "164B": 8
+    "373A": 2,
+    "373B": 3,
+    "384A": 4,
+    "384B": 5,
+    "9A": 6,
+    "9B": 7,
+    "271A": 8,
+    "271B": 9,
+    "164A": 10,
+    "164B": 11,
+    "84": 12
 };
 function actualizarRecorrido() {
     const input = document.getElementById('recorrido-info');

@@ -1,6 +1,7 @@
 Titulo: "Nuevos Internos, nuevas lineas y nuevos recorridos!!!!"
 Mensaje: "Se agregaron los interno 8 y 9 - Se agrego la linea 164 y se ajusto en algunas cosas a la linea 271 - Se agregaron los recorridos: 271 B, 164 A y 164 B."
-Cmabios: "
+Cambios: "
 - Se cargaron los Nuevos internos.
 - Se agregaron la nueva linea y se modifico otra.
-- Se agregaron nuevos ramales."
+- Se agregaron nuevos ramales.
+- Nueva estructura para los ramales."
