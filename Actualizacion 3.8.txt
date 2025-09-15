@@ -4,4 +4,216 @@ Cambios: "
 - Se cargaron los Nuevos internos.
 - Se agregaron la nueva linea y se modifico otra.
 - Se agregaron nuevos ramales.
-- Nueva estructura para los ramales."
+- Nueva estructura para los ramales.
+- Dependiendo el ramal, solo se muestran los botones correspondientes."
+=========================================================================================
+Crea varias funciones para hacer que el siguiente HTML y la idea funcionen correctamente:
+HTML:
+<div class="seccion" id="panel-ubicaciones-botones" style="display: none;">
+    <h3>Seleccione su ramal actual</h3>
+    <select>
+        <option value="" disabled selected>Seleccione su ramal</option>
+        <option value="9A">Linea 9 - Ramal A</option>
+        <option value="9B">Linea 9 - Ramal B</option>
+        <option value="271A">Linea 271 - Ramal A</option>
+        <option value="271B">Linea 271 - Ramal B</option>
+        <option value="164A">Linea 164 - Ramal A</option>
+        <option value="164B">Linea 164 - Ramal B</option>
+        <option value="373A">Linea 373 - Ramal A</option>
+        <option value="373B">Linea 373 - Ramal B</option>
+        <option value="384A">Linea 384 - Ramal A</option>
+        <option value="384B">Linea 384 - Ramal B</option>
+        <option value="570">Linea 570 - Ramal A</option>
+    </select>
+</div>
+<div class="seccion" id="panel-ubicaciones-btns" style="display: none;">
+    <h1>Ubicación del Chofer</h1>
+    <div id="panel-ubicaciones">
+        <div class="seccion">
+            <h2>Ciudad</h2>
+            <div class="separador"></div>
+            <div class="acciones">
+                <button type="button" id="ubi-Av-Principal" onclick="guardarUbicacion('Av. Principal'); entendidoAlarma();">Av. Principal</button>
+                <button type="button" id="ubi-Centro" onclick="guardarUbicacion('Centro'); entendidoAlarma();">Centro</button>
+            </div>
+        </div>
+        <div class="seccion">
+            <h2>Depositos</h2>
+            <div class="separador"></div>
+            <div class="acciones">
+                <button type="button" id="ubi-Deposito-FONO-BUS" onclick="guardarUbicacion('Deposito FONO BUS'); entendidoAlarma();">Deposito FONO BUS</button>
+                <button type="button" id="ubi-Deposito-General-Tomas-Guido" onclick="guardarUbicacion('Deposito General Tomas Guido'); entendidoAlarma();">Deposito General Tomas Guido</button>
+                <button type="button" id="ubi-Deposito-Larga-Distancia" onclick="guardarUbicacion('Deposito Larga Distancia'); entendidoAlarma();">Deposito Larga Distancia</button>
+                <button type="button" id="ubi-Deposito-Urbano" onclick="guardarUbicacion('Deposito Urbano'); entendidoAlarma();">Deposito Urbano</button>
+            </div>
+        </div>
+        <div class="seccion">
+            <h2>Metrobuses</h2>
+            <div class="separador"></div>
+            <div class="acciones">
+                <button type="button" id="ubi-Metrobus-2" onclick="guardarUbicacion('Metrobus 2 Carriles'); entendidoAlarma();">Metrobus 2 Carriles</button>
+                <button type="button" id="ubi-Metrobus-6" onclick="guardarUbicacion('Metrobus 6 Carriles'); entendidoAlarma();">Metrobus 6 Carriles</button>
+            </div>
+        </div>
+        <div class="seccion">
+            <h2>Lugares Publicos</h2>
+            <div class="separador"></div>
+            <div class="acciones">
+                <button type="button" id="ubi-Patio-de-Eventos" onclick="guardarUbicacion('Patio de Eventos'); entendidoAlarma();">Patio de Eventos</button>
+                <button type="button" id="ubi-Plaza-La-Cumbre" onclick="guardarUbicacion('Plaza La Cumbre'); entendidoAlarma();">Plaza La Cumbre</button>
+                <button type="button" id="ubi-Diagonal" onclick="guardarUbicacion('Diagonal 1'); entendidoAlarma();">Diagonal 1</button>
+            </div>
+        </div>
+        <div class="seccion">
+            <h2>Terminales</h2>
+            <div class="separador"></div>
+            <div class="acciones">
+                <button type="button" id="ubi-T-Aguas-de-Oro" onclick="guardarUbicacion('Terminal Aguas de Oro'); entendidoAlarma();">Terminal Aguas de Oro</button>
+                <button type="button" id="ubi-T-del-Areopuerto" onclick="guardarUbicacion('Terminal del Areopuerto'); entendidoAlarma();">Terminal del Areopuerto</button>
+                <button type="button" id="ubi-T-de-Barrio" onclick="guardarUbicacion('Terminal de Barrio'); entendidoAlarma();">Terminal de Barrio</button>
+                <button type="button" id="ubi-T-de-La-Cumbre" onclick="guardarUbicacion('Terminal de La Cumbre'); entendidoAlarma();">Terminal de La Cumbre</button>
+                <button type="button" id="ubi-T-de-Los-Altos" onclick="guardarUbicacion('Terminal de Los Altos'); entendidoAlarma();">Terminal de Los Altos</button>
+                <button type="button" id="ubi-T-de-Minibuses" onclick="guardarUbicacion('Terminal de Minibuses'); entendidoAlarma();">Terminal de Minibuses</button>
+                <button type="button" id="ubi-T-Omnibus-Villa" onclick="guardarUbicacion('Terminal de Omnibus Villa'); entendidoAlarma();">Terminal de Omnibus Villa</button>
+                <button type="button" id="ubi-T-de-Retiro" onclick="guardarUbicacion('Terminal de Retiro'); entendidoAlarma();">Terminal de Retiro</button>
+            </div>
+        </div>
+    </div>
+</div>
+Idea: Dependiendo de que ramal alla seleccionado el usuario, se utilizara una funcion diferente.
+
+Si el usuario selecciona el valor: "9A", se ejecutara: {
+    function btnsRamal9A() {
+        document.getElementById('ubi-T-de-Barrio').style.display = 'block';
+        docuemnt.getElementById('ubi-Av-Principal').style.display = 'block';
+        docuemnt.getElementById('ubi-T-de-Retiro').style.display = 'block';
+        docuemnt.getElementById('ubi-Metrobus-2').style.display = 'block';
+        docuemnt.getElementById('ubi-Metrobus-6').style.display = 'block';
+        docuemnt.getElementById('ubi-T-de-Minibuses').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-Urbano').style.display = 'block';
+        docuemnt.getElementById('ubi-T-de-La-Cumbre').style.display = 'block';
+    }
+}
+Si el usuario selecciona el valor: "9B", se ejecutara: {
+    function btnsRamal9B() {
+        document.getElementById('ubi-T-de-Barrio').style.display = 'block';
+        docuemnt.getElementById('ubi-Av-Principal').style.display = 'block';
+        docuemnt.getElementById('ubi-T-de-Retiro').style.display = 'block';
+        docuemnt.getElementById('ubi-Diagonal').style.display = 'block';
+        docuemnt.getElementById('ubi-Metrobus-2').style.display = 'block';
+        docuemnt.getElementById('ubi-Metrobus-6').style.display = 'block';
+        docuemnt.getElementById('ubi-T-de-Minibuses').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-Urbano').style.display = 'block';
+        docuemnt.getElementById('ubi-T-de-La-Cumbre').style.display = 'block';
+    }
+}
+Si el usuario selecciona el valor: "271A", se ejecutara: {
+    function btnsRamal271A() {
+        document.getElementById('ubi-T-Omnibus-Villa').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-General-Tomas-Guido').style.display = 'block';
+        docuemnt.getElementById('ubi-Av-Principal').style.display = 'block';
+        docuemnt.getElementById('ubi-T-de-Retiro').style.display = 'block';
+        docuemnt.getElementById('ubi-Diagonal').style.display = 'block';
+        docuemnt.getElementById('ubi-Metrobus-2').style.display = 'block';
+        docuemnt.getElementById('ubi-Metrobus-6').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-Urbano').style.display = 'block';
+        docuemnt.getElementById('ubi-Patio-de-Eventos').style.display = 'block';
+        docuemnt.getElementById('ubi-T-de-La-Cumbre').style.display = 'block';
+        docuemnt.getElementById('ubi-T-Aguas-de-Oro').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-General-Tomas-Guido').style.display = 'block';
+    }
+}
+Si el usuario selecciona el valor: "271B", se ejecutara: {
+    function btnsRamal271B() {
+        document.getElementById('ubi-T-Omnibus-Villa').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-General-Tomas-Guido').style.display = 'block';
+        docuemnt.getElementById('ubi-Av-Principal').style.display = 'block';
+        docuemnt.getElementById('ubi-T-de-Retiro').style.display = 'block';
+        docuemnt.getElementById('ubi-Diagonal').style.display = 'block';
+        docuemnt.getElementById('ubi-Metrobus-2').style.display = 'block';
+        docuemnt.getElementById('ubi-Metrobus-6').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-Urbano').style.display = 'block';
+        docuemnt.getElementById('ubi-Patio-de-Eventos').style.display = 'block';
+        document.getElementById('ubi-T-de-La-Cumbre').style.display = 'block';
+        document.getElementById('ubi-T-del-Areopuerto').style.display = 'block';
+        document.getElementById('ubi-Deposito-General-Tomas-Guido').style.display = 'block';
+    }
+}
+Si el usuario selecciona el valor: "164A", se ejecutara: {
+    function btnsRamal164A() {
+        document.getElementById('ubi-Deposito-FONO-BUS').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-General-Tomas-Guido').style.display = 'block';
+        docuemnt.getElementById('ubi-Av-Principal').style.display = 'block';
+        docuemnt.getElementById('ubi-Diagonal').style.display = 'block';
+        docuemnt.getElementById('ubi-Av-Principal').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-FONO-BUS').style.display = 'block';
+        document.getElementById('ubi-T-de-Minibuses').style.display = 'block';
+        document.getElementById('ubi-T-de-Retiro).style.display = 'block';
+    }
+}
+Si el usuario selecciona el valor: "164B", se ejecutara: {
+    function btnsRamal164B() {
+        docuemnt.getElementById('ubi-Deposito-Urbano').style.display = 'block';
+        docuemnt.getElementById('ubi-T-de-Minibuses').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-FONO-BUS').style.display = 'block';
+        docuemnt.getElementById('ubi-Av-Principal').style.display = 'block';
+        docuemnt.getElementById('ubi-T-de-Retiro').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-Larga-Distancia').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-General-Tomas-Guido').style.display = 'block';
+        docuemnt.getElementById('ubi-Deposito-Urbano').style.display = 'block';
+    }
+}
+Si el usuario selecciona el valor: "373A", se ejecutara: {
+    docuemnt.getElementById('ubi-T-del-Areopuerto').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-Barrio').style.display = 'block';
+    docuemnt.getElementById('ubi-Av-Principal').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-Retiro').style.display = 'block';
+    docuemnt.getElementById('ubi-Metrobus2').style.display = 'block';
+    docuemnt.getElementById('ubi-Metrobus6').style.display = 'block';
+    docuemnt.getElementById('ubi-Deposito-Urbano').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-La-Cumbre').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-Los-Altos').style.display = 'block';
+}
+Si el usuario selecciona el valor: "373B", se ejecutara: {
+    docuemnt.getElementById('ubi-T-del-Areopuerto').style.display = 'block';
+    docuemnt.getElementById('ubi-Av-Principal').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-Retiro').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-La-Cumbre').style.display = 'block';
+}
+Si el usuario selecciona el valor: "384A", se ejecutara: {
+    docuemnt.getElementById('ubi-T-de-Los-Altos').style.display = 'block';
+    docuemnt.getElementById('ubi-T-Aguas-de-Oro').style.display = 'block';
+    docuemnt.getElementById('ubi-T-del-Areopuerto').style.display = 'block';
+    docuemnt.getElementById('ubi-T-Aguas-de-Oro').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-Barrio').style.display = 'block';
+    docuemnt.getElementById('ubi-T-Omnibus-Villa').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-Minibuses').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-La-Cumbre').style.display = 'block';
+    docuemnt.getElementById('ubi-Deposito-Urbano').style.display = 'block';
+    docuemnt.getElementById('ubi-Metrobus2').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-Retiro').style.display = 'block';
+}
+Si el usuario selecciona el valor: "384B", se ejecutara: {
+    docuemnt.getElementById('ubi-T-de-Los-Altos').style.display = 'block';
+    docuemnt.getElementById('ubi-T-Aguas-de-Oro').style.display = 'block';
+    docuemnt.getElementById('ubi-T-del-Aeropuerto').style.display = 'block';
+    docuemnt.getElementById('ubi-T-Aguas-de-Oro').style.display = 'block';
+    docuemnt.getElementById('ubi-T-Omnibus-villa').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-La-Cumbre').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-Retiro').style.display = 'block';
+    docuemnt.getElementById('ubi-Diagonal').style.display = 'block';
+    docuemnt.getElementById('ubi-Deposito-Urbano').style.display = 'block';
+}
+Si el usuario selecciona el valor: "570", se ejecutara: {
+    docuemnt.getElementById('ubi-T-de-Barrio').style.display = 'block';
+    docuemnt.getElementById('ubi-Av-Principal').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-Retiro').style.display = 'block';
+    docuemnt.getElementById('ubi-Av-Principal').style.display = 'block';
+    docuemnt.getElementById('ubi-Deposito-FONO-BUS').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-La-Cumbre').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-Los-Altos').style.display = 'block';
+    docuemnt.getElementById('ubi-T-de-La-Cumbre').style.display = 'block';
+    docuemnt.getElementById('ubi-Deposito-Urbano').style.display = 'block';
+    docuemnt.getElementById('ubi-Metrobus2').style.display = 'block';
+    docuemnt.getElementById('ubi-Metrobus6').style.display = 'block';
+}

@@ -938,11 +938,19 @@ async function enviarMensajePerzonalizado() {
         const res = await fetch(apiUrl, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ content: mensaje })
+            body: JSON.stringify({
+                embeds: [
+                    {
+                        title: "📌 Mensaje Personalizado",
+                        description: mensaje,
+                        color: 5814783 // azul (puedes cambiar el color con otro número decimal)
+                    }
+                ]
+            })
         });
         if (res.ok) {
             const aviso = document.createElement("p");
-            aviso.textContent = "✅ Mensaje enviado correctamente.";
+            aviso.textContent = "✅ Embed enviado correctamente.";
             aviso.className = "texto-verde";
             aviso.style.fontWeight = "bold";
             contenedor.appendChild(aviso);
@@ -950,7 +958,7 @@ async function enviarMensajePerzonalizado() {
             document.getElementById("msg-perz-api").value = "";
         } else {
             const aviso = document.createElement("p");
-            aviso.textContent = "❌ Error al enviar el mensaje. Revisa la API.";
+            aviso.textContent = "❌ Error al enviar el embed. Revisa la API.";
             aviso.className = "texto-rojo";
             contenedor.appendChild(aviso);
         }

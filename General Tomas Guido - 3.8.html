@@ -733,10 +733,10 @@
             <h3>Enviar Mensaje Perzonalizado a Discord</h3>
             <p style="color: red;">⚠️ Asegurate de que la API que introduzcas sea valida, si no es asi, no se podra enviar el mensaje correctamnete ⚠️</p>
             <p>Si no sabes cual es la API especifica para mandar el mensaje a ese canal, haz click en el siguiente boton:</p>
-            <button type="button" onclick="window.open('https://abelcarftok.github.io/GTG/webhooks.html')">Ver Webhooks Activos</button>  
+            <button type="button" onclick="window.open('./webhooks.html')">Ver Webhooks Activos</button>  
             <p style="color: red;">⚠️ Si no sabes como usar objetos especiales en los mensajes, te recomiendo que un creador de mensajes para discord ⚠️</p>
             <p>Te recomiendo usar mi creador de arcchivos MD, bueno tu escribiras y arribas podras colocar los elementos especiales, para acceder a mi creador haz clic en el siguiente boton:</p>
-            <button type="button" onclick="window.open('https://abelcarftok.github.io/GTG/md.html')">Ir al creador de mensajes para Discord</button>
+            <button type="button" onclick="window.open('./md.html')">Ir al creador de mensajes para Discord</button>
             <div class="campo">
                 <label for="msg-perz-texto">Mensaje:</label>
                 <textarea id="msg-perz-texto" rows="4" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid #607d8b; background: #4a647d; color: #ecf0f1;" placeholder="Escribe el mensaje que quieres enviar..."></textarea>
@@ -888,54 +888,74 @@
                 </div>
             </div>
             <div class="seccion" id="panel-ubicaciones-botones" style="display: none;">
-                <h1>Ubicación del Chofer</h1>
-                <div id="panel-ubicaciones">
-                    <div class="seccion">
-                        <h2>Ciudad</h2>
-                        <div class="separador"></div>
-                        <div class="acciones">
-                            <button type="button" onclick="guardarUbicacion('Av. Principal'); entendidoAlarma();">Av. Principal</button>
-                            <button type="button" onclick="guardarUbicacion('Centro'); entendidoAlarma();">Centro</button>
-                        </div>
+    <h3>Seleccione su ramal actual</h3>
+    <div class="campo">
+    <select>
+        <option value="" disabled selected>Seleccione su ramal</option>
+        <option value="9A">Linea 9 - Ramal A</option>
+        <option value="9B">Linea 9 - Ramal B</option>
+        <option value="271A">Linea 271 - Ramal A</option>
+        <option value="271B">Linea 271 - Ramal B</option>
+        <option value="164A">Linea 164 - Ramal A</option>
+        <option value="164B">Linea 164 - Ramal B</option>
+        <option value="373A">Linea 373 - Ramal A</option>
+        <option value="373B">Linea 373 - Ramal B</option>
+        <option value="384A">Linea 384 - Ramal A</option>
+        <option value="384B">Linea 384 - Ramal B</option>
+        <option value="570">Linea 570 - Ramal A</option>
+    </select>
+    </div>  
+</div>
+<div class="seccion" id="panel-ubicaciones-btns" style="display: none;">
+    <h1>Ubicación del Chofer</h1>
+    <div id="panel-ubicaciones">
+        <div class="seccion">
+            <h2>Ciudad</h2>
+            <div class="separador"></div>
+            <div class="acciones">
+                <button type="button" id="ubi-Av-Principal" onclick="guardarUbicacion('Av. Principal'); entendidoAlarma();">Av. Principal</button>
+                <button type="button" id="ubi-Centro" onclick="guardarUbicacion('Centro'); entendidoAlarma();">Centro</button>
+            </div>
+        </div>
+        <div class="seccion">
+            <h2>Depositos</h2>
+            <div class="separador"></div>
+            <div class="acciones">
+                <button type="button" id="ubi-Deposito-FONO-BUS" onclick="guardarUbicacion('Deposito FONO BUS'); entendidoAlarma();">Deposito FONO BUS</button>
+                <button type="button" id="ubi-Deposito-General-Tomas-Guido" onclick="guardarUbicacion('Deposito General Tomas Guido'); entendidoAlarma();">Deposito General Tomas Guido</button>
+                <button type="button" id="ubi-Deposito-Larga-Distancia" onclick="guardarUbicacion('Deposito Larga Distancia'); entendidoAlarma();">Deposito Larga Distancia</button>
+                <button type="button" id="ubi-Deposito-Urbano" onclick="guardarUbicacion('Deposito Urbano'); entendidoAlarma();">Deposito Urbano</button>
+            </div>
+        </div>
+                <div class="seccion">
+                    <h2>Metrobuses</h2>
+                    <div class="separador"></div>
+                    <div class="acciones">
+                        <button type="button" id="ubi-Metrobus-2" onclick="guardarUbicacion('Metrobus 2 Carriles'); entendidoAlarma();">Metrobus 2 Carriles</button>
+                        <button type="button" id="ubi-Metrobus-6" onclick="guardarUbicacion('Metrobus 6 Carriles'); entendidoAlarma();">Metrobus 6 Carriles</button>
                     </div>
-                    <div class="seccion">
-                        <h2>Depositos</h2>
-                        <div class="separador"></div>
-                        <div class="acciones">
-                            <button type="button" onclick="guardarUbicacion('Deposito FONO BUS'); entendidoAlarma();">Deposito FONO BUS</button>
-                            <button type="button" onclick="guardarUbicacion('Deposito General Tomas Guido'); entendidoAlarma();">Deposito General Tomas Guido</button>
-                            <button type="button" onclick="guardarUbicacion('Deposito Larga Distancia'); entendidoAlarma();">Deposito Larga Distancia</button>
-                            <button type="button" onclick="guardarUbicacion('Deposito Urbano'); entendidoAlarma();">Deposito Urbano</button>
-                        </div>
+                </div>
+                <div class="seccion">
+                    <h2>Lugares Publicos</h2>
+                    <div class="separador"></div>
+                    <div class="acciones">
+                        <button type="button" id="ubi-Patio-de-Eventos" onclick="guardarUbicacion('Patio de Eventos'); entendidoAlarma();">Patio de Eventos</button>
+                        <button type="button" id="ubi-Plaza-La-Cumbre" onclick="guardarUbicacion('Plaza La Cumbre'); entendidoAlarma();">Plaza La Cumbre</button>
+                        <button type="button" id="ubi-Diagonal" onclick="guardarUbicacion('Diagonal 1'); entendidoAlarma();">Diagonal 1</button>
                     </div>
-                    <div class="seccion">
-                        <h2>Metrobuses</h2>
+                </div>
+                <div class="seccion">
+                    <h2>Terminales</h2>
                         <div class="separador"></div>
                         <div class="acciones">
-                            <button type="button" onclick="guardarUbicacion('Metrobus 2 Carriles'); entendidoAlarma();">Metrobus 2 Carriles</button>
-                            <button type="button" onclick="guardarUbicacion('Metrobus 6 Carriles'); entendidoAlarma();">Metrobus 6 Carriles</button>
-                        </div>
-                    </div>
-                    <div class="seccion">
-                        <h2>Lugares Publicos</h2>
-                        <div class="separador"></div>
-                        <div class="acciones">
-                            <button type="button" onclick="guardarUbicacion('Patio de Eventos'); entendidoAlarma();">Patio de Eventos</button>
-                            <button type="button" onclick="guardarUbicacion('Plaza La Cumbre'); entendidoAlarma();">Plaza La Cumbre</button>
-                        </div>
-                    </div>
-                    <div class="seccion">
-                        <h2>Terminales</h2>
-                        <div class="separador"></div>
-                        <div class="acciones">
-                            <button type="button" onclick="guardarUbicacion('Terminal Aguas de Oro'); entendidoAlarma();">Terminal Aguas de Oro</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal del Areopuerto'); entendidoAlarma();">Terminal del Areopuerto</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal de Barrio'); entendidoAlarma();">Terminal de Barrio</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal de La Cumbre'); entendidoAlarma();">Terminal de La Cumbre</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal de Los Altos'); entendidoAlarma();">Terminal de Los Altos</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal de Minibuses'); entendidoAlarma();">Terminal de Minibuses</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal de Omnibus Villa'); entendidoAlarma();">Terminal de Omnibus Villa</button>
-                            <button type="button" onclick="guardarUbicacion('Terminal de Retiro'); entendidoAlarma();">Terminal de Retiro</button>
+                            <button type="button" id="ubi-T-Aguas-de-Oro" onclick="guardarUbicacion('Terminal Aguas de Oro'); entendidoAlarma();">Terminal Aguas de Oro</button>
+                            <button type="button" id="ubi-T-del-Areopuerto" onclick="guardarUbicacion('Terminal del Areopuerto'); entendidoAlarma();">Terminal del Areopuerto</button>
+                            <button type="button" id="ubi-T-de-Barrio" onclick="guardarUbicacion('Terminal de Barrio'); entendidoAlarma();">Terminal de Barrio</button>
+                            <button type="button" id="ubi-T-de-La-Cumbre" onclick="guardarUbicacion('Terminal de La Cumbre'); entendidoAlarma();">Terminal de La Cumbre</button>
+                            <button type="button" id="ubi-T-de-Los-Altos" onclick="guardarUbicacion('Terminal de Los Altos'); entendidoAlarma();">Terminal de Los Altos</button>
+                            <button type="button" id="ubi-T-de-Minibuses" onclick="guardarUbicacion('Terminal de Minibuses'); entendidoAlarma();">Terminal de Minibuses</button>
+                            <button type="button" id="ubi-T-Omnibus-Villa" onclick="guardarUbicacion('Terminal de Omnibus Villa'); entendidoAlarma();">Terminal de Omnibus Villa</button>
+                            <button type="button" id="ubi-T-de-Retiro" onclick="guardarUbicacion('Terminal de Retiro'); entendidoAlarma();">Terminal de Retiro</button>
                         </div>
                     </div>
                 </div>
@@ -1560,5 +1580,42 @@ setTimeout(() => {
                 refrescarColectivos();
             }, 2000);
     </script>
+    <script>
+document.addEventListener("DOMContentLoaded", () => {
+    const selectRamal = document.querySelector("#panel-ubicaciones-botones select");
+    const panelBtns = document.getElementById("panel-ubicaciones-btns");
+    const todosBotones = document.querySelectorAll("#panel-ubicaciones button");
+    const ramales = {
+        "9A": ["ubi-T-de-Barrio","ubi-Av-Principal","ubi-T-de-Retiro","ubi-Metrobus-2","ubi-Metrobus-6","ubi-T-de-Minibuses","ubi-Deposito-Urbano","ubi-T-de-La-Cumbre"],
+        "9B": ["ubi-T-de-Barrio","ubi-Av-Principal","ubi-T-de-Retiro","ubi-Diagonal","ubi-Metrobus-2","ubi-Metrobus-6","ubi-T-de-Minibuses","ubi-Deposito-Urbano","ubi-T-de-La-Cumbre"],
+        "271A": ["ubi-T-Omnibus-Villa","ubi-Deposito-General-Tomas-Guido","ubi-Av-Principal","ubi-T-de-Retiro","ubi-Diagonal","ubi-Metrobus-2","ubi-Metrobus-6","ubi-Deposito-Urbano","ubi-Patio-de-Eventos","ubi-T-de-La-Cumbre","ubi-T-Aguas-de-Oro"],
+        "271B": ["ubi-T-Omnibus-Villa","ubi-Deposito-General-Tomas-Guido","ubi-Av-Principal","ubi-T-de-Retiro","ubi-Diagonal","ubi-Metrobus-2","ubi-Metrobus-6","ubi-Deposito-Urbano","ubi-Patio-de-Eventos","ubi-T-de-La-Cumbre","ubi-T-del-Areopuerto"],
+        "164A": ["ubi-Deposito-FONO-BUS","ubi-Deposito-General-Tomas-Guido","ubi-Av-Principal","ubi-Diagonal","ubi-T-de-Minibuses","ubi-T-de-Retiro"],
+        "164B": ["ubi-Deposito-Urbano","ubi-T-de-Minibuses","ubi-Deposito-FONO-BUS","ubi-Av-Principal","ubi-T-de-Retiro","ubi-Deposito-Larga-Distancia","ubi-Deposito-General-Tomas-Guido"],
+        "373A": ["ubi-T-del-Areopuerto","ubi-T-de-Barrio","ubi-Av-Principal","ubi-T-de-Retiro","ubi-Metrobus-2","ubi-Metrobus-6","ubi-Deposito-Urbano","ubi-T-de-La-Cumbre","ubi-T-de-Los-Altos"],
+        "373B": ["ubi-T-del-Areopuerto","ubi-Av-Principal","ubi-T-de-Retiro","ubi-T-de-La-Cumbre"],
+        "384A": ["ubi-T-de-Los-Altos","ubi-T-Aguas-de-Oro","ubi-T-del-Areopuerto","ubi-T-de-Barrio","ubi-T-Omnibus-Villa","ubi-T-de-Minibuses","ubi-T-de-La-Cumbre","ubi-Deposito-Urbano","ubi-Metrobus-2","ubi-T-de-Retiro"],
+        "384B": ["ubi-T-de-Los-Altos","ubi-T-Aguas-de-Oro","ubi-T-del-Areopuerto","ubi-T-Omnibus-Villa","ubi-T-de-La-Cumbre","ubi-T-de-Retiro","ubi-Diagonal","ubi-Deposito-Urbano"],
+        "570": ["ubi-T-de-Barrio","ubi-Av-Principal","ubi-T-de-Retiro","ubi-Deposito-FONO-BUS","ubi-T-de-La-Cumbre","ubi-T-de-Los-Altos","ubi-Deposito-Urbano","ubi-Metrobus-2","ubi-Metrobus-6"]
+    };
+    function resetBotones() {
+        todosBotones.forEach(btn => btn.style.display = "none");
+    }
+    function mostrarRamal(ramal) {
+        resetBotones();
+        if (ramales[ramal]) {
+            ramales[ramal].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) btn.style.display = "block";
+            });
+            panelBtns.style.display = "block";
+        }
+    }
+    selectRamal.addEventListener("change", e => {
+        mostrarRamal(e.target.value);
+    });
+    resetBotones();
+});
+</script>
 </body>
 </html>
