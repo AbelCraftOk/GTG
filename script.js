@@ -228,12 +228,23 @@ function horaActual(inputId) {
     const minutos = String(ahora.getMinutes()).padStart(2, '0');
     document.getElementById(inputId).value = `${horas}:${minutos}`;
 }
+<script>
 function verificarChofer() {
     const chofer = document.getElementById("chofer").value.trim();
-    if (chofer === "@abelcraft_ok664") {
-        seleccionarInterno('9');
+
+    // Lista de choferes permitidos
+    const choferesPermitidos = [
+        "@abelcraft_ok664",
+        "@lolo_jaja"
+    ];
+
+    if (choferesPermitidos.includes(chofer)) {
+        seleccionarInterno('9'); // Acción si está permitido
     } else {
         alert("No tienes permisos para acceder a este interno");
     }
 }
+</script>
+
+
 window.verificarChofer = verificarChofer;
