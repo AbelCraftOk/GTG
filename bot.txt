@@ -1,5 +1,0 @@
-Token: MTQxNjg4NTUxMzc4ODU5MjE2MA.Gxt0es.yKBRYcC-C9ZQnoPn59OxALoMIbIXU7osHJky28
-URL OAuth2: https://discord.com/oauth2/authorize?client_id=1416885513788592160&permissions=8&integration_type=0&scope=bot
-ID de la aplicacion: 1416885513788592160
-
-https://discord.com/oauth2/authorize?client_id=1416885513788592160&scope=bot&permissions=2048
