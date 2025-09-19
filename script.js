@@ -70,51 +70,6 @@ function seleccionarInterno(interno) {
     document.getElementById('boton-interno').textContent = `Interno: ${interno}`;
     cerrarMenuInternos();
 }
-function abrirMenuCargarVuelta() {
-    if (!ramalSeleccionado || !internoSeleccionado) {
-        alert("Seleccione ramal e interno primero.");
-        return;
-    }
-    document.getElementById('menu-cargar-vuelta').style.display = 'flex';
-}
-function cargarVuelta() {
-    const ida = document.getElementById('ida-cargar').value.trim();
-    const vuelta = document.getElementById('vuelta-cargar').value.trim();
-    if (!ida || !vuelta) {
-        alert("Complete los horarios de ida y vuelta.");
-        return;
-    }
-    vueltas.push({ ida, vuelta, invalidada: false });
-    alert(`Vuelta cargada: Ida ${ida} - Vuelta ${vuelta}`);
-    document.getElementById('ida-cargar').value = "";
-    document.getElementById('vuelta-cargar').value = "";
-}
-function invalidarVuelta() {
-    if (vueltas.length === 0) {
-        alert("No hay vueltas para invalidar.");
-        return;
-    }
-    vueltas[vueltas.length - 1].invalidada = true;
-    alert("Última vuelta invalidada.");
-}
-function abrirMenuVueltasCargadas() {
-    const lista = document.getElementById('vueltas-lista');
-    if (vueltas.length === 0) {
-        lista.innerHTML = "<div class='texto-rojo'>No hay vueltas cargadas.</div>";
-    } else {
-        lista.innerHTML = "";
-        vueltas.forEach((v, i) => {
-            const estadoTexto = v.invalidada ? '<em>(Invalidada)</em>' : '';
-            lista.innerHTML += `<div class="burbuja">
-                <strong>Vuelta ${i + 1}:</strong> Ida: ${v.ida} | Vuelta: ${v.vuelta} ${estadoTexto}
-            </div>`;
-        });
-    }
-    document.getElementById('menu-vueltas-cargadas').style.display = 'flex';
-}
-function cerrarMenuVueltasCargadas() {
-    document.getElementById('menu-vueltas-cargadas').style.display = 'none';
-}
 function generarCodigoUnico() {
     const año = new Date().getFullYear();
     const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -267,110 +222,18 @@ function iniciarTextoRotativo() {
         i++;
     }, 500);
 }
-
 function horaActual(inputId) {
     const ahora = new Date();
     const horas = String(ahora.getHours()).padStart(2, '0');
     const minutos = String(ahora.getMinutes()).padStart(2, '0');
     document.getElementById(inputId).value = `${horas}:${minutos}`;
 }
-let alarmaInterval;
-let audio = new Audio('./alarm.mp3');
-audio.loop = true;
-let alarmaDesactivada = false;
-function iniciarAlarma() {
-    alarmaDesactivada = false;
-    alarmaInterval = setInterval(() => {
-        if (!alarmaDesactivada) {
-            audio.play();
-        }
-    }, 90 * 1000); // 1 minuto 30 segundos
-}
-function entendidoAlarma() {
-    console.log("✅ Arrancado sistema de Alarma");
-    audio.pause();
-    audio.currentTime = 0;
-    alarmaDesactivada = true;
-    if (alarmaInterval) {
-        clearInterval(alarmaInterval);
-        alarmaInterval = null;
+function verificarChofer() {
+    const chofer = document.getElementById("chofer").value.trim();
+    if (chofer === "@abelcraft_ok664") {
+        seleccionarInterno('9');
+    } else {
+        alert("No tienes permisos para acceder a este interno");
     }
 }
-function desactivarAlarma() {
-    alarmaDesactivada = true;
-    audio.pause();
-    audio.currentTime = 0;
-    if (alarmaInterval) {
-        clearInterval(alarmaInterval);
-        alarmaInterval = null;
-    }
-}
-function pendienteEnterINPUT(event) {
-    if (event.key === "Enter") {
-        event.preventDefault();
-        CodigoZonaUbi();
-    }
-}
-function CodigoZonaUbi() {
-    const codigo = document.getElementById("codigo-zona").value;
-    switch (codigo) {
-        case "1":
-            guardarUbicacion("Av. Principal"); entendidoAlarma();
-            break;
-        case "2":
-            guardarUbicacion("Centro"); entendidoAlarma();
-            break;
-        case "3":
-            guardarUbicacion("Deposito FONO BUS"); entendidoAlarma();
-            break;
-        case "4":
-            guardarUbicacion("Deposito General Tomas Guido"); entendidoAlarma();
-            break;
-        case "5":
-            guardarUbicacion("Deposito Larga Distancia"); entendidoAlarma();
-            break;
-        case "6":
-            guardarUbicacion("Deposito Urbano"); entendidoAlarma();
-            break;
-        case "7":
-            guardarUbicacion("Metrobus 2 Carriles"); entendidoAlarma();
-            break;
-        case "8":
-            guardarUbicacion("Metrobus 6 Carriles"); entendidoAlarma();
-            break;
-        case "9":
-            guardarUbicacion("Patio de Eventos"); entendidoAlarma();
-            break;
-        case "10":
-            guardarUbicacion("Plaza La Cumbre"); entendidoAlarma();
-            break;
-        case "11":
-            guardarUbicacion("Terminal Aguas de Oro"); entendidoAlarma();
-            break;
-        case "12":
-            guardarUbicacion("Terminal del Areopuerto"); entendidoAlarma();
-            break;
-        case "13":
-            guardarUbicacion("Terminal de Barrio"); entendidoAlarma();
-            break;
-        case "14":
-            guardarUbicacion("Terminal de La Cumbre"); entendidoAlarma();
-            break;
-        case "15":
-            guardarUbicacion("Terminal de Los Altos"); entendidoAlarma();
-            break;
-        case "16":
-            guardarUbicacion("Terminal de Minibuses"); entendidoAlarma();
-            break;
-        case "17":
-            guardarUbicacion("Terminal de Omnibus Villa"); entendidoAlarma();
-            break;
-        case "18":
-            guardarUbicacion("Terminal de Retiro"); entendidoAlarma();
-            break;
-        default:
-            alert("⚠️ Código de zona no válido.");
-            break;
-    }
-    document.getElementById("codigo-zona").value = "";
-}
+window.verificarChofer = verificarChofer;

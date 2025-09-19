@@ -1,0 +1,19 @@
+Titulo: "Cambios en los Internos, Cambios en las Lineas y sus recorridos!!!!"
+Mensaje: "Se hicieron cambios en cuestion de la web, aquellas cosas viejas, etc. Ademas muchos ajustes en el tema de internos y las lineas."
+Cambios: "
+ - Se sacaron los internos: 1, 2, 3, 4, 5, 6 y 7.
+ - Se elimino el sistema de ubicaciones y todo lo relacionado a ello.
+ - Se agrego un metodo de seguridad para que no todos los choferes puedan seleccionar los internos privados.
+ - Con la modificaciones de las lineas, las lineas que estan disponibles para circular actualmente son:
+   - Linea 9.
+   - Linea 25.
+   - Linea 164.
+   - Linea 271.
+   - Linea 299. 
+ - Con la modificaciones de las lineas, las lineas que NO estan disponibles para circular actualmente son:
+   - Linea 84.
+   - Linea 373.
+   - Linea 384.
+   - Linea 505.
+   - Linea 570.
+"

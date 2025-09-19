@@ -524,7 +524,6 @@ window.login = async function () {
                 mostrarPestania('developer');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
-                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
                 document.getElementById('boton-pestanias').style.display = 'flex';
             }
@@ -533,15 +532,14 @@ window.login = async function () {
                 mostrarPestania('inspectores');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
-                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
+                document.getElementById('boton-pestanias').style.display = 'flex';
             }
             else if (rol === "personal") {
                 alert('Logueo exitoso, tu eres del Perosnal de la empresa GTG');
                 mostrarPestania('personal');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
-                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
             else if (rol === "admin") {
@@ -549,7 +547,6 @@ window.login = async function () {
                 mostrarPestania('admin');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
-                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
                 document.getElementById('boton-pestanias').style.display = 'flex';
             }
@@ -558,7 +555,6 @@ window.login = async function () {
                 mostrarPestania('admin');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
-                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
                 document.getElementById('boton-pestanias').style.display = 'flex';
             }
@@ -567,7 +563,6 @@ window.login = async function () {
                 mostrarPestania('usuario');
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
-                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
             }
         } else {
@@ -621,7 +616,6 @@ window.autoLogin = async function () {
                 mostrarPestania(pestania);
                 document.getElementById('cerrarSesion').style.display = 'block';
                 document.getElementById('feedback').style.display = 'flex';
-                document.getElementById('micro-btn').style.display = 'flex';
                 document.getElementById('logueandocampo').style.display = 'none';
                 document.getElementById('auto-login').style.display = 'none';
             }
@@ -706,7 +700,6 @@ const titulo = document.getElementById('titulo-pre-actualizacion').value.trim();
         console.error(error);
     }
 };
-window.guardarUbicacion = guardarUbicacion;
 async function enviarPlanilla() {
     const chofer = document.getElementById('chofer').value.trim();
     if (!chofer) {
@@ -717,89 +710,6 @@ async function enviarPlanilla() {
     await eliminarUbicacionesChofer(chofer);
 }
 window.enviarPlanilla = enviarPlanilla;
-async function eliminarUbicacionesChofer(chofer) {
-    try {
-        const q = query(collection(db, "ubication"), where("chofer", "==", chofer));
-        const snapshot = await getDocs(q);
-        if (snapshot.empty) {
-            console.log("No había ubicaciones para eliminar.");
-            return;
-        }
-        const deletes = snapshot.docs.map(docSnap => deleteDoc(docSnap.ref));
-        await Promise.all(deletes);
-        console.log(`Se eliminaron ${snapshot.size} ubicaciones del chofer ${chofer}`);
-    } catch (error) {
-        console.error("Error eliminando ubicaciones:", error);
-    }
-}
-async function refrescarColectivos() {
-    const listaDiv = document.getElementById("colectivos-lista");
-    listaDiv.innerHTML = "Cargando...";
-    try {
-        const snapshot = await getDocs(collection(db, "ubication"));
-        if (snapshot.empty) {
-            listaDiv.innerHTML = '<span style="color:red; font-weight:bold;">No hay colectivos circulando.</span>';
-            return;
-        }
-        listaDiv.innerHTML = "";
-        snapshot.forEach(docSnap => {
-            const data = docSnap.data();
-            const linea = `[${data.ramal}] - ${data.chofer} - ${data.ubicacion} - ${data.sentido} - ${data.time}`;
-            const p = document.createElement("p");
-            p.classList.add("colectivo-linea");
-            p.innerHTML = `
-                <span style="color: #00BFFF; font-weight: bold;">Línea General Tomas Guido [${data.ramal}]</span>
-                <span style="color: white; font-weight: bold;"> - </span>
-                <span style="color: #FFA500; font-weight: bold;">${data.sentido}</span>
-                <span style="color: white; font-weight: bold;"> - </span>
-                <span style="color: #32CD32; font-weight: bold;">En: ${data.ubicacion}</span>
-                <span style="color: white; font-weight: bold;"> - </span>
-                <span style="color: #FF0000; font-weight: bold;">Chofer: ${data.chofer}</span>
-                <span style="color: white; font-weight: bold;"> - </span>
-                <span style="color: #008000; font-weight: bold;">${data.time}</span>
-            `;
-            listaDiv.appendChild(p);
-            listaDiv.appendChild(document.createElement("div"));
-        });
-    } catch (error) {
-        console.error("Error al cargar colectivos:", error);
-        listaDiv.innerHTML = "Error al cargar la información.";
-    }
-}
-window.refrescarColectivos = refrescarColectivos;
-async function guardarUbicacion(ubicacion) {
-    const chofer = document.getElementById('chofer').value.trim();
-    const ramal = ramalSeleccionado;
-    const sentido = document.getElementById('sentido').value;
-    if (!chofer || !ramal || !sentido) {
-        alert("⚠️ Faltan datos para guardar la ubicación.");
-        return;
-    }
-    const fecha = new Date();
-    const horaFormato = `${fecha.getHours().toString().padStart(2,'0')}:${fecha.getMinutes().toString().padStart(2,'0')}`;
-    try {
-        await setDoc(doc(db, "ubication", chofer), {
-            chofer, ubicacion, time: horaFormato, ramal, sentido
-        });
-        alert("📍 Ubicación enviada");
-        console.log(`Ubicación "${ubicacion}" guardada para ${chofer}`);
-        const webhookUrl = enlaces();
-        const embed = {
-            title: "🚌 Nueva Ubicación Registrada",
-            description: `El chofer @${chofer.replace('@','')} registró una ubicación.\n\n📍 ${ubicacion}\n🛣️ Ramal: ${ramal}\n➡️ Sentido: ${sentido}\n\n[Visualizar Últimas Ubicaciones de Recorridos Actuales](https://abelcraftok.github.io/GTG/ubication.html)`,
-            color: 3447003,
-            footer: { text: `📅 ${new Date().toLocaleString()}` }
-        };
-        await fetch(webhookUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ embeds: [embed] })
-        });
-    } catch (error) {
-        console.error("❌ Error guardando ubicación:", error);
-    }
-}
-window.guardarUbicacion = guardarUbicacion;
 const recorridoPorRamal = {
     "570": 1,
     "373A": 2,
@@ -860,21 +770,6 @@ function mostrarVueltasGenerales() {
     });
 }
 window.mostrarVueltasGenerales = mostrarVueltasGenerales;
-async function TerminarReco() {
-    try {
-        const choferId = document.getElementById("chofer").value.trim();
-        if (!choferId) {
-            alert("Debe ingresar un ID de chofer antes de eliminar la ubicación.");
-            return;
-        }
-        await deleteDoc(doc(db, "ubication", choferId));
-        console.log(`Ubicación de ${choferId} eliminada.`);
-        alert(`Ubicación de ${choferId} eliminada.`);
-    } catch (error) {
-        console.error("Error eliminando la ubicación:", error);
-        alert("Error al eliminar la ubicación");
-    }
-}
 async function nuevoViajeAgregado() {
   const chofer = document.getElementById("chofer-viaje").value;
   const costo = document.getElementById("costo-viaje").value;
@@ -972,4 +867,3 @@ async function enviarMensajePerzonalizado() {
 }
 window.enviarMensajePerzonalizado = enviarMensajePerzonalizado;
 window.guardarPlanilla = guardarPlanilla;
-window.TerminarReco = TerminarReco;
