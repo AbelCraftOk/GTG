@@ -86,11 +86,14 @@ async function guardarPlanilla() {
     const planillas1 = document.getElementById('planillas1').value.trim();
     const planillas2 = document.getElementById('planillas2').value.trim();
     const planillas3 = document.getElementById('planillas3').value.trim();
+
     if (!chofer || !ramalSeleccionado || !internoSeleccionado || !planillas1 || vueltasGenerales.length === 0) {
         alert("⚠️ Debes completar los campos obligatorios y cargar al menos una vuelta general.");
         return;
     }
+
     try {
+        // Crear objeto planilla
         const nuevaPlanilla = {
             chofer,
             interno: internoSeleccionado,
@@ -104,17 +107,44 @@ async function guardarPlanilla() {
             timestamp: new Date(),
             codigoPlanilla
         };
+
+        // Guardar planilla en la colección "planillas"
         await addDoc(collection(db, "planillas"), nuevaPlanilla);
         console.log("✅ Planilla registrada");
+
+        // Guardar capturas asociadas (si existen)
+        const archivos = document.getElementById("capturas").files;
+        if (archivos.length > 0) {
+            const dataCapturas = {};
+            for (let i = 0; i < archivos.length && i < 8; i++) {
+                const binario = await convertirABinario(archivos[i]); // función definida en I-script.js
+                dataCapturas[`img${i + 1}`] = binario;
+            }
+            try {
+                await setDoc(doc(db, "capturas", codigoPlanilla), dataCapturas);
+                console.log("📸 Capturas registradas con ID:", codigoPlanilla);
+            } catch (err) {
+                console.error("Error al guardar capturas:", err);
+            }
+        } else {
+            console.log("ℹ️ No se subieron capturas en esta planilla.");
+        }
+
+        // Enviar mensaje a Discord
         enviarMensaje(nuevaPlanilla);
+
+        // Eliminar ubicación del chofer si existe
         try {
             await deleteDoc(doc(db, "ubication", chofer));
             console.log(`Ubicación de ${chofer} eliminada tras enviar planilla.`);
         } catch (err) {
             console.warn(`No se pudo eliminar la ubicación de ${chofer}:`, err);
         }
+
+        // Reset de variables y campos
         vueltasGenerales = [];
         limpiarCampos();
+
     } catch (error) {
         console.error("Error al guardar planilla:", error);
         alert("❌ Error al guardar planilla.");
@@ -867,3 +897,36 @@ async function enviarMensajePerzonalizado() {
 }
 window.enviarMensajePerzonalizado = enviarMensajePerzonalizado;
 window.guardarPlanilla = guardarPlanilla;
+async function buscarCapturas() {
+    const codigo = document.getElementById("codigoCaptura").value.trim();
+    const contenedor = document.getElementById("resultadoCapturas");
+    contenedor.innerHTML = "";
+
+    if (!codigo) {
+        contenedor.innerHTML = "<p style='color:red;'>⚠️ Ingresa un código de planilla.</p>";
+        return;
+    }
+
+    try {
+        const docRef = doc(db, "capturas", codigo);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            let html = "<h4>📸 Capturas encontradas:</h4><div class='grid-capturas'>";
+            Object.keys(data).forEach((key) => {
+                const binario = data[key];
+                const imgSrc = `data:image/png;base64,${binario}`;
+                html += `<img src="${imgSrc}" alt="${key}" style="max-width:200px; border:1px solid #ccc; margin:5px; border-radius:6px;">`;
+            });
+            html += "</div>";
+            contenedor.innerHTML = html;
+        } else {
+            contenedor.innerHTML = "<p style='color:orange;'>⚠️ No se encontraron capturas para este código.</p>";
+        }
+    } catch (err) {
+        console.error("Error al buscar capturas:", err);
+        contenedor.innerHTML = "<p style='color:red;'>❌ Error al buscar capturas.</p>";
+    }
+}
+window.buscarCapturas = buscarCapturas;

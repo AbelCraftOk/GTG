@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>MiniProyecto - Capturas</title>
+  <script type="module" src="I-script2.js"></script>
+  <script src="I-script.js"></script>
+</head>
+<body>
+  <h1>Cargar Capturas de Una Planilla</h1>
+  <p>Seleccionas las capturas que deseas cargar</p>
+  <input type="text" id="id-planilla" placeholder="Escribe la ID de la planilla a la que se asignara">
+  <br><br>
+  <input type="file" id="imagenes" multiple accept="image/*">
+  <br><br>
+  <button onclick="subirImagenes()">Subir Capturas</button>
+  <div class="separador"></div>
+  <h1>Ver Capturas de Una Planilla</h1>
+  <p>Coloca la ID de la planilla de la que deseas verlas capturas</p>
+  <input type="text" id="buscar-id" placeholder="Coloca aqui la ID">
+  <br><br>
+  <button onclick="verImagenes()">Ver Capturas</button>
+  <div id="contenedor-imagenes"></div>
+</body>
+</html>
