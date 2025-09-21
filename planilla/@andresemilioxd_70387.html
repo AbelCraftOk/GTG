@@ -23,12 +23,11 @@
             left: 0;
             width: 30vw;
             height: 60vh;
-            background: url('./../fondo.png') left center/contain no-repeat;
+            background: url('./fondo.png') left center/contain no-repeat;
             opacity: 1;
             z-index: 0;
             pointer-events: none;
             transform: translateY(-50%) rotate(-90deg);
-            /* filter: invert(0.8) hue-rotate(180deg); /* Descomenta si tu imagen necesita esto en modo oscuro */
         }
         body::after {
             content: "";
@@ -37,12 +36,11 @@
             right: 0;
             width: 30vw;
             height: 60vh;
-            background: url('./../fondo.png') right center/contain no-repeat;
+            background: url('./fondo.png') right center/contain no-repeat;
             opacity: 1;
             z-index: 0;
             pointer-events: none;
             transform: translateY(-50%) rotate(90deg);
-            /* filter: invert(0.8) hue-rotate(180deg); /* Descomenta si tu imagen necesita esto en modo oscuro */
         }
         .contenedor {
             position: relative;
@@ -91,6 +89,8 @@
         .campo input[type="number"],
         .campo input[type="time"],
         .campo input[type="password"],
+        .campo input[type="date"],
+        .campo input[type="file"],
         .campo select {
             flex: 1;
             padding: 7px 10px;
@@ -105,6 +105,8 @@
         .campo input[type="number"]:focus,
         .campo input[type="time"]:focus,
         .campo input[type="password"]:focus,
+        .campo input[type="date"]:focus,
+        .campo input[type="file"]:focus,
         .campo select:focus {
             border-color: #3498db;
             outline: none;
@@ -117,7 +119,7 @@
         }
         .acciones button {
             flex: 1 1 45%;
-            background: #3498db; /* Azul para botones por defecto */
+            background: #3498db;
             color: #fff;
             border: none;
             border-radius: 6px;
@@ -132,7 +134,7 @@
             background: #217dbb;
         }
         .acciones .discord {
-            background: #7289da; /* Ajuste para discord por defecto */
+            background: #7289da;
         }
         .acciones .discord:hover {
             background: #5b6eae;
@@ -200,8 +202,8 @@
             background: #c0392b;
         }
         .theme-toggle-button {
-            background-color: #2c3e50; /* Un azul oscuro como la noche */
-            color: #ffde4c; /* Un naranja/amarillo como la luna */
+            background-color: #2c3e50;
+            color: #ffde4c; 
             border: none;
             padding: 8px 15px;
             border-radius: 20px;
@@ -232,19 +234,19 @@
             justify-content: center;
         }
         .menu-flotante .menu-contenido {
-            background: rgba(44,62,80,0.98); /* Fondo oscuro para menú flotante por defecto */
+            background: rgba(44,62,80,0.98);
             border-radius: 16px;
             box-shadow: 0 6px 32px rgba(0,0,0,0.4);
             padding: 28px 22px 18px 22px;
             min-width: 320px;
             max-width: 370px;
-            color: #ecf0f1; /* Texto claro para menú flotante por defecto */
+            color: #ecf0f1; 
         }
         .menu-flotante h3 {
             margin-top: 0;
             margin-bottom: 16px;
             font-size: 1.1rem;
-            color: #ecf0f1; /* Título claro para menú flotante por defecto */
+            color: #ecf0f1; 
         }
         .menu-flotante .campo {
             margin-bottom: 12px;
@@ -256,7 +258,7 @@
             margin-bottom: 0;
         }
         .menu-flotante .separador {
-            border-top: 1px solid #55728f; /* Separador oscuro para menú flotante por defecto */
+            border-top: 1px solid #55728f;
             margin: 10px 0;
         }
         .menu-flotante.ramales .menu-contenido,
@@ -286,11 +288,11 @@
             flex: 1;
         }
         .separador {
-            border-top: 1px solid #55728f; /* Separador oscuro por defecto */
+            border-top: 1px solid #55728f;
             margin: 10px 0;
         }
         .texto-rojo {
-            color: #e74c3c; /* Mantener rojo para errores/alertas */
+            color: #e74c3c; 
             font-weight: 500;
             margin-bottom: 10px;
         }
@@ -299,14 +301,14 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            color: #b0c4d6; /* Color de texto del footer claro por defecto */
+            color: #b0c4d6; 
             font-size: 0.97rem;
             margin-top: 40px;
             margin-bottom: 18px;
             padding: 20px 0;
             z-index: 1;
             position: relative;
-            background-color: #4a5c6e; /* Fondo del footer oscuro por defecto */
+            background-color: #4a5c6e;
             transition: background-color 0.3s, color 0.3s;
         }
         .footer-bottom {
@@ -317,16 +319,16 @@
             margin-top: 15px;
         }
         .burbuja {
-            border: 1px solid #3498db; /* Borde de burbuja oscuro por defecto */
-            background: #4a647d; /* Fondo de burbuja oscuro por defecto */
+            border: 1px solid #3498db;
+            background: #4a647d; 
             border-radius: 12px;
             padding: 12px 16px;
             margin-bottom: 14px;
             box-shadow: 0 2px 8px rgba(52,152,219,0.3);
-            color: #ecf0f1; /* Texto de burbuja claro por defecto */
+            color: #ecf0f1; 
         }
         .burbuja strong {
-            color: #b0d3f2; /* Color de texto fuerte claro por defecto */
+            color: #b0d3f2; 
         }
         .acciones-aprobacion button {
             background: transparent;
@@ -380,8 +382,8 @@
             color: #7b8a99;
         }
         body.light-mode .theme-toggle-button {
-            background-color: #ffe8a2; /* Un amarillo claro como el sol */
-            color: #333; /* Texto oscuro */
+            background-color: #ffe8a2; 
+            color: #333; 
         }
         body.light-mode .theme-toggle-button:hover {
             background-color: #ffd166;
@@ -408,7 +410,7 @@
         body.light-mode .boton-mini {
             background: #fff;
             border-color: #bfc9d1;
-            color: initial; /* Vuelve al color de texto normal */
+            color: initial; 
         }
         body.light-mode .boton-mini:hover {
             background: #eaf1f8;
@@ -464,6 +466,42 @@
                 margin-bottom: 20px;
             }
         }
+        #boton-configuracion {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            background-color: #ccc; 
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%;
+            padding: 10px; 
+            font-size: 14px; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #boton-configuracion img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        li {
+            font-weight: bold;
+        }
+        .grid-capturas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .grid-capturas img {
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+        .grid-capturas img:hover {
+            transform: scale(1.05);
+        }
     </style>
 </head>
 <body>
@@ -477,9 +515,16 @@
             <button id="theme-toggle" class="theme-toggle-button">Cambiar Modo</button>
         </div>
         <div id="resumen-vueltas"></div>
+        <div class="seccion">
+            <h2>🔍 Buscar Capturas por Código de Planilla</h2>
+            <input type="text" id="codigoCaptura" placeholder="Ej: P12345" style="width:100%; margin-bottom:10px;">
+            <button onclick="buscarCapturas()" style="width:100%;">Buscar</button>
+            <div id="resultadoCapturas" style="margin-top:15px;"></div>
+        </div>
     </div>
-    <script type="module" src="./planilla-config2.js"></script>
+    <script type="module" src="./planilla-config.js"></script>
     <script>
+        const chofer = "@andresemilioxd_70387";
         document.addEventListener("DOMContentLoaded", rotateText);
         function rotateText() {
     const textArray = [
