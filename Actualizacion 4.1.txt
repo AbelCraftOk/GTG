@@ -1,0 +1,7 @@
+Titulo: "Cambios en la Configuracion de los Internos"
+Mensaje: "Hicimos algunos ajustes en la Configuracion de los Inertnos. Agregando internos y cambiando los permisos"
+Cambios: "
+ - Configuracion con Internos:
+   - Nuevos internos agregados
+   - Arreglos en los permisos
+"

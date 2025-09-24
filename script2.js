@@ -901,12 +901,10 @@ async function buscarCapturas() {
     const codigo = document.getElementById("codigoCaptura").value.trim();
     const contenedor = document.getElementById("resultadoCapturas");
     contenedor.innerHTML = "";
-
     if (!codigo) {
         contenedor.innerHTML = "<p style='color:red;'>⚠️ Ingresa un código de planilla.</p>";
         return;
     }
-
     try {
         const docRef = doc(db, "capturas", codigo);
         const docSnap = await getDoc(docRef);

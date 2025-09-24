@@ -235,7 +235,7 @@ function verificarChofer() {
         "@lolo_jaja"
     ];
     if (choferesPermitidos.includes(chofer)) {
-        seleccionarInterno('9');
+        seleccionarInterno('11');
     } else {
         alert("No tienes permisos para acceder a este interno");
     }
