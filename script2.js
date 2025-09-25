@@ -129,18 +129,8 @@ async function guardarPlanilla() {
         } else {
             console.log("ℹ️ No se subieron capturas en esta planilla.");
         }
-
         // Enviar mensaje a Discord
         enviarMensaje(nuevaPlanilla);
-
-        // Eliminar ubicación del chofer si existe
-        try {
-            await deleteDoc(doc(db, "ubication", chofer));
-            console.log(`Ubicación de ${chofer} eliminada tras enviar planilla.`);
-        } catch (err) {
-            console.warn(`No se pudo eliminar la ubicación de ${chofer}:`, err);
-        }
-
         // Reset de variables y campos
         vueltasGenerales = [];
         limpiarCampos();
