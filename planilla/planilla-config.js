@@ -209,3 +209,34 @@ ${vueltasTexto}
         console.error(error);
     }
 }
+async function buscarCapturas() {
+    const codigo = document.getElementById("codigoCaptura").value.trim();
+    const contenedor = document.getElementById("resultadoCapturas");
+    contenedor.innerHTML = "";
+    if (!codigo) {
+        contenedor.innerHTML = "<p style='color:red;'>⚠️ Ingresa un código de planilla.</p>";
+        return;
+    }
+    try {
+        const docRef = doc(db, "capturas", codigo);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            let html = "<h4>📸 Capturas encontradas:</h4><div class='grid-capturas'>";
+            Object.keys(data).forEach((key) => {
+                const binario = data[key];
+                const imgSrc = `data:image/png;base64,${binario}`;
+                html += `<img src="${imgSrc}" alt="${key}" style="max-width:200px; border:1px solid #ccc; margin:5px; border-radius:6px;">`;
+            });
+            html += "</div>";
+            contenedor.innerHTML = html;
+        } else {
+            contenedor.innerHTML = "<p style='color:orange;'>⚠️ No se encontraron capturas para este código.</p>";
+        }
+    } catch (err) {
+        console.error("Error al buscar capturas:", err);
+        contenedor.innerHTML = "<p style='color:red;'>❌ Error al buscar capturas.</p>";
+    }
+}
+window.buscarCapturas = buscarCapturas;
