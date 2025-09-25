@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#2d3e50">
     <link rel="icon" type="image/png" href="./logo.png">
-    <link rel="manifest" href="/manifest.json">
-    <meta name="theme-color" content="#2d2d2d">
     <title>General Tomas Guido</title>
     <style>
         body {
@@ -596,7 +594,7 @@
             <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-nuevoViaje').style.display = 'flex';">Abrir menu para agregar un nuevo viaje Larga Distacia</button>
             <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-msg-perz').style.display = 'flex';">Enviar un mensaje perzonalizado a Discord</button>
             <button type="button" class="theme-toggle-button" onclick="window.open('https://abelcraftok.github.io/GTG/usuario.html', '_blank')">Ir al sistema de usuario</button>
-            <button type="button" class="theme-toggle-button" onclick="document.getElementById('boton-pestanias').style.display = 'flex';">Abrir selector de pestañas</button>
+            <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-pestanias').style.display = 'flex';">Abrir selector de pestañas</button>
         </div>
         <div class="seccion">
             <h2>Acceso Personal de la Empresa</h2>
@@ -616,7 +614,7 @@
             <button type="button" class="theme-toggle-button" onclick="abrirMenuProximaActualizacion()">Cargar una próxima actualización</button>
             <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-msg-perz').style.display = 'flex';">Enviar un mensaje perzonalizado a Discord</button>
             <button type="button" class="theme-toggle-button" onclick="window.open('https://abelcraftok.github.io/GTG/usuario.html', '_blank')">Ir al sistema de usuario</button>
-            <button type="button" class="theme-toggle-button" onclick="document.getElementById('boton-pestanias').style.display = 'flex';">Abrir selector de pestañas</button>
+            <button type="button" class="theme-toggle-button" onclick="document.getElementById('menu-pestanias').style.display = 'flex';">Abrir selector de pestañas</button>
         </div>
         <div class="seccion">
             <h2>Acceso Personal de la Empresa</h2>
@@ -1331,21 +1329,6 @@
         border: none;
         cursor: pointer;
     ">💬</button>
-    <button onclick="document.getElementById('menu-pestanias').style.display = 'flex';" id="boton-pestanias" style="
-        display: none;
-        position: fixed;
-        bottom: 80px;
-        right: 20px;
-        z-index: 999;
-        background-color: #ffd166;
-        border-radius: 50%;
-        padding: 14px 18px;
-        font-size: 20px;
-        box-shadow: 0 0 10px rgba(0,0,0,0.3);
-        color: white;
-        border: none;
-        cursor: pointer;
-    ">🚪</button>
     <script type="module" src="./script2.js"></script>
     <script src="./script.js"></script>
     <script src="./Embleds.js"></script>
@@ -1388,15 +1371,6 @@
                 window.autoLogin();
             }, 1500);
         };
-    </script>
-    <script>
-        if ("serviceWorker" in navigator) {
-            navigator.serviceWorker.register("/sw.js")
-                .then(reg => conole.log("Servicio Worker Registrado:",
-            reg.scope))
-                .catch(err => console.log("Error al Registrar SW",
-            err));
-        }
     </script>
 </body>
 </html>

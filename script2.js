@@ -79,66 +79,22 @@ function enviarMensaje(planillaData) {
         console.error("❌ Error en la solicitud al enviar embed:", error);
     });
 }
-async function guardarPlanilla() {
-    alert("Enviando planilla, por favor espere...");
-    const codigoPlanilla = generarCodigoUnico();
-    const chofer = document.getElementById('chofer').value.trim();
-    const planillas1 = document.getElementById('planillas1').value.trim();
-    const planillas2 = document.getElementById('planillas2').value.trim();
-    const planillas3 = document.getElementById('planillas3').value.trim();
-
-    if (!chofer || !ramalSeleccionado || !internoSeleccionado || !planillas1 || vueltasGenerales.length === 0) {
-        alert("⚠️ Debes completar los campos obligatorios y cargar al menos una vuelta general.");
-        return;
-    }
-
-    try {
-        // Crear objeto planilla
-        const nuevaPlanilla = {
-            chofer,
-            interno: internoSeleccionado,
-            ramal: ramalSeleccionado,
-            recorrido: document.getElementById('recorrido-info').value,
-            vueltas: vueltasGenerales,
-            planillas1,
-            planillas2: planillas2 || 0,
-            planillas3: planillas3 || 0,
-            estado: "pendiente",
-            timestamp: new Date(),
-            codigoPlanilla
-        };
-
-        // Guardar planilla en la colección "planillas"
-        await addDoc(collection(db, "planillas"), nuevaPlanilla);
-        console.log("✅ Planilla registrada");
-
-        // Guardar capturas asociadas (si existen)
-        const archivos = document.getElementById("capturas").files;
-        if (archivos.length > 0) {
-            const dataCapturas = {};
-            for (let i = 0; i < archivos.length && i < 8; i++) {
-                const binario = await convertirABinario(archivos[i]); // función definida en I-script.js
-                dataCapturas[`img${i + 1}`] = binario;
-            }
-            try {
-                await setDoc(doc(db, "capturas", codigoPlanilla), dataCapturas);
-                console.log("📸 Capturas registradas con ID:", codigoPlanilla);
-            } catch (err) {
-                console.error("Error al guardar capturas:", err);
-            }
-        } else {
-            console.log("ℹ️ No se subieron capturas en esta planilla.");
-        }
-        // Enviar mensaje a Discord
-        enviarMensaje(nuevaPlanilla);
-        // Reset de variables y campos
-        vueltasGenerales = [];
-        limpiarCampos();
-
-    } catch (error) {
-        console.error("Error al guardar planilla:", error);
-        alert("❌ Error al guardar planilla.");
-    }
+function convertirABinario(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const arrayBuffer = e.target.result;
+      let binary = '';
+      const bytes = new Uint8Array(arrayBuffer);
+      const chunkSize = 0x8000;
+      for (let i = 0; i < bytes.length; i += chunkSize) {
+        binary += String.fromCharCode.apply(null, bytes.subarray(i, i + chunkSize));
+      }
+      resolve(btoa(binary)); // se guarda en base64 para no corromper datos
+    };
+    reader.onerror = reject;
+    reader.readAsArrayBuffer(file);
+  });
 }
 window.obtenerPlanillas = async function obtenerPlanillas() {
     alert("Obteniendo planillas, por favor espere...");
@@ -731,18 +687,24 @@ async function enviarPlanilla() {
 }
 window.enviarPlanilla = enviarPlanilla;
 const recorridoPorRamal = {
-    "570": 1,
-    "373A": 2,
-    "373B": 3,
-    "384A": 4,
-    "384B": 5,
-    "9A": 6,
-    "9B": 7,
-    "271A": 8,
-    "271B": 9,
-    "164A": 10,
-    "164B": 11,
-    "84": 12
+    "570A": 1,
+    "570B": 2,
+    "373A": 3,
+    "373B": 4,
+    "384A": 5,
+    "384B": 6,
+    "9A": 7,
+    "9B": 8,
+    "271A": 9,
+    "271B": 10,
+    "164A": 11,
+    "164B": 12,
+    "84A": 13,
+    "84B": 14,
+    "505A": 15,
+    "505B": 16,
+    "299A": 17,
+    "299B": 18
 };
 function actualizarRecorrido() {
     const input = document.getElementById('recorrido-info');
@@ -888,33 +850,92 @@ async function enviarMensajePerzonalizado() {
 window.enviarMensajePerzonalizado = enviarMensajePerzonalizado;
 window.guardarPlanilla = guardarPlanilla;
 async function buscarCapturas() {
-    const codigo = document.getElementById("codigoCaptura").value.trim();
-    const contenedor = document.getElementById("resultadoCapturas");
-    contenedor.innerHTML = "";
-    if (!codigo) {
-        contenedor.innerHTML = "<p style='color:red;'>⚠️ Ingresa un código de planilla.</p>";
-        return;
-    }
-    try {
-        const docRef = doc(db, "capturas", codigo);
-        const docSnap = await getDoc(docRef);
+  const codigo = document.getElementById("codigoCaptura").value.trim();
+  const contenedor = document.getElementById("resultadoCapturas");
+  contenedor.innerHTML = "";
+  if (!codigo) {
+    contenedor.innerHTML = "<p style='color:red;'>⚠️ Ingresa un código de planilla.</p>";
+    return;
+  }
 
-        if (docSnap.exists()) {
-            const data = docSnap.data();
-            let html = "<h4>📸 Capturas encontradas:</h4><div class='grid-capturas'>";
-            Object.keys(data).forEach((key) => {
-                const binario = data[key];
-                const imgSrc = `data:image/png;base64,${binario}`;
-                html += `<img src="${imgSrc}" alt="${key}" style="max-width:200px; border:1px solid #ccc; margin:5px; border-radius:6px;">`;
-            });
-            html += "</div>";
-            contenedor.innerHTML = html;
-        } else {
-            contenedor.innerHTML = "<p style='color:orange;'>⚠️ No se encontraron capturas para este código.</p>";
-        }
-    } catch (err) {
-        console.error("Error al buscar capturas:", err);
-        contenedor.innerHTML = "<p style='color:red;'>❌ Error al buscar capturas.</p>";
+  for (let i = 1; i <= 8; i++) {
+    const { data } = supabase.storage
+      .from("capturas")
+      .getPublicUrl(`${codigo}/img${i}.png`);
+
+    if (data?.publicUrl) {
+      contenedor.innerHTML += `
+        <img src="${data.publicUrl}" 
+             alt="img${i}" 
+             style="max-width:200px; border:1px solid #ccc; margin:5px; border-radius:6px;">
+      `;
     }
+  }
 }
 window.buscarCapturas = buscarCapturas;
+async function guardarPlanilla() {
+  alert("Enviando planilla, por favor espere...");
+  const codigoPlanilla = generarCodigoUnico();
+  const chofer = document.getElementById('chofer').value.trim();
+  const planillas1 = document.getElementById('planillas1').value.trim();
+  const planillas2 = document.getElementById('planillas2').value.trim();
+  const planillas3 = document.getElementById('planillas3').value.trim();
+
+  if (!chofer || !ramalSeleccionado || !internoSeleccionado || !planillas1 || vueltasGenerales.length === 0) {
+    alert("⚠️ Debes completar los campos obligatorios y cargar al menos una vuelta general.");
+    return;
+  }
+
+  try {
+    // 1️⃣ Crear objeto planilla
+    const nuevaPlanilla = {
+      chofer,
+      interno: internoSeleccionado,
+      ramal: ramalSeleccionado,
+      recorrido: document.getElementById('recorrido-info').value,
+      vueltas: vueltasGenerales,
+      planillas1,
+      planillas2: planillas2 || 0,
+      planillas3: planillas3 || 0,
+      estado: "pendiente",
+      timestamp: new Date(),
+      codigoPlanilla
+    };
+
+    // 2️⃣ Guardar planilla en Firebase
+    await setDoc(doc(db, "planillas", codigoPlanilla), nuevaPlanilla);
+    console.log("✅ Planilla registrada con ID:", codigoPlanilla);
+
+    // 3️⃣ Subir capturas a Supabase Storage
+    const archivos = document.getElementById("capturas").files;
+    if (archivos.length > 0) {
+      for (let i = 0; i < archivos.length && i < 8; i++) {
+        const file = archivos[i];
+        const fileName = `${codigoPlanilla}/img${i + 1}-${file.name}`;
+
+        const { error } = await supabase.storage
+          .from("capturas") // nombre del bucket
+          .upload(fileName, file, { upsert: true });
+
+        if (error) {
+          console.error("❌ Error al subir captura:", error);
+        } else {
+          console.log(`📸 Captura subida: ${fileName}`);
+        }
+      }
+    } else {
+      console.log("ℹ️ No se subieron capturas en esta planilla.");
+    }
+
+    // 4️⃣ Enviar mensaje a Discord
+    enviarMensaje(nuevaPlanilla);
+
+    // 5️⃣ Reset de variables y campos
+    vueltasGenerales = [];
+    limpiarCampos();
+
+  } catch (error) {
+    console.error("❌ Error al guardar planilla:", error);
+    alert("❌ Error al guardar planilla.");
+  }
+}
