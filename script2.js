@@ -55,7 +55,7 @@ function enviarMensaje(planillaData) {
 
             `**Código de Planilla:** ${planillaData.codigoPlanilla}\n` +
             `📅 Enviada: ${new Date().toLocaleString()}\n\n` +
-            `[👉 Aceptar/Rechazar Planilla](https://abelcraftok.github.io/GTG/planilla/@${planillaData.chofer.replace('@', '')}.html)`,
+            `[👉 Aceptar/Rechazar Planilla](https://abelcraftok.github.io/GTG/)`,
         color: 3066993,
         footer: {
             text: `📅 Registrada: ${new Date().toLocaleString()}`
